@@ -1,38 +1,35 @@
-<!-- ========================
-     SERVICES SECTION
-     ======================== -->
-<section class="services section-pad" id="services">
-    <div class="container-mid">
-        <p class="services-label gsap-fade-up">Services</p>
-        <h2 class="services-title gsap-fade-up">
-            We are a <em>COMPLETE PACKAGE</em>
-        </h2>
+@php
+$imgIcon = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
+$services = [
+    ['name' => "Software\nDevelopment"],
+    ['name' => "Web-App\nDevelopment"],
+    ['name' => "Mobile\nApplications"],
+    ['name' => "Backend\n& DevOps"],
+    ['name' => "Game\nDevelopment"],
+    ['name' => "Hardware\nSolutions"],
+];
+@endphp
 
-        <div class="services-grid gsap-fade-up" id="services-grid">
-            @php
-                $services = [
-                    ['icon' => '🌐', 'title' => 'Web-App Development'],
-                    ['icon' => '📱', 'title' => 'Mobile Applications'],
-                    ['icon' => '⚙️', 'title' => 'Backend & DevOps'],
-                    ['icon' => '🎮', 'title' => 'Game Development'],
-                    ['icon' => '🎨', 'title' => 'UI/UX Design'],
-                    ['icon' => '🖥️', 'title' => 'Hardware Solutions'],
-                ];
-            @endphp
+<section class="services" id="services">
+    <div class="sec-inner">
+        <p class="sec-label fade-up">Services</p>
+        <h2 class="services-title fade-up">We are a <strong>COMPLETE PACKAGE</strong></h2>
+    </div>
 
-            @foreach($services as $service)
-            <div class="service-card">
-                <div class="service-card-icon">{{ $service['icon'] }}</div>
-                <p class="service-card-title">{{ $service['title'] }}</p>
-            </div>
-            @endforeach
+    <div class="services-cards" id="svc-cards">
+        @foreach($services as $svc)
+        <div class="svc-card scale-in">
+            <div class="svc-icon">{!! $imgIcon !!}</div>
+            <p class="svc-card-name" style="white-space:pre-line;">{{ $svc['name'] }}</p>
         </div>
+        @endforeach
+    </div>
 
-        <p class="services-description gsap-fade-up">
+    <div class="sec-inner">
+        <p class="services-desc fade-up">
             Business problems aren't solved by generic templates. Whether you need a standalone
             service or a fully integrated package, we engineer the exact solution your operations demand.
         </p>
-
-        <a href="#cta" class="btn-dark gsap-fade-up">Let's Build</a>
+        <a href="#cta" class="btn-dark fade-up">Let's Build</a>
     </div>
 </section>
