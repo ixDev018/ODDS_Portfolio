@@ -378,6 +378,7 @@ html, body {
 
 .services-track {
     display: flex;
+    flex-wrap: nowrap;
     width: max-content;
     animation: marquee 25s linear infinite;
 }
@@ -388,6 +389,8 @@ html, body {
 
 .services-group {
     display: flex;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
     gap: 20px;
     padding-right: 20px;
 }
