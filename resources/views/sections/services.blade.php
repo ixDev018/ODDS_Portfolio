@@ -17,17 +17,30 @@ $services = [
     </div>
 
     <div class="services-cards" id="svc-cards">
-        @foreach($services as $svc)
-        <div class="svc-card scale-in">
-            <div class="svc-icon">{!! $imgIcon !!}</div>
-            <p class="svc-card-name" style="white-space:pre-line;">{{ $svc['name'] }}</p>
+        <div class="services-track">
+            <div class="services-group">
+                @foreach($services as $svc)
+                <div class="svc-card">
+                    <div class="svc-icon">{!! $imgIcon !!}</div>
+                    <p class="svc-card-name" style="white-space:pre-line;">{{ $svc['name'] }}</p>
+                </div>
+                @endforeach
+            </div>
+            <!-- Duplicate group for infinite loop marquee -->
+            <div class="services-group" aria-hidden="true">
+                @foreach($services as $svc)
+                <div class="svc-card">
+                    <div class="svc-icon">{!! $imgIcon !!}</div>
+                    <p class="svc-card-name" style="white-space:pre-line;">{{ $svc['name'] }}</p>
+                </div>
+                @endforeach
+            </div>
         </div>
-        @endforeach
     </div>
 
     <div class="sec-inner services-footer">
         <p class="services-desc fade-up">
-            Business problems aren't solved by generic templates. Whether you need a standalone
+            Business problems aren't solved by generic templates. Whether you need a standalone<br>
             service or a fully integrated package, we engineer the exact solution your operations demand.
         </p>
         <a href="#cta" class="btn-dark fade-up">Let's Build</a>
