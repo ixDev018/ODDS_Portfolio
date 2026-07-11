@@ -34,4 +34,6 @@
     @include('sections.testimonials')
     @include('sections.why')
     @include('sections.cta')
+    
+    <x-odds-chat-widget />
 </x-layout>
