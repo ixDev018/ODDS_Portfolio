@@ -1,6 +1,6 @@
 <section class="hero" id="hero">
-    <div class="hero-glow"></div>
-    <div class="hero-glow-bottom"></div>
+    <div class="hero-glow-left"></div>
+    <div class="hero-glow-right"></div>
 
     <div class="hero-content">
         <h1 class="hero-title fade-up" id="hero-h1">

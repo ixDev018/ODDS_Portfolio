@@ -108,35 +108,40 @@ html, body {
     text-align: center;
     padding: 120px 48px 80px;
 }
-/* The big pink radial glow */
-.hero-glow {
+/* Left Pink Orb */
+.hero-glow-left {
     position: absolute;
+    width: 835px;
+    height: 505px;
+    left: -580px; /* Anchor to left edge */
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 140vw;
-    height: 600px;
-    background: radial-gradient(ellipse at center,
-        rgba(215, 65, 150, 0.45) 0%,
-        rgba(150, 40, 130, 0.25) 30%,
-        rgba(80, 15, 90, 0.1) 55%,
-        transparent 75%
+    margin-top: -252px;
+    filter: blur(150px);
+    transform: rotate(9.47deg);
+    background: radial-gradient(ellipse at center, 
+        #FFFFFF 0%, #FFFFFF 20%, 
+        #F359B0 20.1%, #F359B0 55%, 
+        #D7018F 55.1%, #D7018F 100%
     );
+    border-radius: 50%;
     pointer-events: none;
-    filter: blur(40px);
 }
-/* Slight purple tint bottom */
-.hero-glow-bottom {
+/* Right Pink Orb */
+.hero-glow-right {
     position: absolute;
-    bottom: -20%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 800px;
-    height: 400px;
-    background: radial-gradient(ellipse at center,
-        rgba(100, 10, 150, 0.2) 0%,
-        transparent 65%
+    width: 835px;
+    height: 505px;
+    right: -548px; /* Anchor to right edge */
+    top: 50%;
+    margin-top: -252px;
+    filter: blur(150px);
+    transform: rotate(-6.65deg);
+    background: radial-gradient(ellipse at center, 
+        #FFFFFF 0%, #FFFFFF 20%, 
+        #F359B0 20.1%, #F359B0 55%, 
+        #D7018F 55.1%, #D7018F 100%
     );
+    border-radius: 50%;
     pointer-events: none;
 }
 .hero-content {
@@ -147,14 +152,14 @@ html, body {
 }
 .hero-title {
     font-size: clamp(44px, 6vw, 84px);
-    font-weight: 500;
+    font-weight: 400;
     line-height: 1.05;
     color: #fff;
     letter-spacing: -0.04em;
     margin-bottom: 24px;
 }
 .hero-title strong {
-    font-weight: 800;
+    font-weight: 700;
 }
 .hero-subtitle {
     font-size: 16px;
@@ -665,4 +670,18 @@ html, body {
     .hero { padding: 100px 24px 60px; }
     .sec-inner { padding: 0 20px; }
     .footer-inner { padding: 0 20px; }
+    .hero-glow-left {
+        width: 400px;
+        height: 240px;
+        left: -300px;
+        margin-top: -120px;
+        filter: blur(80px);
+    }
+    .hero-glow-right {
+        width: 400px;
+        height: 240px;
+        right: -300px;
+        margin-top: -120px;
+        filter: blur(80px);
+    }
 }
