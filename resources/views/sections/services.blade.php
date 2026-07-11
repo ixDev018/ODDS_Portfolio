@@ -11,6 +11,8 @@ $services = [
 @endphp
 
 <section class="services" id="services">
+    <div class="services-glow-left"></div>
+    <div class="services-glow-right"></div>
     <div class="sec-inner services-header">
         <p class="sec-label fade-up">Services</p>
         <h2 class="services-title fade-up">We are a <strong>COMPLETE PACKAGE</strong></h2>
