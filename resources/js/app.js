@@ -38,6 +38,9 @@ if (document.querySelector('.hero-services-wrapper') && document.querySelector('
         paused: true
     });
 
+    // Set initial pointer-events state for services
+    gsap.set('.services', { pointerEvents: 'none' });
+
     // 1. Fade out Hero content first (from 0 to 0.25)
     transitionTimeline.to('.hero-content', {
         opacity: 0,
@@ -45,6 +48,19 @@ if (document.querySelector('.hero-services-wrapper') && document.querySelector('
         duration: 0.25,
         ease: 'power2.inOut'
     }, 0);
+
+    // Disable pointer events and hide hero section so it doesn't block the Services section underneath
+    transitionTimeline.to('.hero', {
+        pointerEvents: 'none',
+        visibility: 'hidden',
+        duration: 0.1
+    }, 0.2);
+
+    // Enable pointer events on the services section once revealed
+    transitionTimeline.to('.services', {
+        pointerEvents: 'auto',
+        duration: 0.1
+    }, 0.65);
 
     // 2. Collapse the transition overlay columns (vertical strips wipe, sweeping horizontally)
     transitionTimeline.to('.trans-col', {
