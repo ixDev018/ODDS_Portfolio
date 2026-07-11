@@ -28,14 +28,14 @@ if (document.querySelector('.hero-services-wrapper') && document.querySelector('
         y: 40
     });
 
+    let currentState = 0; // 0 = Hero, 1 = Services
+    let isTransitioning = false;
+    let isReady = false;
+    const transitionDuration = 1.6; // Hard-locked transition duration in seconds (slower)
+
+    // Fixed-duration transition timeline (total duration maps to 1.0s)
     const transitionTimeline = gsap.timeline({
-        scrollTrigger: {
-            trigger: '.hero-services-wrapper',
-            start: 'top top',
-            end: '+=100%', // Pin for one full viewport height of scrolling
-            pin: true,
-            scrub: true,
-        }
+        paused: true
     });
 
     // 1. Fade out Hero content first (from 0 to 0.25)
@@ -91,6 +91,169 @@ if (document.querySelector('.hero-services-wrapper') && document.querySelector('
         ease: 'power2.out',
         stagger: 0.08
     }, 0.65);
+
+    // Scroll prevention helper functions
+    function preventScroll(e) {
+        e.preventDefault();
+    }
+
+    const scrollKeys = { 32: 1, 33: 1, 34: 1, 35: 1, 36: 1, 37: 1, 38: 1, 39: 1, 40: 1 };
+    function preventDefaultScrollKeys(e) {
+        if (scrollKeys[e.keyCode]) {
+            e.preventDefault();
+            return false;
+        }
+    }
+
+    function disableScroll() {
+        window.addEventListener('wheel', preventScroll, { passive: false });
+        window.addEventListener('touchmove', preventScroll, { passive: false });
+        window.addEventListener('keydown', preventDefaultScrollKeys, { passive: false });
+    }
+
+    function enableScroll() {
+        window.removeEventListener('wheel', preventScroll);
+        window.removeEventListener('touchmove', preventScroll);
+        window.removeEventListener('keydown', preventDefaultScrollKeys);
+    }
+
+    // Main event-driven transition trigger
+    function triggerTransition(targetState) {
+        if (isTransitioning || !isReady) return;
+        isTransitioning = true;
+        disableScroll();
+
+        const targetScroll = targetState === 1 ? mainPin.end : mainPin.start;
+
+        // Animate the scroll position programmatically
+        const scrollObj = { y: window.scrollY };
+        gsap.to(scrollObj, {
+            y: targetScroll,
+            duration: transitionDuration,
+            ease: 'power2.inOut',
+            onUpdate: () => {
+                window.scrollTo(0, scrollObj.y);
+            }
+        });
+
+        // Play/reverse the transition timeline smoothly at the fixed duration
+        gsap.to(transitionTimeline, {
+            progress: targetState,
+            duration: transitionDuration,
+            ease: 'power2.inOut',
+            onComplete: () => {
+                currentState = targetState;
+                isTransitioning = false;
+                enableScroll();
+            }
+        });
+    }
+
+    // ScrollTrigger to pin the section and capture scroll direction/progress
+    const mainPin = ScrollTrigger.create({
+        trigger: '.hero-services-wrapper',
+        start: 'top top',
+        end: '+=100%',
+        pin: true,
+        pinSpacing: true,
+        onRefresh: (self) => {
+            // Correctly set initial state on load/refresh (handles scroll restoration)
+            currentState = self.progress >= 0.5 ? 1 : 0;
+            transitionTimeline.progress(currentState);
+            // Allow transitions after initial layout calculations
+            setTimeout(() => {
+                isReady = true;
+            }, 100);
+        },
+        onUpdate: (self) => {
+            if (isTransitioning || !isReady) return;
+
+            // Trigger transitions based on scroll direction and progress
+            if (self.direction === 1 && self.progress > 0.01 && currentState === 0) {
+                triggerTransition(1);
+            } else if (self.direction === -1 && self.progress < 0.99 && currentState === 1) {
+                triggerTransition(0);
+            }
+        }
+    });
+
+    // Anchor links smooth navigation and transition synchronization
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const targetId = link.getAttribute('href');
+            if (!targetId) return;
+
+            // Handle return to home/hero
+            if (targetId === '#' || targetId === '#hero') {
+                e.preventDefault();
+                isReady = false;
+                disableScroll();
+
+                const scrollObj = { y: window.scrollY };
+                gsap.to(transitionTimeline, {
+                    progress: 0,
+                    duration: transitionDuration,
+                    ease: 'power2.inOut',
+                    onComplete: () => {
+                        currentState = 0;
+                    }
+                });
+
+                gsap.to(scrollObj, {
+                    y: 0,
+                    duration: transitionDuration,
+                    ease: 'power2.inOut',
+                    onUpdate: () => window.scrollTo(0, scrollObj.y),
+                    onComplete: () => {
+                        isReady = true;
+                        enableScroll();
+                    }
+                });
+                return;
+            }
+
+            const targetEl = document.querySelector(targetId);
+            if (!targetEl) return;
+
+            e.preventDefault();
+            isReady = false;
+            disableScroll();
+
+            let targetScroll = 0;
+            if (targetId === '#services') {
+                // Services is pinned; target the fully-revealed state
+                targetScroll = mainPin.end;
+            } else {
+                const rect = targetEl.getBoundingClientRect();
+                targetScroll = rect.top + window.scrollY;
+            }
+
+            const scrollObj = { y: window.scrollY };
+            const targetProgress = (targetId === '#services' || targetScroll >= mainPin.end) ? 1 : 0;
+
+            gsap.to(transitionTimeline, {
+                progress: targetProgress,
+                duration: transitionDuration,
+                ease: 'power2.inOut',
+                onComplete: () => {
+                    currentState = targetProgress;
+                }
+            });
+
+            gsap.to(scrollObj, {
+                y: targetScroll,
+                duration: transitionDuration,
+                ease: 'power2.inOut',
+                onUpdate: () => {
+                    window.scrollTo(0, scrollObj.y);
+                },
+                onComplete: () => {
+                    isReady = true;
+                    enableScroll();
+                }
+            });
+        });
+    });
 }
 
 // ─── Navbar Dynamic Background and Theme ScrollTriggers ───

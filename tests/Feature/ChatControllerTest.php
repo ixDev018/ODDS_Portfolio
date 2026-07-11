@@ -50,9 +50,9 @@ class ChatControllerTest extends TestCase
             $mock->shouldReceive('chat')
                  ->once()
                  ->with(Mockery::on(function ($prompt) {
-                     return str_contains($prompt, 'You are the ODDS assistant') &&
+                     return str_contains($prompt, 'You are Lorenzo') &&
                             str_contains($prompt, 'Simula') &&
-                            str_contains($prompt, 'I can only help with ODDS questions');
+                            str_contains($prompt, 'can only help with ODDS-related questions');
                  }), 'what is Simula?')
                  ->andReturn('Simula is a framework.');
         });

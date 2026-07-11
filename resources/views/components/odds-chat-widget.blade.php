@@ -1,53 +1,38 @@
-<div class="fixed bottom-6 right-6 z-50 font-sans" id="odds-chat-container">
-    <!-- Chat Toggle Button -->
-    <button 
-        id="chat-toggle-btn"
-        class="flex items-center justify-center w-14 h-14 rounded-full text-white shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer focus:outline-none relative group"
-        style="background: linear-gradient(135deg, #cf5aa8 0%, #a83f84 100%); box-shadow: 0 8px 30px rgba(207, 90, 168, 0.4);"
-        aria-label="Open ODDS Assistant"
-    >
-        <!-- Pulse effect -->
-        <span class="absolute inset-0 rounded-full bg-pink-500 opacity-20 group-hover:animate-ping duration-1000"></span>
-        
-        <!-- Chat Icon -->
-        <svg id="chat-icon-open" class="w-6 h-6 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-        </svg>
-        
-        <!-- Close Icon (initially hidden) -->
-        <svg id="chat-icon-close" class="w-6 h-6 hidden transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-    </button>
-
-    <!-- Chat Window -->
+<!-- ODDS Chat Widget Container -->
+<div class="fixed bottom-6 right-6 z-50 font-sans" id="odds-chat-container" style="width: 0; height: 0;">
+    
+    <!-- Chat Window (floats above the FAB) -->
     <div 
         id="chat-window"
-        class="hidden flex-col w-[360px] sm:w-[400px] h-[500px] bg-[#16161a] border border-[#ffffff15] rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 origin-bottom-right"
-        style="box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);"
+        class="hidden flex-col w-[315px] sm:w-[345px] h-[460px] rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 origin-bottom-right chat-box-panel absolute bottom-16 right-0"
+        style="background: rgba(14, 14, 14, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(207, 90, 168, 0.08);"
     >
         <!-- Header -->
-        <div class="flex items-center justify-between px-5 py-4 border-b border-[#ffffff10] bg-[#1e1e24]">
-            <div class="flex items-center gap-3">
-                <!-- Avatar/Logo -->
-                <div class="flex items-center justify-center w-8 h-8 rounded-full bg-[#cf5aa8] text-white font-extrabold text-xs tracking-tighter">
-                    ODDS
+        <div class="chat-header">
+            <div class="chat-profile">
+                <!-- Glowing ODDS Icon Avatar -->
+                <div class="chat-avatar" style="background: linear-gradient(135deg, #cf5aa8 0%, #875af5 100%); box-shadow: 0 0 12px rgba(207, 90, 168, 0.4);">
+                    <svg width="18" height="18" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white">
+                        <path d="M11.3567 12.2224C11.376 12.4818 11.5355 12.7099 11.7726 12.817L19.6574 16.378C20.1484 16.5998 20.6978 16.2154 20.6579 15.6782L20.2762 10.5463C20.2569 10.287 20.0974 10.0589 19.8603 9.95181L11.9755 6.39075C11.4845 6.169 10.9351 6.55335 10.975 7.09063L11.3567 12.2224Z" fill="currentColor"/>
+                        <path d="M10.8914 13.253C11.0988 13.096 11.3754 13.0649 11.6124 13.172L19.4972 16.733C19.9882 16.9548 20.0631 17.6211 19.6336 17.9463L15.5312 21.053C15.3239 21.21 15.0472 21.2411 14.8102 21.1341L6.92539 17.573C6.43438 17.3512 6.35946 16.6849 6.78897 16.3597L10.8914 13.253Z" fill="currentColor"/>
+                        <path d="M27.9087 13.9543C27.9087 21.6611 21.6611 27.9087 13.9543 27.9087C6.24757 27.9087 0 21.6611 0 13.9543C0 6.24757 6.24757 0 13.9543 0C21.6611 0 27.9087 6.24757 27.9087 13.9543ZM2.99795 13.9543C2.99795 20.0054 7.90329 24.9107 13.9543 24.9107C20.0054 24.9107 24.9107 20.0054 24.9107 13.9543C24.9107 7.90329 20.0054 2.99795 13.9543 2.99795C7.90329 2.99795 2.99795 7.90329 2.99795 13.9543Z" fill="currentColor"/>
+                    </svg>
                 </div>
-                <div>
-                    <h3 class="text-sm font-bold text-white leading-none">ODDS Assistant</h3>
-                    <div class="flex items-center gap-1.5 mt-1">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span class="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">Online</span>
+                <div class="chat-details">
+                    <h3 class="chat-title font-sora">Lorenzo</h3>
+                    <div class="chat-status">
+                        <span class="chat-status-dot animate-pulse"></span>
+                        <span class="chat-status-text">ODDS Studio</span>
                     </div>
                 </div>
             </div>
             
             <button 
                 id="chat-close-btn"
-                class="text-zinc-400 hover:text-white transition-colors cursor-pointer p-1 rounded-lg hover:bg-[#ffffff08]"
+                class="chat-close-btn active:scale-95"
                 aria-label="Close chat"
             >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
@@ -56,45 +41,52 @@
         <!-- Messages Area -->
         <div 
             id="chat-messages" 
-            class="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent"
+            class="flex-1 overflow-y-auto chat-messages-list scroll-container"
         >
             <!-- Greeting Message -->
-            <div class="flex gap-2 max-w-[85%]">
-                <div class="flex-shrink-0 w-6 h-6 rounded-full bg-zinc-800 text-zinc-300 flex items-center justify-center text-[9px] font-bold">
-                    ODDS
+            <div class="chat-message-row fade-in-message">
+                <div class="chat-message-avatar">
+                    <svg width="12" height="12" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-zinc-300">
+                        <path d="M11.3567 12.2224C11.376 12.4818 11.5355 12.7099 11.7726 12.817L19.6574 16.378C20.1484 16.5998 20.6978 16.2154 20.6579 15.6782L20.2762 10.5463C20.2569 10.287 20.0974 10.0589 19.8603 9.95181L11.9755 6.39075C11.4845 6.169 10.9351 6.55335 10.975 7.09063L11.3567 12.2224Z" fill="currentColor"/>
+                        <path d="M10.8914 13.253C11.0988 13.096 11.3754 13.0649 11.6124 13.172L19.4972 16.733C19.9882 16.9548 20.0631 17.6211 19.6336 17.9463L15.5312 21.053C15.3239 21.21 15.0472 21.2411 14.8102 21.1341L6.92539 17.573C6.43438 17.3512 6.35946 16.6849 6.78897 16.3597L10.8914 13.253Z" fill="currentColor"/>
+                        <path d="M27.9087 13.9543C27.9087 21.6611 21.6611 27.9087 13.9543 27.9087C6.24757 27.9087 0 21.6611 0 13.9543C0 6.24757 6.24757 0 13.9543 0C21.6611 0 27.9087 6.24757 27.9087 13.9543ZM2.99795 13.9543C2.99795 20.0054 7.90329 24.9107 13.9543 24.9107C20.0054 24.9107 24.9107 20.0054 24.9107 13.9543C24.9107 7.90329 20.0054 2.99795 13.9543 2.99795C7.90329 2.99795 2.99795 7.90329 2.99795 13.9543Z" fill="currentColor"/>
+                    </svg>
                 </div>
-                <div class="bg-zinc-800/80 text-zinc-100 text-xs py-2.5 px-3.5 rounded-2xl rounded-tl-none border border-[#ffffff05] leading-relaxed">
-                    Hey! I'm the ODDS assistant. Ask me anything about our services, past projects, or our simulation engine, Simula.
+                <div class="chat-bubble chat-bubble-assistant">
+                    Hey! I'm <strong>Lorenzo</strong>. Ask me anything about ODDS—our projects, Simula, or how we collaborate!
                 </div>
             </div>
-        </div>
 
-        <!-- Typing Indicator -->
-        <div id="typing-indicator" class="hidden px-4 py-2 flex items-center gap-2 max-w-[85%]">
-            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-zinc-800 text-zinc-300 flex items-center justify-center text-[9px] font-bold">
-                ODDS
-            </div>
-            <div class="bg-zinc-800/50 text-zinc-400 text-xs py-2 px-3 rounded-2xl rounded-tl-none flex items-center gap-1">
-                <span class="w-1.5 h-1.5 bg-zinc-400 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
-                <span class="w-1.5 h-1.5 bg-zinc-400 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
-                <span class="w-1.5 h-1.5 bg-zinc-400 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
+            <!-- Typing Indicator -->
+            <div id="typing-indicator" class="hidden chat-message-row chat-typing-wrapper">
+                <div class="chat-message-avatar">
+                    <svg width="12" height="12" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-zinc-400">
+                        <path d="M11.3567 12.2224C11.376 12.4818 11.5355 12.7099 11.7726 12.817L19.6574 16.378C20.1484 16.5998 20.6978 16.2154 20.6579 15.6782L20.2762 10.5463C20.2569 10.287 20.0974 10.0589 19.8603 9.95181L11.9755 6.39075C11.4845 6.169 10.9351 6.55335 10.975 7.09063L11.3567 12.2224Z" fill="currentColor"/>
+                        <path d="M10.8914 13.253C11.0988 13.096 11.3754 13.0649 11.6124 13.172L19.4972 16.733C19.9882 16.9548 20.0631 17.6211 19.6336 17.9463L15.5312 21.053C15.3239 21.21 15.0472 21.2411 14.8102 21.1341L6.92539 17.573C6.43438 17.3512 6.35946 16.6849 6.78897 16.3597L10.8914 13.253Z" fill="currentColor"/>
+                        <path d="M27.9087 13.9543C27.9087 21.6611 21.6611 27.9087 13.9543 27.9087C6.24757 27.9087 0 21.6611 0 13.9543C0 6.24757 6.24757 0 13.9543 0C21.6611 0 27.9087 6.24757 27.9087 13.9543ZM2.99795 13.9543C2.99795 20.0054 7.90329 24.9107 13.9543 24.9107C20.0054 24.9107 24.9107 20.0054 24.9107 13.9543C24.9107 7.90329 20.0054 2.99795 13.9543 2.99795C7.90329 2.99795 2.99795 7.90329 2.99795 13.9543Z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <div class="chat-bubble chat-bubble-typing chat-bubble-assistant">
+                    <span class="chat-typing-dot"></span>
+                    <span class="chat-typing-dot"></span>
+                    <span class="chat-typing-dot"></span>
+                </div>
             </div>
         </div>
 
         <!-- Input Area -->
-        <form id="chat-form" class="p-3 bg-[#121215] border-t border-[#ffffff08] flex items-center gap-2">
+        <form id="chat-form" class="chat-input-form">
             @csrf
             <input 
                 type="text" 
                 id="chat-input"
-                placeholder="Ask a question..."
-                class="flex-1 bg-zinc-900 border border-zinc-800 text-white placeholder-zinc-500 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#cf5aa8] transition-colors"
+                placeholder="Ask Lorenzo a question..."
+                class="chat-input-field font-sans"
                 autocomplete="off"
             >
             <button 
                 type="submit"
-                class="flex items-center justify-center w-9 h-9 rounded-xl text-white transition-all cursor-pointer hover:scale-105 active:scale-95"
-                style="background: #cf5aa8;"
+                class="chat-send-btn hover:scale-105 active:scale-95"
                 aria-label="Send message"
             >
                 <svg class="w-4 h-4 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
@@ -103,13 +95,276 @@
             </button>
         </form>
     </div>
+
+    <!-- Chat Toggle Button (FAB) -->
+    <button 
+        id="chat-toggle-btn"
+        class="flex items-center justify-center w-12 h-12 rounded-full text-white shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer focus:outline-none absolute bottom-0 right-0 chat-fab"
+        style="background: rgba(14, 14, 14, 0.65); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(207, 90, 168, 0.25);"
+        aria-label="Open Chat with Lorenzo"
+    >
+        <!-- Inner glow/pulse -->
+        <span class="absolute inset-0 rounded-full bg-[#cf5aa8] opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
+        
+        <!-- Toggle Icon (ODDS Geometric Icon) -->
+        <div id="chat-icon-open" class="transition-transform duration-300 text-white group-hover:rotate-12">
+            <svg width="22" height="22" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.3567 12.2224C11.376 12.4818 11.5355 12.7099 11.7726 12.817L19.6574 16.378C20.1484 16.5998 20.6978 16.2154 20.6579 15.6782L20.2762 10.5463C20.2569 10.287 20.0974 10.0589 19.8603 9.95181L11.9755 6.39075C11.4845 6.169 10.9351 6.55335 10.975 7.09063L11.3567 12.2224Z" fill="currentColor"/>
+                <path d="M10.8914 13.253C11.0988 13.096 11.3754 13.0649 11.6124 13.172L19.4972 16.733C19.9882 16.9548 20.0631 17.6211 19.6336 17.9463L15.5312 21.053C15.3239 21.21 15.0472 21.2411 14.8102 21.1341L6.92539 17.573C6.43438 17.3512 6.35946 16.6849 6.78897 16.3597L10.8914 13.253Z" fill="currentColor"/>
+                <path d="M27.9087 13.9543C27.9087 21.6611 21.6611 27.9087 13.9543 27.9087C6.24757 27.9087 0 21.6611 0 13.9543C0 6.24757 6.24757 0 13.9543 0C21.6611 0 27.9087 6.24757 27.9087 13.9543ZM2.99795 13.9543C2.99795 20.0054 7.90329 24.9107 13.9543 24.9107C20.0054 24.9107 24.9107 20.0054 24.9107 13.9543C24.9107 7.90329 20.0054 2.99795 13.9543 2.99795C7.90329 2.99795 2.99795 7.90329 2.99795 13.9543Z" fill="currentColor"/>
+            </svg>
+        </div>
+        
+        <!-- Close Icon (initially hidden) -->
+        <svg id="chat-icon-close" class="w-5 h-5 hidden transition-transform duration-300 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+    </button>
 </div>
 
+<!-- Custom Layout & Spacing Styles -->
 <style>
+    /* Font bindings */
+    .font-sora {
+        font-family: 'Sora', 'Plus Jakarta Sans', sans-serif;
+    }
+    
+    /* Header layout rules */
+    .chat-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(20, 20, 24, 0.4);
+    }
+    .chat-profile {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .chat-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .chat-details {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .chat-title {
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: 0.02em;
+    }
+    .chat-status {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 3px;
+    }
+    .chat-status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: #cf5aa8;
+    }
+    .chat-status-text {
+        font-size: 9px;
+        color: #a1a1aa;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+    }
+    .chat-close-btn {
+        color: #a1a1aa;
+        background: transparent;
+        border: none;
+        padding: 6px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
+    .chat-close-btn:hover {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Message list area */
+    .chat-messages-list {
+        padding: 18px 18px 26px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .chat-message-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        max-width: 90%;
+    }
+    .chat-message-avatar {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        margin-top: 2px;
+    }
+
+    /* SPECIFICITY OVERRIDE FOR HIDING ELEMENTS */
+    .chat-message-row.hidden {
+        display: none !important;
+    }
+    #typing-indicator.hidden {
+        display: none !important;
+    }
+
+    /* Message bubbles */
+    .chat-bubble {
+        padding: 10px 14px;
+        font-size: 13px;
+        line-height: 1.5;
+        word-break: break-word;
+        box-sizing: border-box;
+    }
+    .chat-bubble-assistant {
+        color: #f4f4f5;
+        border-radius: 16px;
+        border-top-left-radius: 4px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.03);
+    }
+    .chat-bubble-user {
+        color: #ffffff;
+        border-radius: 16px;
+        border-top-right-radius: 4px;
+        background: linear-gradient(135deg, #cf5aa8 0%, #a83f84 100%);
+        box-shadow: 0 4px 12px rgba(207, 90, 168, 0.2);
+    }
+    .chat-bubble-typing {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 12px 16px;
+    }
+    .chat-typing-wrapper {
+        margin-top: 4px;
+    }
+    
+    /* Bouncing dots styling */
+    .chat-typing-dot {
+        width: 5px;
+        height: 5px;
+        background-color: #cf5aa8;
+        border-radius: 50%;
+        animation: chatBounce 1.4s infinite ease-in-out both;
+        display: inline-block;
+    }
+    .chat-typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .chat-typing-dot:nth-child(2) { animation-delay: -0.16s; }
+    .chat-typing-dot:nth-child(3) { animation-delay: 0s; }
+
+    @keyframes chatBounce {
+        0%, 80%, 100% { transform: scale(0.3); opacity: 0.4; }
+        40% { transform: scale(1.1); opacity: 1; }
+    }
+
+    /* Footer / Input Area styling */
+    .chat-input-form {
+        padding: 12px 16px;
+        background: rgba(10, 10, 12, 0.55);
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .chat-input-field {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #ffffff;
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 13px;
+        outline: none;
+        transition: all 0.25s ease;
+        box-sizing: border-box;
+    }
+    .chat-input-field::placeholder {
+        color: #71717a;
+    }
+    .chat-input-field:focus {
+        border-color: #cf5aa8;
+        background: rgba(255, 255, 255, 0.07);
+        box-shadow: 0 0 10px rgba(207, 90, 168, 0.15);
+    }
+    .chat-send-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        background: linear-gradient(135deg, #cf5aa8 0%, #a83f84 100%);
+        box-shadow: 0 4px 15px rgba(207, 90, 168, 0.3);
+        transition: all 0.25s ease;
+        flex-shrink: 0;
+    }
+    
+    /* Toggle FAB styling */
+    .chat-fab:hover {
+        border-color: rgba(207, 90, 168, 0.5) !important;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(207, 90, 168, 0.5) !important;
+    }
+    
+    /* Hide scrollbars but keep scrolling active */
+    .scroll-container::-webkit-scrollbar {
+        display: none;
+    }
+    .scroll-container {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    
+    /* Markdown rendering specifics */
+    .chat-bubble-assistant strong {
+        color: #ffffff;
+        font-weight: 700;
+    }
+    .chat-bubble-assistant ul {
+        list-style-type: disc;
+        margin-left: 1.25rem;
+        margin-top: 0.4rem;
+        margin-bottom: 0.4rem;
+    }
+    .chat-bubble-assistant li {
+        margin-bottom: 0.2rem;
+    }
+
+    /* Message animation */
     .fade-in-message {
-        animation: fadeInMsg 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation: fadeInMsg 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         opacity: 0;
-        transform: translateY(8px);
+        transform: translateY(10px);
     }
     @keyframes fadeInMsg {
         to {
@@ -152,22 +407,27 @@ document.addEventListener('DOMContentLoaded', () => {
     function openChat() {
         chatWindow.classList.remove('hidden');
         chatWindow.classList.add('flex');
-        // Animation trigger
+        
+        // Let display register then trigger transition
         setTimeout(() => {
             chatWindow.style.opacity = '1';
-            chatWindow.style.transform = 'scale(1)';
+            chatWindow.style.transform = 'scale(1) translateY(0)';
         }, 10);
         
         chatIconOpen.classList.add('hidden');
         chatIconClose.classList.remove('hidden');
+        
+        // Pulse animation toggle on button
+        toggleBtn.style.borderColor = 'rgba(207, 90, 168, 0.4)';
+        
         chatInput.focus();
     }
 
     function closeChat() {
         chatWindow.style.opacity = '0';
-        chatWindow.style.transform = 'scale(0.95)';
+        chatWindow.style.transform = 'scale(0.92) translateY(15px)';
         
-        // Wait for animation to finish
+        // Wait for transition to finish
         setTimeout(() => {
             chatWindow.classList.add('hidden');
             chatWindow.classList.remove('flex');
@@ -175,12 +435,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         chatIconOpen.classList.remove('hidden');
         chatIconClose.classList.add('hidden');
+        
+        toggleBtn.style.borderColor = 'rgba(255, 255, 255, 0.08)';
     }
 
-    // Initialize initial styles for transition
-    chatWindow.style.transition = 'opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)';
+    // Initialize styling transition properties
+    chatWindow.style.transition = 'opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1)';
     chatWindow.style.opacity = '0';
-    chatWindow.style.transform = 'scale(0.95)';
+    chatWindow.style.transform = 'scale(0.92) translateY(15px)';
 
     // Handle form submit
     chatForm.addEventListener('submit', async (e) => {
@@ -215,7 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok && data.reply) {
                 appendMessage(data.reply, 'assistant');
             } else {
-                appendMessage(data.error || 'Oops, something went wrong. Please try again.', 'system');
+                appendMessage(data.error || 'Oops, Lorenzo had an issue processing that. Please try again.', 'system');
             }
         } catch (error) {
             console.error('Chat error:', error);
@@ -226,21 +488,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function appendMessage(text, sender) {
         const messageDiv = document.createElement('div');
-        messageDiv.classList.add('flex', 'gap-2', 'max-w-[85%]', 'fade-in-message');
+        messageDiv.className = 'chat-message-row fade-in-message';
 
         if (sender === 'user') {
             messageDiv.classList.add('ml-auto', 'justify-end');
             messageDiv.innerHTML = `
-                <div class="text-white text-xs py-2.5 px-3.5 rounded-2xl rounded-tr-none leading-relaxed break-words" style="background: #cf5aa8;">
+                <div class="chat-bubble chat-bubble-user">
                     ${escapeHtml(text)}
                 </div>
             `;
         } else if (sender === 'assistant') {
             messageDiv.innerHTML = `
-                <div class="flex-shrink-0 w-6 h-6 rounded-full bg-zinc-800 text-zinc-300 flex items-center justify-center text-[9px] font-bold">
-                    ODDS
+                <div class="chat-message-avatar">
+                    <svg width="12" height="12" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-zinc-300">
+                        <path d="M11.3567 12.2224C11.376 12.4818 11.5355 12.7099 11.7726 12.817L19.6574 16.378C20.1484 16.5998 20.6978 16.2154 20.6579 15.6782L20.2762 10.5463C20.2569 10.287 20.0974 10.0589 19.8603 9.95181L11.9755 6.39075C11.4845 6.169 10.9351 6.55335 10.975 7.09063L11.3567 12.2224Z" fill="currentColor"/>
+                        <path d="M10.8914 13.253C11.0988 13.096 11.3754 13.0649 11.6124 13.172L19.4972 16.733C19.9882 16.9548 20.0631 17.6211 19.6336 17.9463L15.5312 21.053C15.3239 21.21 15.0472 21.2411 14.8102 21.1341L6.92539 17.573C6.43438 17.3512 6.35946 16.6849 6.78897 16.3597L10.8914 13.253Z" fill="currentColor"/>
+                        <path d="M27.9087 13.9543C27.9087 21.6611 21.6611 27.9087 13.9543 27.9087C6.24757 27.9087 0 21.6611 0 13.9543C0 6.24757 6.24757 0 13.9543 0C21.6611 0 27.9087 6.24757 27.9087 13.9543ZM2.99795 13.9543C2.99795 20.0054 7.90329 24.9107 13.9543 24.9107C20.0054 24.9107 24.9107 20.0054 24.9107 13.9543C24.9107 7.90329 20.0054 2.99795 13.9543 2.99795C7.90329 2.99795 2.99795 7.90329 2.99795 13.9543Z" fill="currentColor"/>
+                    </svg>
                 </div>
-                <div class="bg-zinc-800/80 text-zinc-100 text-xs py-2.5 px-3.5 rounded-2xl rounded-tl-none border border-[#ffffff05] leading-relaxed break-words">
+                <div class="chat-bubble chat-bubble-assistant">
                     ${formatResponse(text)}
                 </div>
             `;
@@ -248,13 +514,13 @@ document.addEventListener('DOMContentLoaded', () => {
             // System or error messages
             messageDiv.classList.add('mx-auto');
             messageDiv.innerHTML = `
-                <div class="bg-red-950/40 text-red-300 text-[11px] py-1.5 px-3 rounded-lg border border-red-900/30 text-center">
+                <div class="bg-red-950/40 text-red-300 text-xs py-2 px-4 rounded-lg border border-red-900/30 text-center font-semibold">
                     ${escapeHtml(text)}
                 </div>
             `;
         }
 
-        chatMessages.appendChild(messageDiv);
+        chatMessages.insertBefore(messageDiv, typingIndicator);
         
         // Auto scroll to bottom
         chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -281,14 +547,47 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function formatResponse(text) {
-        // Convert simple markdown-like elements (bold, lists, links) to HTML safely
+        // Convert simple markdown-like elements safely
         let html = escapeHtml(text);
         
         // Replace bold **text**
+        html = html.replace(/\*\/(.*?)\*\//g, '<strong>$1</strong>');
         html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         
-        // Replace newlines with <br>
-        html = html.replace(/\n/g, '<br>');
+        // Replace bullet lists: lines starting with "- " or "* "
+        const lines = html.split('\n');
+        let inList = false;
+        const processedLines = lines.map(line => {
+            const listMatch = line.match(/^(\s*)[-*]\s+(.*)$/);
+            if (listMatch) {
+                let content = listMatch[2];
+                let prefix = '';
+                if (!inList) {
+                    prefix = '<ul class="list-disc ml-4 my-1">';
+                    inList = true;
+                }
+                return prefix + '<li>' + content + '</li>';
+            } else {
+                let prefix = '';
+                if (inList) {
+                    prefix = '</ul>';
+                    inList = false;
+                }
+                return prefix + line;
+            }
+        });
+        
+        if (inList) {
+            processedLines.push('</ul>');
+        }
+        
+        html = processedLines.join('\n');
+        
+        // Replace newlines outside lists with <br>
+        html = html.replace(/([^>])\n([^<])/g, '$1<br>$2');
+        html = html.replace(/<\/ul>\n/g, '</ul>');
+        html = html.replace(/<\/li>\n/g, '</li>');
+        html = html.replace(/<li>\n/g, '<li>');
 
         return html;
     }
