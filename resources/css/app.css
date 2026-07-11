@@ -393,6 +393,7 @@ html, body {
     flex-direction: row !important;
     flex-wrap: nowrap !important;
     flex-shrink: 0 !important;
+    width: max-content !important;
     gap: 20px !important;
     padding-right: 20px !important;
 }
