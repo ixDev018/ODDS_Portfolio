@@ -11,7 +11,7 @@ $services = [
 @endphp
 
 <section class="services" id="services">
-    <div class="sec-inner">
+    <div class="sec-inner services-header">
         <p class="sec-label fade-up">Services</p>
         <h2 class="services-title fade-up">We are a <strong>COMPLETE PACKAGE</strong></h2>
     </div>
@@ -25,7 +25,7 @@ $services = [
         @endforeach
     </div>
 
-    <div class="sec-inner">
+    <div class="sec-inner services-footer">
         <p class="services-desc fade-up">
             Business problems aren't solved by generic templates. Whether you need a standalone
             service or a fully integrated package, we engineer the exact solution your operations demand.
