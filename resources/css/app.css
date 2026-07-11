@@ -10,6 +10,9 @@
    ============================================= */
 :root {
     --font-primary: 'Plus Jakarta Sans', sans-serif;
+    --glow-color-inner: #FFFFFF;
+    --glow-color-mid: #F359B0;
+    --glow-color-outer: #D7018F;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -39,13 +42,17 @@ html, body {
     top: 0; left: 0; right: 0;
     z-index: 100;
     padding: 35px 0 18px; /* 35px top from design */
-    transition: background 0.3s, backdrop-filter 0.3s, padding 0.3s;
+    color: #fff;
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition: color 0.3s ease, border-color 0.3s ease, padding 0.3s ease;
 }
 .navbar.scrolled {
     padding: 18px 0; /* Shrink padding on scroll */
-    background: rgba(5, 5, 5, 0.82);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    background: var(--nav-bg, rgba(14, 14, 14, 0.65));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--nav-border, rgba(255, 255, 255, 0.08));
 }
 .nav-inner {
     max-width: 1440px;
@@ -59,8 +66,10 @@ html, body {
 .nav-logo {
     font-size: 22px;
     font-weight: 800;
-    color: #fff;
+    color: inherit;
     letter-spacing: -0.03em;
+    display: flex;
+    align-items: center;
 }
 .nav-links {
     display: flex;
@@ -71,7 +80,7 @@ html, body {
     font-size: 14px;
     font-weight: 500;
     color: rgba(255,255,255,0.8);
-    transition: color 0.2s;
+    transition: color 0.3s ease;
 }
 .nav-links a:hover { color: #fff; }
 .btn-nav {
@@ -85,7 +94,7 @@ html, body {
     font-family: inherit;
     border: none;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s, transform 0.2s;
+    transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -93,56 +102,103 @@ html, body {
 .btn-nav:hover { background: #f359b0; color: #fff; transform: translateY(-1px); }
 
 /* =============================================
+   NAVBAR LIGHT THEME
+   ============================================= */
+.navbar.light-theme {
+    color: #111;
+}
+.navbar.light-theme .nav-links a {
+    color: rgba(17, 17, 17, 0.7);
+}
+.navbar.light-theme .nav-links a:hover {
+    color: #111;
+}
+.navbar.light-theme .btn-nav {
+    background: #111;
+    color: #fff;
+}
+.navbar.light-theme .btn-nav:hover {
+    background: #f359b0;
+    color: #fff;
+}
+
+/* =============================================
+   HERO / SERVICES SHARED WRAPPER
+   ============================================= */
+.hero-services-wrapper {
+    position: relative;
+    background: #0e0e0e;
+    overflow: hidden;
+    width: 100%;
+    height: 100vh;
+}
+.services-bg-color {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(160deg, #875af5 0%, #6340df 100%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* =============================================
    HERO
    ============================================= */
 .hero {
     width: 100%;
-    min-height: 100vh;
-    background: #0e0e0e;
-    position: relative;
+    height: 100vh;
+    background: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    overflow: visible;
     text-align: center;
     padding: 120px 48px 80px;
+    z-index: 4;
 }
 /* Left Pink Orb */
-.hero-glow-left {
+.shared-glow-left {
     position: absolute;
     width: 835px;
     height: 505px;
     left: -580px; /* Anchor to left edge */
-    top: 50%;
+    top: 50vh;
     margin-top: -252px;
     filter: blur(150px);
     transform: rotate(9.47deg);
     background: radial-gradient(ellipse at center, 
-        #FFFFFF 0%, #FFFFFF 20%, 
-        #F359B0 20.1%, #F359B0 55%, 
-        #D7018F 55.1%, #D7018F 100%
+        var(--glow-color-inner) 0%, var(--glow-color-inner) 20%, 
+        var(--glow-color-mid) 20.1%, var(--glow-color-mid) 55%, 
+        var(--glow-color-outer) 55.1%, var(--glow-color-outer) 100%
     );
     border-radius: 50%;
     pointer-events: none;
+    z-index: 3;
 }
 /* Right Pink Orb */
-.hero-glow-right {
+.shared-glow-right {
     position: absolute;
     width: 835px;
     height: 505px;
     right: -548px; /* Anchor to right edge */
-    top: 50%;
+    top: 50vh;
     margin-top: -252px;
     filter: blur(150px);
     transform: rotate(-6.65deg);
     background: radial-gradient(ellipse at center, 
-        #FFFFFF 0%, #FFFFFF 20%, 
-        #F359B0 20.1%, #F359B0 55%, 
-        #D7018F 55.1%, #D7018F 100%
+        var(--glow-color-inner) 0%, var(--glow-color-inner) 20%, 
+        var(--glow-color-mid) 20.1%, var(--glow-color-mid) 55%, 
+        var(--glow-color-outer) 55.1%, var(--glow-color-outer) 100%
     );
     border-radius: 50%;
     pointer-events: none;
+    z-index: 3;
 }
 .hero-content {
     position: relative;
@@ -194,14 +250,47 @@ html, body {
    SERVICES
    ============================================= */
 .services {
-    background: linear-gradient(160deg, #875af5 0%, #6340df 100%);
+    background: transparent;
     padding: 72px 0 60px;
     overflow: hidden;
-    position: relative;
-    min-height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    z-index: 3;
+}
+.services-transition-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    z-index: 2;
+    pointer-events: none;
+}
+.trans-col {
+    flex: 1;
+    height: 100%;
+    background: #0e0e0e;
+    pointer-events: none;
+}
+.trans-col:nth-child(even) {
+    transform-origin: top;
+}
+.trans-col:nth-child(odd) {
+    transform-origin: bottom;
+}
+.services .sec-inner, 
+.services .services-cards {
+    position: relative;
+    z-index: 2;
+    opacity: 0;
 }
 .sec-inner {
     max-width: 1440px;
@@ -682,14 +771,14 @@ html, body {
     .hero { padding: 100px 24px 60px; }
     .sec-inner { padding: 0 20px; }
     .footer-inner { padding: 0 20px; }
-    .hero-glow-left {
+    .shared-glow-left {
         width: 400px;
         height: 240px;
         left: -300px;
         margin-top: -120px;
         filter: blur(80px);
     }
-    .hero-glow-right {
+    .shared-glow-right {
         width: 400px;
         height: 240px;
         right: -300px;
