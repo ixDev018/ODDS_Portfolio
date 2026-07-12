@@ -194,7 +194,7 @@ html, body {
    SERVICES
    ============================================= */
 .services {
-    background: linear-gradient(160deg, #875af5 0%, #6340df 100%);
+    background: #976CFF;
     padding: 72px 0 60px;
     overflow: hidden;
     position: relative;
@@ -202,6 +202,47 @@ html, body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+.services-glow-left {
+    position: absolute;
+    width: 900px;
+    height: 600px;
+    left: -550px; /* Anchor to left edge */
+    top: 50%;
+    margin-top: -300px;
+    filter: blur(130px);
+    transform: rotate(9.47deg);
+    background: radial-gradient(ellipse at center, 
+        #FFFFFF 0%, #FFFFFF 15%, 
+        #976CFF 15.1%, #976CFF 35%, 
+        #2D16B1 35.1%, #2D16B1 100%
+    );
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+}
+.services-glow-right {
+    position: absolute;
+    width: 900px;
+    height: 600px;
+    right: -520px; /* Anchor to right edge */
+    top: 50%;
+    margin-top: -300px;
+    filter: blur(130px);
+    transform: rotate(-6.65deg);
+    background: radial-gradient(ellipse at center, 
+        #FFFFFF 0%, #FFFFFF 15%, 
+        #976CFF 15.1%, #976CFF 35%, 
+        #2D16B1 35.1%, #2D16B1 100%
+    );
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+}
+.services .sec-inner,
+.services-cards {
+    position: relative;
+    z-index: 2;
 }
 .sec-inner {
     max-width: 1440px;
@@ -231,13 +272,11 @@ html, body {
 }
 /* Horizontal scrolling cards row */
 .services-cards {
-    display: flex;
-    gap: 16px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    margin-bottom: 36px;
-    padding-bottom: 8px;
+    overflow: hidden;
+    margin-top: -25px;
+    margin-bottom: -40px;
+    padding-top: 45px;
+    padding-bottom: 70px;
     /* bleed from sec-inner constraint */
     width: 100vw;
     position: relative;
@@ -245,30 +284,71 @@ html, body {
     right: 50%;
     margin-left: -50vw;
     margin-right: -50vw;
-    padding-left: clamp(20px, 5.5vw, 80px);
-    padding-right: clamp(20px, 5.5vw, 80px);
 }
 .services-cards::-webkit-scrollbar { display: none; }
+
+.services-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 25s linear infinite;
+}
+
+.services-track:hover {
+    animation-play-state: paused;
+}
+
+.services-group {
+    display: flex;
+    gap: 20px;
+    padding-right: 20px;
+}
+
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
 .svc-card {
-    flex: 0 0 240px;
+    flex: 0 0 312px;
+    height: 312px;
     background: #ffffff;
-    border: none;
-    border-radius: 12px;
+    border: 2px solid transparent;
+    border-radius: 20px;
     padding: 32px 24px 28px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
+    justify-content: center;
+    gap: 20px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    transition: transform 0.25s, box-shadow 0.25s;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s, opacity 0.3s, border-color 0.3s;
+    cursor: pointer;
 }
-.svc-card:hover {
-    transform: translateY(-4px);
+
+/* Hover Selection States */
+.services-track:hover .svc-card {
+    opacity: 0.6;
+    transform: scale(0.9);
+}
+.services-track:hover .svc-card:hover {
+    opacity: 1;
+    transform: scale(1.05) translateY(-4px);
     box-shadow: 0 16px 40px rgba(0,0,0,0.15);
 }
+
+/* Active Click Selection States */
+.services-track.has-selected .svc-card {
+    opacity: 0.5;
+    transform: scale(0.85);
+}
+.services-track.has-selected .svc-card.selected {
+    opacity: 1;
+    transform: scale(1.06);
+    border-color: #f359b0;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+}
 .svc-icon {
-    width: 64px;
-    height: 64px;
+    width: 83px;
+    height: 83px;
     border: none;
     display: flex;
     align-items: center;
@@ -276,13 +356,13 @@ html, body {
     background: transparent;
 }
 .svc-icon svg {
-    width: 64px;
-    height: 64px;
+    width: 83px;
+    height: 83px;
     opacity: 1;
     stroke: #d1d5db;
 }
 .svc-card-name {
-    font-size: 16px;
+    font-size: 21px;
     font-weight: 800;
     color: #111;
 
@@ -294,7 +374,7 @@ html, body {
     margin-top: 16px;
 }
 .services-desc {
-    font-size: 15px;
+    font-size: 16.5px;
     color: rgba(255,255,255,0.9);
     line-height: 1.75;
     max-width: 820px;
@@ -702,6 +782,20 @@ html, body {
         filter: blur(80px);
     }
     .hero-glow-right {
+        width: 400px;
+        height: 240px;
+        right: -300px;
+        margin-top: -120px;
+        filter: blur(80px);
+    }
+    .services-glow-left {
+        width: 400px;
+        height: 240px;
+        left: -300px;
+        margin-top: -120px;
+        filter: blur(80px);
+    }
+    .services-glow-right {
         width: 400px;
         height: 240px;
         right: -300px;

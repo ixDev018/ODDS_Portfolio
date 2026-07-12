@@ -73,6 +73,38 @@ if (track) {
     });
 }
 
+// ─── Service card selection ──────────────────────────
+document.querySelectorAll('.svc-card').forEach(card => {
+    card.addEventListener('click', () => {
+        const track = card.closest('.services-track');
+        if (!track) return;
+        
+        const isSelected = card.classList.contains('selected');
+        
+        // Clear selection from all cards first
+        document.querySelectorAll('.svc-card').forEach(c => c.classList.remove('selected'));
+        
+        if (isSelected) {
+            track.classList.remove('has-selected');
+        } else {
+            // Select all instances of this card (including duplicate marquee instances)
+            const nameEl = card.querySelector('.svc-card-name');
+            if (nameEl) {
+                const serviceName = nameEl.textContent.trim();
+                document.querySelectorAll('.svc-card').forEach(c => {
+                    const cNameEl = c.querySelector('.svc-card-name');
+                    if (cNameEl && cNameEl.textContent.trim() === serviceName) {
+                        c.classList.add('selected');
+                    }
+                });
+            } else {
+                card.classList.add('selected');
+            }
+            track.classList.add('has-selected');
+        }
+    });
+});
+
 // ─── Auto-hide custom scrollbar ───────────────────────
 let scrollTimeout;
 window.addEventListener('scroll', () => {
