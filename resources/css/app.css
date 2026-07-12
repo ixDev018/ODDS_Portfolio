@@ -421,6 +421,10 @@ html, body {
     background: #f359b0;
     padding: 72px 0 64px;
     overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 .testi-header {
     display: grid;
@@ -517,6 +521,10 @@ html, body {
 .why {
     background: #efefef;
     padding: 72px 0 64px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 .why-center { text-align: center; margin-bottom: 48px; }
 .why-title {
@@ -597,6 +605,10 @@ html, body {
     padding: 80px 0 88px;
     position: relative;
     overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 /* Large play icon background */
 .cta-bg-play {
