@@ -100,14 +100,18 @@
             </div>
 
             <p class="works-desc fade-up">
-                Real-world solutions, custom-engineered for rapid deployment and measurable business impact.
+                Real-world solutions, custom-engineered for rapid deployment<br>
+                and measurable business impact.
             </p>
 
             <div class="works-grid">
                 @foreach($works as $client)
                 <div class="work-card scale-in">
-                    <div class="work-img">{!! $imgSvg !!}</div>
-                    <div class="work-label">{{ $client }}</div>
+                    <div class="work-card-tab"></div>
+                    <div class="work-card-body">
+                        <div class="work-img">{!! $imgSvg !!}</div>
+                    </div>
+                    <span class="work-label">{{ $client }}</span>
                 </div>
                 @endforeach
             </div>

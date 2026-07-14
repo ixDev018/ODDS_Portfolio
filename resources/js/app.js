@@ -47,7 +47,9 @@ document.querySelectorAll('[data-target]').forEach((el) => {
             const obj = { val: 0 };
             gsap.to(obj, {
                 val: target, duration: 1.8, ease: 'power2.out',
-                onUpdate() { el.textContent = Math.round(obj.val) + suffix; },
+                onUpdate() {
+                    el.innerHTML = Math.round(obj.val) + (suffix ? `<span class="stat-suffix">${suffix}</span>` : '');
+                },
             });
         },
     });

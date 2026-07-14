@@ -385,18 +385,22 @@ html, body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 14px 32px;
-    background: #1a1a1a;
-    color: #fff;
+    padding: 14px 38px;         /* slightly adjusted padding for borderless button */
+    background: #fff;
+    color: #000;
     font-size: 15px;
     font-weight: 700;
     font-family: inherit;
     border-radius: 100px;
-    border: none;
+    border: none;               /* border outline removed */
     cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
+    transition: background 0.25s, color 0.25s, transform 0.2s;
 }
-.btn-dark:hover { background: #000; transform: translateY(-1px); }
+.btn-dark:hover { 
+    background: #f359b0; 
+    color: #fff;
+    transform: translateY(-1px); 
+}
 
 /* =============================================
    OUR WORKS
@@ -406,93 +410,163 @@ html, body {
     padding: 72px 0 64px;
 }
 .works-label {
-    font-size: 14px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 26px;
     font-weight: 700;
     letter-spacing: 0.02em;
-    color: #444;
+    color: #888;
     margin-bottom: 10px;
+    text-align: center;
 }
 .works-title {
-    font-size: clamp(32px, 4.5vw, 62px);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 65.7px;
     font-weight: 700;
     color: #111;
     line-height: 1.1;
-    letter-spacing: -0.02em;
-    margin-bottom: 32px;
+    letter-spacing: -0.03em;
+    margin-bottom: 40px;
+    text-align: center;
 }
 .works-stats {
     display: flex;
-    gap: 56px;
-    align-items: flex-end;
-    margin-bottom: 12px;
+    justify-content: center;
+    align-items: center;
+    margin: 40px auto 32px;
+    max-width: 1080px;
+    width: 100%;
+}
+.works-stats > div {
+    flex: 1;
+    text-align: center;
+    padding: 24px 20px;
+    border-left: 1px solid rgba(0, 0, 0, 0.18);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.works-stats > div:last-child {
+    border-right: 1px solid rgba(0, 0, 0, 0.18);
 }
 .stat-num {
-    font-size: clamp(36px, 5vw, 56px);
-    font-weight: 800;
-    color: #111;
+    font-family: 'Rokkitt', serif;
+    font-size: 77.67px;
+    font-weight: 700;
+    color: #000;
     line-height: 1;
+    letter-spacing: -0.03em;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+}
+.stat-num .stat-suffix {
+    font-size: 0.55em;
+    font-weight: 700;
+    margin-left: 2px;
 }
 .stat-lbl {
-    font-size: 12px;
-    color: #666;
-    font-weight: 500;
-    margin-top: 4px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 22.6px;
+    color: #000;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-top: 12px;
+    text-align: center;
 }
 .works-desc {
-    font-size: 15px;
-    color: #555;
-    line-height: 1.75;
-    max-width: 620px;
-    margin: 20px 0 36px;
+    font-size: 16px;
+    color: #444;
+    line-height: 1.65;
+    max-width: 680px;
+    margin: 36px auto 44px;
+    text-align: center;
 }
 .works-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    gap: 28px 8px;              /* even tighter column gap to bring folders closer */
     margin-bottom: 32px;
+    padding-top: 22px;          /* space above first row for floating labels */
+    overflow: visible;
 }
+/* ── FOLDER CARD WRAPPER ── */
 .work-card {
-    background: #fff;
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid rgba(0,0,0,0.08);
     position: relative;
-    transition: transform 0.25s, box-shadow 0.25s;
+    padding-top: 30px;
     cursor: pointer;
+    transition: transform 0.3s ease;
+    max-width: 380px;            /* expanded folder width */
+    margin: 0 auto;             /* centers it in its grid cell */
+    width: 100%;
 }
-.work-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+.work-card:hover { transform: translateY(-4px); }
+.work-card:hover .work-card-body {
+    box-shadow: 0 16px 40px rgba(0,0,0,0.14);
 }
+
+/* ── FOLDER TAB — left side ── */
+.work-card-tab {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 58%;                 /* tab covers the left ~42% */
+    height: 33px;
+    background: #d0d0d0;
+    border: 1.5px solid rgba(0,0,0,0.18);
+    border-bottom: none;
+    border-radius: 12px 12px 12px 0;
+    z-index: 2;
+}
+
+/* ── FOLDER BODY ── */
+.work-card-body {
+    background: #d0d0d0;
+    border: 1.5px solid rgba(0,0,0,0.18);
+    border-radius: 0 16px 16px 16px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    transition: box-shadow 0.3s ease;
+}
+
 .work-img {
     width: 100%;
-    aspect-ratio: 16 / 11;
+    aspect-ratio: 16 / 7.6;
     background: #d0d0d0;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 .work-img svg {
-    width: 40px;
-    height: 40px;
-    opacity: 0.25;
+    width: 48px;
+    height: 48px;
+    opacity: 0.22;
 }
+
+/* ── PROJECT NAME LABEL — pill floating above the folder, right-aligned ── */
 .work-label {
     position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
+    top: -2px;
+    left: 44.5%;          /* stretches the left edge to the tab crease at the new width */
+    right: 10px;        /* keeps the right edge in its exact position */
     background: #111;
     color: #fff;
     font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.06em;
-    padding: 3px 10px;
+    letter-spacing: 0.08em;
+    padding: 5px 0;     /* no horizontal padding needed as it's stretched by left/right */
     border-radius: 100px;
-    white-space: nowrap;
     text-transform: uppercase;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* keep text centered inside the expanded pill */
+    z-index: 3;
 }
+
 .works-cta { text-align: center; }
+
 
 /* =============================================
    TESTIMONIALS
@@ -770,7 +844,20 @@ html, body {
     .nav-links { display: none; }
     .works-grid { grid-template-columns: 1fr; }
     .why-grid   { grid-template-columns: 1fr; }
-    .works-stats { gap: 24px; }
+    .works-stats {
+        flex-direction: column;
+        gap: 0;
+    }
+    .works-stats > div {
+        border-left: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+        padding: 20px 0;
+        width: 100%;
+    }
+    .works-stats > div:last-child {
+        border-right: none;
+        border-bottom: none;
+    }
     .hero { padding: 100px 24px 60px; }
     .sec-inner { padding: 0 20px; }
     .footer-inner { padding: 0 20px; }
