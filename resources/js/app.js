@@ -20,143 +20,94 @@ gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.9 } })
     .to('#hero-p',   { opacity: 1, y: 0 }, '-=0.55')
     .to('#hero-btn', { opacity: 1, y: 0 }, '-=0.5');
 
-// ─── Hero-to-Services Pinned Transition ──────────
+// ─── Hero → Services Pinned Transition ──────────
 if (document.querySelector('.hero-services-wrapper') && document.querySelector('.trans-col')) {
     // Hide services content initially so it doesn't overlap the Hero section
-    gsap.set(['.services .sec-inner', '.services .services-cards'], {
-        opacity: 0,
-        y: 40
-    });
+    gsap.set(['.services .sec-inner', '.services .services-cards'], { opacity: 0, y: 40 });
 
     let currentState = 0; // 0 = Hero, 1 = Services
     let isTransitioning = false;
     let isReady = false;
-    const transitionDuration = 1.6; // Hard-locked transition duration in seconds (slower)
+    const transitionDuration = 1.6;
 
-    // Fixed-duration transition timeline (total duration maps to 1.0s)
-    const transitionTimeline = gsap.timeline({
-        paused: true
-    });
+    const transitionTimeline = gsap.timeline({ paused: true });
 
     // Set initial pointer-events state for services
     gsap.set('.services', { pointerEvents: 'none' });
 
     // 1. Fade out Hero content first (from 0 to 0.25)
     transitionTimeline.to('.hero-content', {
-        opacity: 0,
-        y: -40,
-        duration: 0.25,
-        ease: 'power2.inOut'
+        opacity: 0, y: -40, duration: 0.25, ease: 'power2.inOut'
     }, 0);
 
-    // Disable pointer events and hide hero section so it doesn't block the Services section underneath
+    // Disable pointer events and hide hero section
     transitionTimeline.to('.hero', {
-        pointerEvents: 'none',
-        visibility: 'hidden',
-        duration: 0.1
+        pointerEvents: 'none', visibility: 'hidden', duration: 0.1
     }, 0.2);
 
     // Enable pointer events on the services section once revealed
     transitionTimeline.to('.services', {
-        pointerEvents: 'auto',
-        duration: 0.1
+        pointerEvents: 'auto', duration: 0.1
     }, 0.65);
 
-    // 2. Collapse the transition overlay columns (vertical strips wipe, sweeping horizontally)
+    // 2. Collapse the transition overlay columns
     transitionTimeline.to('.trans-col', {
-        scaleY: 0,
-        duration: 0.45,
-        ease: 'power2.inOut',
-        stagger: {
-            each: 0.02,
-            from: 'start'
-        }
+        scaleY: 0, duration: 0.45, ease: 'power2.inOut',
+        stagger: { each: 0.02, from: 'start' }
     }, 0.2);
 
-    // 3. Morph glow colors in sync (from 0.2 to 0.6)
+    // 3. Morph glow colors in sync
     transitionTimeline.to(':root', {
         '--glow-color-inner': '#0d0d0d',
         '--glow-color-mid': '#060606',
         '--glow-color-outer': '#000000',
-        duration: 0.4,
-        ease: 'power2.inOut'
+        duration: 0.4, ease: 'power2.inOut'
     }, 0.2);
 
-    // 3b. Transition navbar background from Hero glass to Services purple glass (from 0.2 to 0.6)
+    // 3b. Transition navbar background
     if (navbar) {
-        transitionTimeline.fromTo(navbar, 
-            { 
-                '--nav-bg': 'rgba(14, 14, 14, 0.65)',
-                '--nav-border': 'rgba(255, 255, 255, 0.08)'
-            },
-            {
-                '--nav-bg': 'rgba(135, 90, 245, 0.65)',
-                '--nav-border': 'rgba(255, 255, 255, 0.08)',
-                duration: 0.4,
-                ease: 'power2.inOut'
-            }, 
+        transitionTimeline.fromTo(navbar,
+            { '--nav-bg': 'rgba(14, 14, 14, 0.65)', '--nav-border': 'rgba(255, 255, 255, 0.08)' },
+            { '--nav-bg': 'rgba(135, 90, 245, 0.65)', '--nav-border': 'rgba(255, 255, 255, 0.08)', duration: 0.4, ease: 'power2.inOut' },
             0.2
         );
     }
 
-    // 4. Fade in and slide up Services content as the wipe clears (from 0.65 to 1.0)
+    // 4. Fade in and slide up Services content
     transitionTimeline.to(['.services .sec-inner', '.services .services-cards'], {
-        opacity: 1,
-        y: 0,
-        duration: 0.35,
-        ease: 'power2.out',
-        stagger: 0.08
+        opacity: 1, y: 0, duration: 0.35, ease: 'power2.out', stagger: 0.08
     }, 0.65);
 
-    // Scroll prevention helper functions
-    function preventScroll(e) {
-        e.preventDefault();
-    }
-
-    const scrollKeys = { 32: 1, 33: 1, 34: 1, 35: 1, 36: 1, 37: 1, 38: 1, 39: 1, 40: 1 };
-    function preventDefaultScrollKeys(e) {
-        if (scrollKeys[e.keyCode]) {
-            e.preventDefault();
-            return false;
-        }
-    }
-
+    // ── Scroll prevention helpers ──
+    function preventScroll(e) { e.preventDefault(); }
+    const scrollKeys = { 32:1, 33:1, 34:1, 35:1, 36:1, 37:1, 38:1, 39:1, 40:1 };
+    function preventDefaultScrollKeys(e) { if (scrollKeys[e.keyCode]) { e.preventDefault(); return false; } }
     function disableScroll() {
         window.addEventListener('wheel', preventScroll, { passive: false });
         window.addEventListener('touchmove', preventScroll, { passive: false });
         window.addEventListener('keydown', preventDefaultScrollKeys, { passive: false });
     }
-
     function enableScroll() {
         window.removeEventListener('wheel', preventScroll);
         window.removeEventListener('touchmove', preventScroll);
         window.removeEventListener('keydown', preventDefaultScrollKeys);
     }
 
-    // Main event-driven transition trigger
     function triggerTransition(targetState) {
         if (isTransitioning || !isReady) return;
         isTransitioning = true;
         disableScroll();
 
         const targetScroll = targetState === 1 ? mainPin.end : mainPin.start;
-
-        // Animate the scroll position programmatically
         const scrollObj = { y: window.scrollY };
+
         gsap.to(scrollObj, {
-            y: targetScroll,
-            duration: transitionDuration,
-            ease: 'power2.inOut',
-            onUpdate: () => {
-                window.scrollTo(0, scrollObj.y);
-            }
+            y: targetScroll, duration: transitionDuration, ease: 'power2.inOut',
+            onUpdate: () => { window.scrollTo(0, scrollObj.y); }
         });
 
-        // Play/reverse the transition timeline smoothly at the fixed duration
         gsap.to(transitionTimeline, {
-            progress: targetState,
-            duration: transitionDuration,
-            ease: 'power2.inOut',
+            progress: targetState, duration: transitionDuration, ease: 'power2.inOut',
             onComplete: () => {
                 currentState = targetState;
                 isTransitioning = false;
@@ -165,7 +116,6 @@ if (document.querySelector('.hero-services-wrapper') && document.querySelector('
         });
     }
 
-    // ScrollTrigger to pin the section and capture scroll direction/progress
     const mainPin = ScrollTrigger.create({
         trigger: '.hero-services-wrapper',
         start: 'top top',
@@ -173,18 +123,12 @@ if (document.querySelector('.hero-services-wrapper') && document.querySelector('
         pin: true,
         pinSpacing: true,
         onRefresh: (self) => {
-            // Correctly set initial state on load/refresh (handles scroll restoration)
             currentState = self.progress >= 0.5 ? 1 : 0;
             transitionTimeline.progress(currentState);
-            // Allow transitions after initial layout calculations
-            setTimeout(() => {
-                isReady = true;
-            }, 100);
+            setTimeout(() => { isReady = true; }, 100);
         },
         onUpdate: (self) => {
             if (isTransitioning || !isReady) return;
-
-            // Trigger transitions based on scroll direction and progress
             if (self.direction === 1 && self.progress > 0.01 && currentState === 0) {
                 triggerTransition(1);
             } else if (self.direction === -1 && self.progress < 0.99 && currentState === 1) {
@@ -193,51 +137,30 @@ if (document.querySelector('.hero-services-wrapper') && document.querySelector('
         }
     });
 
-    // Anchor links smooth navigation and transition synchronization
+    // Anchor links
     document.querySelectorAll('a[href^="#"]').forEach(link => {
         link.addEventListener('click', (e) => {
             const targetId = link.getAttribute('href');
             if (!targetId) return;
 
-            // Handle return to home/hero
             if (targetId === '#' || targetId === '#hero') {
                 e.preventDefault();
                 isReady = false;
                 disableScroll();
-
                 const scrollObj = { y: window.scrollY };
-                gsap.to(transitionTimeline, {
-                    progress: 0,
-                    duration: transitionDuration,
-                    ease: 'power2.inOut',
-                    onComplete: () => {
-                        currentState = 0;
-                    }
-                });
-
-                gsap.to(scrollObj, {
-                    y: 0,
-                    duration: transitionDuration,
-                    ease: 'power2.inOut',
-                    onUpdate: () => window.scrollTo(0, scrollObj.y),
-                    onComplete: () => {
-                        isReady = true;
-                        enableScroll();
-                    }
-                });
+                gsap.to(transitionTimeline, { progress: 0, duration: transitionDuration, ease: 'power2.inOut', onComplete: () => { currentState = 0; } });
+                gsap.to(scrollObj, { y: 0, duration: transitionDuration, ease: 'power2.inOut', onUpdate: () => window.scrollTo(0, scrollObj.y), onComplete: () => { isReady = true; enableScroll(); } });
                 return;
             }
 
             const targetEl = document.querySelector(targetId);
             if (!targetEl) return;
-
             e.preventDefault();
             isReady = false;
             disableScroll();
 
             let targetScroll = 0;
             if (targetId === '#services') {
-                // Services is pinned; target the fully-revealed state
                 targetScroll = mainPin.end;
             } else {
                 const rect = targetEl.getBoundingClientRect();
@@ -247,26 +170,11 @@ if (document.querySelector('.hero-services-wrapper') && document.querySelector('
             const scrollObj = { y: window.scrollY };
             const targetProgress = (targetId === '#services' || targetScroll >= mainPin.end) ? 1 : 0;
 
-            gsap.to(transitionTimeline, {
-                progress: targetProgress,
-                duration: transitionDuration,
-                ease: 'power2.inOut',
-                onComplete: () => {
-                    currentState = targetProgress;
-                }
-            });
-
+            gsap.to(transitionTimeline, { progress: targetProgress, duration: transitionDuration, ease: 'power2.inOut', onComplete: () => { currentState = targetProgress; } });
             gsap.to(scrollObj, {
-                y: targetScroll,
-                duration: transitionDuration,
-                ease: 'power2.inOut',
-                onUpdate: () => {
-                    window.scrollTo(0, scrollObj.y);
-                },
-                onComplete: () => {
-                    isReady = true;
-                    enableScroll();
-                }
+                y: targetScroll, duration: transitionDuration, ease: 'power2.inOut',
+                onUpdate: () => { window.scrollTo(0, scrollObj.y); },
+                onComplete: () => { isReady = true; enableScroll(); }
             });
         });
     });
@@ -305,7 +213,7 @@ if (navbar) {
         {
             trigger: '#cta',
             colorFrom: 'rgba(239, 239, 239, 0.65)',
-            colorTo: 'rgba(26, 26, 26, 0.65)',
+            colorTo: 'rgba(0, 0, 0, 0.65)',
             borderFrom: 'rgba(0, 0, 0, 0.06)',
             borderTo: 'rgba(255, 255, 255, 0.08)',
             themeFrom: 'light',
@@ -446,3 +354,46 @@ window.addEventListener('scroll', () => {
         document.documentElement.classList.remove('is-scrolling');
     }, 800);
 }, { passive: true });
+
+// ─── Render CTA ASCII Video to Canvas ────────────────
+const ctaVideo = document.getElementById('cta-video-source');
+const ctaCanvas = document.getElementById('cta-video-canvas');
+if (ctaVideo && ctaCanvas) {
+    const ctx = ctaCanvas.getContext('2d');
+    
+    function updateDimensions() {
+        if (ctaVideo.videoWidth) {
+            ctaCanvas.width = ctaVideo.videoWidth;
+            ctaCanvas.height = ctaVideo.videoHeight;
+        }
+    }
+    
+    ctaVideo.addEventListener('loadedmetadata', updateDimensions);
+    
+    function renderFrame() {
+        if (!ctaVideo.paused && !ctaVideo.ended) {
+            ctx.clearRect(0, 0, ctaCanvas.width, ctaCanvas.height);
+            ctx.drawImage(ctaVideo, 0, 0, ctaCanvas.width, ctaCanvas.height);
+        }
+        requestAnimationFrame(renderFrame);
+    }
+    
+    ctaVideo.addEventListener('play', () => {
+        updateDimensions();
+        renderFrame();
+    });
+    
+    // Trigger playback programmatically if needed, and handle if already playing
+    if (!ctaVideo.paused) {
+        updateDimensions();
+        renderFrame();
+    } else {
+        // Attempt play
+        ctaVideo.play().then(() => {
+            updateDimensions();
+            renderFrame();
+        }).catch(() => {
+            // Browsers might block autoplay, but since it's muted it should succeed
+        });
+    }
+}
