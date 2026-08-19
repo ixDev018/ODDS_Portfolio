@@ -13,6 +13,5 @@
 <body>
     @include('components.navbar')
     <main>{{ $slot }}</main>
-    @include('components.footer')
 </body>
 </html>

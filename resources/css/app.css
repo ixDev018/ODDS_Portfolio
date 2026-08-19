@@ -10,6 +10,7 @@
    ============================================= */
 :root {
     --font-primary: 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
     --glow-color-inner: #FFFFFF;
     --glow-color-mid: #F359B0;
     --glow-color-outer: #D7018F;
@@ -972,116 +973,218 @@ html, body {
 }
 
 /* =============================================
-   CTA
-   ============================================= */
-/* =============================================
-   CTA
-   ============================================= */
-/* =============================================
-   CTA
+   CTA — Terminal Style
    ============================================= */
 .cta {
-    background: #000000;
-    padding: 0;
+    background: #eaeaea;
+    min-height: 100vh;
+    padding: calc(10vh + 20px) 0 40px;
     position: relative;
     overflow: hidden;
-    height: 75vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
 }
-.cta-inner {
+.cta-outer {
     position: relative;
     z-index: 1;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 48px;
+}
+
+/* ── Terminal Card ── */
+.cta-terminal {
+    width: 100%;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow:
+        0 8px 30px rgba(0,0,0,0.08),
+        0 32px 84px rgba(0,0,0,0.16);
+    font-family: var(--font-mono);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── macOS Title Bar ── */
+.cta-terminal-bar {
+    background: #F3F3F3;
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.dot {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.dot-red    { background: #FF5F56; border: 0.6px solid #E0443E; }
+.dot-yellow { background: #FFBD2E; border: 0.6px solid #DEA123; }
+.dot-green  { background: #27C93F; border: 0.6px solid #1AAB29; }
+
+/* ── Dark Terminal Body ── */
+.cta-terminal-body {
+    background: #000;
+    padding: 56px 72px 42px;
+}
+
+/* ── Meta info lines ── */
+.cta-meta {
+    margin-bottom: 32px;
+}
+.cta-meta-line {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 400;
+    color: #fff;
+    line-height: 1.6;
+    display: block;
+}
+.cta-meta-prompt {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 400;
+    color: #fff;
+    line-height: 1.6;
+    display: block;
+    margin-top: 3px;
+}
+
+/* ── Two-column row ── */
+.cta-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 60px;
-    width: 100%;
+    gap: 48px;
+    margin-bottom: 48px;
 }
 .cta-content {
     flex: 1;
-    max-width: 640px;
+    max-width: 660px;
 }
 .cta-visual {
-    flex: 1;
+    flex: 0 0 auto;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
+    width: 440px;
+    height: 440px;
 }
 .cta-video {
-    width: 540px;
-    height: 540px;
+    width: 440px;
+    height: 440px;
     object-fit: contain;
     pointer-events: none;
     user-select: none;
 }
-.cta-label {
-    font-size: 13px;
-    font-weight: 700;
-    color: rgba(255,255,255,0.5);
-    letter-spacing: 0.03em;
-    margin-bottom: 16px;
-}
+
+/* ── Heading ── */
 .cta-title {
-    font-size: clamp(36px, 5vw, 68px);
+    font-family: var(--font-mono);
+    font-size: clamp(36px, 4.2vw, 60px);
     font-weight: 700;
-    color: #fff;
-    line-height: 1.06;
-    letter-spacing: -0.03em;
-    margin-bottom: 20px;
-}
-.cta-desc {
-    font-size: 14px;
-    color: rgba(255,255,255,0.5);
-    line-height: 1.8;
-    max-width: 480px;
-    margin-bottom: 32px;
+    color: #DB3E94;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin-bottom: 26px;
 }
 
+/* ── Description ── */
+.cta-desc {
+    font-family: var(--font-mono);
+    font-size: 14.5px;
+    font-weight: 400;
+    color: #fff;
+    line-height: 1.75;
+    margin-bottom: 34px;
+}
+
+/* ── Button ── */
+.cta-btn {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 14.5px;
+    font-weight: 400;
+    color: #fff;
+    border: 1.2px solid #fff;
+    padding: 10px 24px;
+    border-radius: 0;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+    letter-spacing: 0;
+}
+.cta-btn:hover {
+    background: rgba(255,255,255,0.12);
+}
+
+/* ── Footer social bar ── */
+.cta-terminal-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    padding-top: 22px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 16px 40px;
+}
+.cta-terminal-footer span {
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    font-weight: 400;
+    color: #fff;
+    white-space: nowrap;
+}
+
+/* ── Responsive ── */
 @media (max-width: 1200px) {
-    .cta-video {
-        width: 460px;
-        height: 460px;
-    }
+    .cta-outer { max-width: 100%; padding: 0 32px; }
+    .cta-visual, .cta-video { width: 360px; height: 360px; }
+    .cta-terminal-body { padding: 44px 44px 32px; }
 }
 @media (max-width: 1024px) {
-    .cta-video {
-        width: 380px;
-        height: 380px;
-    }
+    .cta-outer { padding: 0 24px; }
+    .cta-terminal-body { padding: 36px 32px 28px; }
+    .cta-visual, .cta-video { width: 300px; height: 300px; }
+    .cta-title { font-size: 36px; }
+    .cta-terminal-footer { gap: 10px 20px; }
 }
 @media (max-width: 850px) {
-    .cta {
-        height: auto;
-        min-height: 75vh;
-        padding: 40px 0;
-    }
-    .cta-inner {
+    .cta { padding: 48px 0; }
+    .cta-outer { padding: 0 16px; }
+    .cta-terminal { border-radius: 14px; }
+    .cta-row {
         flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 30px;
+        align-items: flex-start;
+        gap: 32px;
+        margin-bottom: 32px;
     }
-    .cta-content {
-        max-width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .cta-desc {
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .cta-visual {
+    .cta-content { max-width: 100%; }
+    .cta-visual, .cta-video {
         justify-content: center;
         width: 100%;
+        height: auto;
+        max-width: 280px;
     }
-    .cta-video {
-        width: 300px;
-        height: 300px;
+    .cta-terminal-body { padding: 28px 20px 24px; }
+    .cta-terminal-footer {
+        gap: 8px 16px;
     }
+    .cta-terminal-footer span { font-size: 11px; }
+    .cta-meta-line,
+    .cta-meta-prompt { font-size: 12px; }
+    .cta-desc { font-size: 12px; }
 }
+
+
+
 
 /* =============================================
    FOOTER
