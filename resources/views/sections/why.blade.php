@@ -23,7 +23,7 @@ $reasons = [
         <div class="why-grid">
             @foreach($reasons as $r)
             <div class="why-card scale-in">
-                <div class="why-card-bg">{!! $imgSvgWhy !!}</div>
+                <div class="why-card-bg"><img src="{{ asset('assets/img/img_placeholder.svg') }}" alt=""></div>
                 <p class="why-card-title">{{ $r['title'] }}</p>
                 <p class="why-card-text">{{ $r['text'] }}</p>
             </div>

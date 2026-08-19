@@ -911,14 +911,20 @@ html, body {
 }
 .why-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 385px);
     gap: 16px;
+    justify-content: center;
 }
 .why-card {
     background: #fff;
     border-radius: 14px;
+     
+    width: 385px;
+    min-width: 385px;
+    height: 454px;
     padding: 36px 28px;
-    border: 1px solid rgba(0,0,0,0.06);
+    box-sizing: border-box;
+    border: 1px solid #E0E0E0;
     position: relative;
     overflow: hidden;
     transition: transform 0.25s, box-shadow 0.25s;
@@ -930,17 +936,19 @@ html, body {
 /* Large background placeholder image (the grey dashed box from Figma) */
 .why-card-bg {
     position: absolute;
-    bottom: 16px;
-    right: 16px;
-    width: 100px;
-    height: 80px;
-    border: 1.5px dashed rgba(0,0,0,0.1);
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    bottom: -60px;
+    right: -60px;
+    width: 300px;
+    height: 300px;
+    pointer-events: none;
 }
-.why-card-bg svg { width: 28px; height: 28px; opacity: 0.12; }
+.why-card-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    
+    transform: rotate(-45deg);
+}
 .why-card-label {
     font-size: 11px;
     font-weight: 700;
@@ -950,16 +958,16 @@ html, body {
     margin-bottom: 10px;
 }
 .why-card-title {
-    font-size: 18px;
+    font-size: 21.09px;
     font-weight: 700;
     color: #111;
     line-height: 1.25;
     margin-bottom: 12px;
 }
 .why-card-text {
-    font-size: 13px;
+    font-size: 14px;
     color: #777;
-    line-height: 1.7;
+    line-height: 30px;
     max-width: 240px;
 }
 
