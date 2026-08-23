@@ -6,6 +6,10 @@
     <meta name="description" content="ODDS — We build what your business needs FAST. Custom software, web, mobile, backend and game development for businesses that can't afford to wait.">
     <title>{{ $title ?? 'ODDS — We Build What Your Business Needs' }}</title>
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}">
+
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

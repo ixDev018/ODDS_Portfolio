@@ -206,7 +206,7 @@
 
     .op-thumb-container {
         width: 100%;
-        height: 170px;
+        aspect-ratio: 16 / 9;
         flex-shrink: 0;
         overflow: hidden;
         background: var(--bg-subtle);
@@ -221,10 +221,11 @@
     .op-preview-body {
         flex: 1; overflow-y: auto;
         display: flex; flex-direction: column;
-        align-items: center; text-align: center;
+        align-items: stretch; text-align: center;
+        width: 100%;
     }
     .op-meta {
-        padding: 1.25rem 1rem; width: 100%;
+        padding: 1.25rem 1rem; width: 100%; box-sizing: border-box;
         display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.85rem;
     }
     .op-meta-title {
@@ -254,18 +255,23 @@
 
     /* preview actions */
     .op-preview-actions {
-        padding: 0.75rem 1rem;
+        padding: 0.85rem 1rem;
         border-top: 1px solid var(--border-color);
-        display: flex; gap: 0.5rem;
+        display: flex; flex-direction: column; gap: 0.5rem;
         flex-shrink: 0; background: var(--bg-sidebar);
+        width: 100%; box-sizing: border-box;
+        margin-top: auto;
     }
     .op-preview-actions a, .op-preview-actions button {
-        flex: 1; display: inline-flex;
-        align-items: center; justify-content: center; gap: 0.35rem;
-        padding: 0.5rem 0.6rem; border-radius: 100px;
-        font-size: 0.75rem; font-weight: 700;
+        width: 100%; box-sizing: border-box; display: flex;
+        align-items: center; justify-content: center; gap: 0.5rem;
+        padding: 0.65rem 1rem; border-radius: 100px;
+        font-size: 0.78rem; font-weight: 700;
         transition: all 0.15s; cursor: pointer;
         text-decoration: none;
+    }
+    .op-preview-actions form {
+        width: 100%; margin: 0; display: flex;
     }
     .op-btn-edit {
         background: var(--odds-purple); border: 1px solid var(--odds-purple); color: #fff !important;
@@ -279,7 +285,7 @@
 
     .op-btn-del {
         background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3);
-        color: #ef4444; flex: 0; padding: 0.5rem 0.65rem;
+        color: #ef4444;
     }
     .op-btn-del:hover { background: rgba(239, 68, 68, 0.25); }
 
@@ -403,6 +409,7 @@
                             <th>CATEGORY</th>
                             <th>YEAR</th>
                             <th>FEATURED</th>
+                            <th>KPI STAT</th>
                             <th style="width: 40px;"></th>
                         </tr>
                     </thead>
@@ -450,6 +457,20 @@
                                     </template>
                                     <template x-if="!p.is_featured">
                                         <span class="odds-badge text-[9px]" style="background: var(--bg-subtle); color: var(--text-faint); border: 1px solid var(--border-color);">Hidden</span>
+                                    </template>
+                                </td>
+
+                                <!-- KPI Count Status -->
+                                <td>
+                                    <template x-if="p.count_in_kpi !== false && p.count_in_kpi != 0">
+                                        <span class="inline-flex items-center gap-1 text-[9px] font-mono font-bold text-emerald-400">
+                                            <i class="fa-solid fa-calculator text-[8px]"></i> Counted
+                                        </span>
+                                    </template>
+                                    <template x-if="p.count_in_kpi === false || p.count_in_kpi == 0">
+                                        <span class="inline-flex items-center gap-1 text-[9px] font-mono text-gray-500">
+                                            <i class="fa-solid fa-minus text-[8px]"></i> Excluded
+                                        </span>
                                     </template>
                                 </td>
 
@@ -551,12 +572,26 @@
                             <p class="text-xs leading-relaxed text-center" style="color: var(--text-muted);" x-text="selectedProject.description || 'No overview summary provided.'"></p>
                         </div>
 
-                        <!-- Story block metric -->
-                        <div class="p-3 rounded-xl text-xs font-mono space-y-1 w-full text-center border"
-                             style="background: var(--bg-input); border-color: var(--border-color);">
-                            <div class="text-[10px] uppercase font-bold text-center" style="color: var(--text-faint);">Notion Story Status</div>
-                            <div class="font-semibold text-center" style="color: var(--text-title);">
-                                <span x-text="selectedProject.body_content && selectedProject.body_content.length ? selectedProject.body_content.length + ' Content Blocks' : 'Default Outline'"></span>
+                        <!-- Story block & KPI metrics -->
+                        <div class="grid grid-cols-2 gap-2 w-full">
+                            <div class="p-2.5 rounded-xl text-xs font-mono space-y-1 text-center border"
+                                 style="background: var(--bg-input); border-color: var(--border-color);">
+                                <div class="text-[9px] uppercase font-bold text-center" style="color: var(--text-faint);">Notion Story</div>
+                                <div class="font-semibold text-center text-[11px]" style="color: var(--text-title);">
+                                    <span x-text="selectedProject.body_content && selectedProject.body_content.length ? selectedProject.body_content.length + ' Blocks' : 'Default Outline'"></span>
+                                </div>
+                            </div>
+                            <div class="p-2.5 rounded-xl text-xs font-mono space-y-1 text-center border"
+                                 style="background: var(--bg-input); border-color: var(--border-color);">
+                                <div class="text-[9px] uppercase font-bold text-center" style="color: var(--text-faint);">Accomplished KPI</div>
+                                <div class="font-semibold text-center text-[11px]">
+                                    <template x-if="selectedProject.count_in_kpi !== false && selectedProject.count_in_kpi != 0">
+                                        <span class="text-emerald-400 font-bold">Counted</span>
+                                    </template>
+                                    <template x-if="selectedProject.count_in_kpi === false || selectedProject.count_in_kpi == 0">
+                                        <span class="text-gray-500 font-bold">Excluded</span>
+                                    </template>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -575,6 +610,7 @@
                             @csrf
                             <button type="submit" class="op-btn-del" title="Delete Output">
                                 <i class="fa-solid fa-trash text-xs"></i>
+                                <span>Delete</span>
                             </button>
                         </form>
                     </div>

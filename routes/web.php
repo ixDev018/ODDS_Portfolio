@@ -23,7 +23,34 @@ Route::get('/', function () {
     $testimonials = OddsTestimonial::where('is_active', true)->orderBy('sort_order')->get();
     $whyReasons = OddsWhyReason::where('is_active', true)->orderBy('sort_order')->get();
 
-    return view('home', compact('settings', 'services', 'works', 'testimonials', 'whyReasons'));
+    // Actual projects count summed only if toggled to be counted
+    $hasCustomWorks = OddsWork::exists();
+    if ($hasCustomWorks) {
+        $accomplishedCount = OddsWork::where('is_active', true)->where('count_in_kpi', true)->count();
+    } else {
+        $accomplishedCount = 9; // Fallback mock items count
+    }
+
+    // Client satisfaction averaged on active testimonial ratings
+    $activeTestimonials = OddsTestimonial::where('is_active', true)->get();
+    if ($activeTestimonials->isNotEmpty()) {
+        $avg = round($activeTestimonials->avg('stars'), 1);
+        $clientSatisfactionAvg = (int)$avg == $avg ? (int)$avg : $avg;
+    } else {
+        $clientSatisfactionAvg = 5; // Default 5-star rating fallback
+    }
+    $clientSatisfactionDenom = '/5';
+
+    return view('home', compact(
+        'settings',
+        'services',
+        'works',
+        'testimonials',
+        'whyReasons',
+        'accomplishedCount',
+        'clientSatisfactionAvg',
+        'clientSatisfactionDenom'
+    ));
 })->name('portfolio.index');
 
 // Public Contact / Lead Form Submission

@@ -155,12 +155,14 @@ if (mobileToggle && mobileDrawer) {
         if (idx !== 2 || statsFired || !secWorks) return;
         statsFired = true;
         secWorks.querySelectorAll('[data-target]').forEach(el => {
-            const targetVal = parseInt(el.dataset.target, 10);
+            const rawTarget = el.dataset.target ?? '0';
+            const targetVal = parseFloat(rawTarget) || 0;
+            const isFloat = rawTarget.includes('.');
             const suffix = el.dataset.suffix ?? '';
             const obj = { val: 0 };
             gsap.to(obj, {
                 val: targetVal, duration: 1.6, ease: 'power2.out', delay: 0.2,
-                onUpdate() { el.textContent = Math.round(obj.val) + suffix; }
+                onUpdate() { el.textContent = (isFloat ? obj.val.toFixed(1) : Math.round(obj.val)) + suffix; }
             });
         });
     }
@@ -513,100 +515,195 @@ if (ctaVideo && ctaCanvas) {
     const titleEl = document.getElementById('project-modal-title');
     const categoryEl = document.getElementById('project-modal-category');
     const yearEl = document.getElementById('project-modal-year');
+    const clientWrapEl = document.getElementById('project-modal-client-wrap');
+    const clientEl = document.getElementById('project-modal-client');
+    const roleWrapEl = document.getElementById('project-modal-role-wrap');
+    const roleEl = document.getElementById('project-modal-role');
     const descEl = document.getElementById('project-modal-desc');
+    const primaryMediaEl = document.getElementById('project-modal-primary-media');
     const blocksContainer = document.getElementById('project-modal-blocks');
     const linksContainer = document.getElementById('project-modal-links');
     const modalCard = modal.querySelector('.project-modal-card');
 
-    function renderNotionBlocks(blocksJson, fallbackStory) {
+    // Parse pre-rendered JSON payload
+    let projectsData = [];
+    const projectsDataScript = document.getElementById('odds-projects-data');
+    if (projectsDataScript) {
+        try {
+            projectsData = JSON.parse(projectsDataScript.textContent);
+        } catch(e) {
+            console.error('Failed to parse odds-projects-data:', e);
+        }
+    }
+
+    function renderNotionBlocks(blocksData, fallbackStory) {
         if (!blocksContainer) return;
         blocksContainer.innerHTML = '';
 
         let blocks = [];
-        try {
-            blocks = typeof blocksJson === 'string' ? JSON.parse(blocksJson) : blocksJson;
-        } catch(e) {
-            blocks = [];
+        if (Array.isArray(blocksData)) {
+            blocks = blocksData;
+        } else if (typeof blocksData === 'string' && blocksData.trim() !== '') {
+            try {
+                let parsed = blocksData;
+                if (parsed.includes('&quot;') || parsed.includes('&#039;')) {
+                    const txt = document.createElement('textarea');
+                    txt.innerHTML = parsed;
+                    parsed = txt.value;
+                }
+                blocks = JSON.parse(parsed);
+            } catch(e) {
+                blocks = [];
+            }
         }
 
         if (Array.isArray(blocks) && blocks.length > 0) {
+            let currentList = null;
+            let currentListType = null;
+
             blocks.forEach(b => {
                 const type = b.type || 'paragraph';
+                const content = b.content !== undefined ? b.content : '';
+
+                // Close list container if current block is of different type
+                if (currentList && currentListType !== type) {
+                    currentList = null;
+                    currentListType = null;
+                }
+
                 if (type === 'heading2') {
                     const h2 = document.createElement('h2');
-                    h2.className = 'text-xl md:text-2xl font-bold text-white mt-6 mb-2 tracking-tight flex items-center';
-                    h2.innerHTML = b.content || '';
+                    h2.className = 'frame46-block-h2';
+                    h2.innerHTML = content;
                     blocksContainer.appendChild(h2);
                 } else if (type === 'heading3') {
                     const h3 = document.createElement('h3');
-                    h3.className = 'text-lg font-bold text-gray-200 mt-4 mb-1.5';
-                    h3.innerHTML = b.content || '';
+                    h3.className = 'frame46-block-h3';
+                    h3.innerHTML = content;
                     blocksContainer.appendChild(h3);
+                } else if (type === 'bullet') {
+                    if (!currentList || currentListType !== 'bullet') {
+                        currentList = document.createElement('ul');
+                        currentList.className = 'frame46-block-bullet-list';
+                        blocksContainer.appendChild(currentList);
+                        currentListType = 'bullet';
+                    }
+                    const li = document.createElement('li');
+                    li.className = 'frame46-block-bullet-item';
+                    li.innerHTML = `<span class="frame46-block-bullet-dot">•</span><div class="flex-1">${content}</div>`;
+                    currentList.appendChild(li);
+                } else if (type === 'numbered') {
+                    if (!currentList || currentListType !== 'numbered') {
+                        currentList = document.createElement('ol');
+                        currentList.className = 'frame46-block-num-list';
+                        blocksContainer.appendChild(currentList);
+                        currentListType = 'numbered';
+                    }
+                    const count = currentList.children.length + 1;
+                    const li = document.createElement('li');
+                    li.className = 'frame46-block-num-item';
+                    li.innerHTML = `<span class="frame46-block-num-badge">${count}.</span><div class="flex-1">${content}</div>`;
+                    currentList.appendChild(li);
                 } else if (type === 'quote') {
                     const blockquote = document.createElement('blockquote');
-                    blockquote.className = 'border-l-4 border-[#875af5] pl-4 py-1 italic text-gray-300 bg-[#875af5]/5 rounded-r-lg my-3';
-                    blockquote.innerHTML = b.content || '';
+                    blockquote.className = 'frame46-block-quote';
+                    blockquote.innerHTML = content;
                     blocksContainer.appendChild(blockquote);
                 } else if (type === 'callout') {
                     const callout = document.createElement('div');
-                    callout.className = 'bg-[#875af5]/10 border border-[#875af5]/30 rounded-xl p-4 text-gray-200 my-4 flex items-start space-x-3';
-                    callout.innerHTML = `<i class="fa-solid fa-lightbulb text-[#875af5] mt-1"></i><div class="flex-1">${b.content || ''}</div>`;
+                    callout.className = 'frame46-block-callout';
+                    callout.innerHTML = `
+                        <div class="frame46-block-callout-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                        <div class="flex-1">${content}</div>
+                    `;
                     blocksContainer.appendChild(callout);
                 } else if (type === 'code') {
                     const pre = document.createElement('pre');
-                    pre.className = 'bg-[#0a0a0c] border border-[#22222a] p-4 rounded-xl font-mono text-xs text-[#38bdf8] overflow-x-auto my-3';
-                    pre.textContent = b.content || '';
+                    pre.className = 'frame46-block-code';
+                    pre.textContent = content;
                     blocksContainer.appendChild(pre);
-                } else if (type === 'bullet') {
-                    const li = document.createElement('div');
-                    li.className = 'flex items-start space-x-2 pl-2 my-1';
-                    li.innerHTML = `<span class="text-[#875af5] font-bold">•</span><div>${b.content || ''}</div>`;
-                    blocksContainer.appendChild(li);
-                } else if (type === 'numbered') {
-                    const num = document.createElement('div');
-                    num.className = 'flex items-start space-x-2 pl-2 my-1';
-                    num.innerHTML = `<span class="text-[#875af5] font-mono text-xs font-bold">1.</span><div>${b.content || ''}</div>`;
-                    blocksContainer.appendChild(num);
                 } else if (type === 'divider') {
                     const hr = document.createElement('hr');
-                    hr.className = 'border-t border-[#22222a] my-6';
+                    hr.className = 'frame46-block-divider';
                     blocksContainer.appendChild(hr);
                 } else if (type === 'image' && b.src) {
-                    const fig = document.createElement('figure');
-                    fig.className = 'my-6 rounded-2xl overflow-hidden border border-[#262632] bg-[#0c0c0e]';
-                    fig.innerHTML = `
-                        <img src="${b.src}" class="w-full h-auto max-h-[480px] object-contain mx-auto">
-                        ${b.caption ? `<figcaption class="p-2.5 text-center text-xs text-gray-500 italic bg-[#141418] border-t border-[#22222a]">${b.caption}</figcaption>` : ''}
+                    const card = document.createElement('div');
+                    card.className = 'frame46-block-image-card';
+                    card.innerHTML = `
+                        <div class="frame46-block-image-inner">
+                            <img src="${b.src}" alt="${b.caption || 'Project visual'}" loading="lazy">
+                        </div>
+                        ${b.caption ? `<div class="frame46-block-image-caption">${b.caption}</div>` : ''}
                     `;
-                    blocksContainer.appendChild(fig);
+                    blocksContainer.appendChild(card);
                 } else {
-                    const p = document.createElement('p');
-                    p.className = 'text-gray-300 leading-relaxed my-2';
-                    p.innerHTML = b.content || '';
-                    blocksContainer.appendChild(p);
+                    if (content.toString().trim() !== '') {
+                        const p = document.createElement('p');
+                        p.className = 'frame46-block-p';
+                        p.innerHTML = content;
+                        blocksContainer.appendChild(p);
+                    }
                 }
             });
-        } else if (fallbackStory) {
-            blocksContainer.innerHTML = fallbackStory;
+        } else if (fallbackStory && fallbackStory.trim() !== '') {
+            const p = document.createElement('p');
+            p.className = 'frame46-block-p';
+            p.innerHTML = fallbackStory;
+            blocksContainer.appendChild(p);
         } else {
-            blocksContainer.innerHTML = '<p class="text-gray-400">Story documentation coming soon.</p>';
+            blocksContainer.innerHTML = '';
         }
     }
 
     function openProjectModal(meta) {
         if (titleEl) titleEl.textContent = meta.title || 'PROJECT';
         if (pathEl) pathEl.textContent = meta.pathStr || `ODDS_Project/${meta.title}/Project_Story`;
-        if (categoryEl) categoryEl.textContent = meta.category || 'Software Architecture';
+        if (categoryEl) categoryEl.textContent = meta.category || 'Architecture';
         if (yearEl) yearEl.textContent = meta.year || '2024';
-        if (descEl) descEl.textContent = meta.desc || '';
+        if (descEl) descEl.textContent = meta.desc || 'Comprehensive project overview, technical architecture, and implementation details.';
+
+        if (clientEl && clientWrapEl) {
+            if (meta.client) {
+                clientEl.textContent = `Client: ${meta.client}`;
+                clientWrapEl.classList.remove('hidden');
+            } else {
+                clientWrapEl.classList.add('hidden');
+            }
+        }
+
+        if (roleEl && roleWrapEl) {
+            if (meta.role) {
+                roleEl.textContent = `Role: ${meta.role}`;
+                roleWrapEl.classList.remove('hidden');
+            } else {
+                roleWrapEl.classList.add('hidden');
+            }
+        }
+
+        if (primaryMediaEl) {
+            if (meta.cover) {
+                primaryMediaEl.innerHTML = `<img src="${meta.cover}" alt="${meta.title}" class="w-full h-full object-cover">`;
+            } else {
+                primaryMediaEl.innerHTML = `
+                    <div class="flex flex-col items-center justify-center text-white/40 space-y-3">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                            <circle cx="9" cy="9" r="2"/>
+                            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                        </svg>
+                        <span class="font-mono text-xs tracking-wider uppercase">${meta.title} Visual Overview</span>
+                    </div>
+                `;
+            }
+        }
 
         if (linksContainer) {
             linksContainer.innerHTML = '';
             if (meta.demoUrl) {
-                linksContainer.innerHTML += `<a href="${meta.demoUrl}" target="_blank" class="px-3 py-1 bg-[#875af5] text-white text-xs font-bold rounded-full hover:bg-[#7343e8] transition-colors"><i class="fa-solid fa-arrow-up-right-from-square mr-1"></i>Live Demo</a>`;
+                linksContainer.innerHTML += `<a href="${meta.demoUrl}" target="_blank" class="frame46-action-btn"><i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>Live Demo</a>`;
             }
             if (meta.githubUrl) {
-                linksContainer.innerHTML += `<a href="${meta.githubUrl}" target="_blank" class="px-3 py-1 bg-[#202026] text-gray-300 text-xs font-bold rounded-full hover:text-white transition-colors"><i class="fa-brands fa-github mr-1"></i>Code</a>`;
+                linksContainer.innerHTML += `<a href="${meta.githubUrl}" target="_blank" class="frame46-action-btn"><i class="fa-brands fa-github text-[11px]"></i>Repository</a>`;
             }
         }
 
@@ -630,24 +727,49 @@ if (ctaVideo && ctaCanvas) {
             if (!modal.classList.contains('is-active')) {
                 modal.classList.add('hidden');
             }
-        }, 300);
+        }, 250);
     }
 
     // Attach trigger to every project card in works grid
     document.querySelectorAll('.project-card-trigger').forEach(trigger => {
         trigger.addEventListener('click', e => {
             e.stopPropagation();
-            const meta = {
-                title: trigger.getAttribute('data-project-title') || 'PROJECT',
-                category: trigger.getAttribute('data-project-category'),
-                year: trigger.getAttribute('data-project-year'),
-                desc: trigger.getAttribute('data-project-desc'),
-                blocks: trigger.getAttribute('data-project-blocks'),
-                story: trigger.getAttribute('data-project-story'),
-                demoUrl: trigger.getAttribute('data-project-demo'),
-                githubUrl: trigger.getAttribute('data-project-github'),
-                pathStr: trigger.getAttribute('data-project-path')
-            };
+            const index = trigger.getAttribute('data-project-index');
+            let meta = null;
+
+            if (index !== null && projectsData && projectsData[index]) {
+                const item = projectsData[index];
+                meta = {
+                    title: item.title,
+                    category: item.category,
+                    year: item.year,
+                    client: item.client,
+                    role: item.role,
+                    desc: item.description,
+                    blocks: item.body_content,
+                    story: item.story_content,
+                    cover: item.cover_image,
+                    demoUrl: item.demo_url,
+                    githubUrl: item.github_url,
+                    pathStr: item.path_str
+                };
+            } else {
+                meta = {
+                    title: trigger.getAttribute('data-project-title') || 'PROJECT',
+                    category: trigger.getAttribute('data-project-category'),
+                    year: trigger.getAttribute('data-project-year'),
+                    client: trigger.getAttribute('data-project-client') || '',
+                    role: trigger.getAttribute('data-project-role') || '',
+                    desc: trigger.getAttribute('data-project-desc'),
+                    blocks: trigger.getAttribute('data-project-blocks'),
+                    story: trigger.getAttribute('data-project-story'),
+                    cover: trigger.getAttribute('data-project-cover'),
+                    demoUrl: trigger.getAttribute('data-project-demo'),
+                    githubUrl: trigger.getAttribute('data-project-github'),
+                    pathStr: trigger.getAttribute('data-project-path')
+                };
+            }
+
             openProjectModal(meta);
         });
     });
@@ -674,4 +796,5 @@ if (ctaVideo && ctaCanvas) {
     window.openProjectModal = openProjectModal;
     window.closeProjectModal = closeProjectModal;
 })();
+
 

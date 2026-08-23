@@ -281,14 +281,44 @@
                 </div>
             </div>
 
-            <div>
-                <label class="odds-label">Card Cover Image</label>
-                @if($work->cover_image)
-                <div class="mb-2">
-                    <img src="{{ $work->cover_image }}" alt="Cover" class="w-full h-24 object-cover rounded-lg border border-[#22222a]">
+            <!-- 16:9 Card Body Cover Image Uploader -->
+            <div class="space-y-1.5">
+                <div class="flex items-center justify-between">
+                    <label class="odds-label mb-0">Card Body Image</label>
+                    <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#875af5]/15 text-[#875af5] font-bold tracking-wider">16:9 RATIO</span>
                 </div>
-                @endif
-                <input type="file" name="cover_image" accept="image/*" class="odds-input p-1 text-xs file:mr-2 file:py-1 file:px-2.5 file:rounded-full file:border-0 file:text-[10px] file:font-semibold file:bg-[#875af5] file:text-white">
+                
+                <div id="cover-dropzone" class="relative group aspect-[16/9] w-full rounded-xl border-2 border-dashed border-[#2b2b36] hover:border-[#875af5] bg-[#0d0d12] flex flex-col items-center justify-center p-3 text-center cursor-pointer transition-all overflow-hidden">
+                    <div id="cover-placeholder" class="{{ $work->cover_image ? 'hidden' : '' }} flex flex-col items-center justify-center space-y-2 pointer-events-none">
+                        <div class="w-10 h-10 rounded-full bg-[#181822] flex items-center justify-center text-[#875af5] group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-semibold text-gray-200">Upload 16:9 Image</div>
+                            <div class="text-[10px] text-gray-500 font-mono mt-0.5">Click or drag & drop (PNG, JPG, WebP)</div>
+                        </div>
+                    </div>
+
+                    <div id="cover-preview-container" class="{{ $work->cover_image ? '' : 'hidden' }} absolute inset-0 w-full h-full">
+                        <img id="cover-preview-img" src="{{ $work->cover_image ?? '' }}" alt="Cover Preview" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                            <button type="button" id="btn-change-cover" class="px-2.5 py-1 bg-[#875af5] hover:bg-[#7245e0] text-white rounded text-[11px] font-medium transition-colors">
+                                <i class="fa-solid fa-pen mr-1 text-[9px]"></i> Change
+                            </button>
+                            <button type="button" id="btn-clear-cover" class="px-2.5 py-1 bg-red-900/80 hover:bg-red-800 text-red-200 rounded text-[11px] font-medium transition-colors">
+                                <i class="fa-solid fa-trash mr-1 text-[9px]"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="file" id="cover_image_input" name="cover_image" accept="image/*" class="hidden">
+                <input type="hidden" name="cover_image_base64" id="cover_image_base64">
+                <input type="hidden" name="remove_cover_image" id="remove_cover_image" value="0">
+                
+                <div class="pt-1">
+                    <input type="url" name="cover_image_url" id="cover_image_url" value="{{ Str::startsWith($work->cover_image, 'http') ? $work->cover_image : '' }}" placeholder="Or paste 16:9 Image URL (https://...)" class="odds-input text-xs font-mono py-1 px-2.5">
+                </div>
             </div>
 
             <div>
@@ -305,6 +335,10 @@
                 <label class="flex items-center space-x-2 cursor-pointer">
                     <input type="checkbox" name="is_featured" value="1" {{ $work->is_featured ? 'checked' : '' }} class="rounded bg-[#0b0b0e] border-[#22222a] text-[#875af5] focus:ring-0">
                     <span class="text-xs text-gray-300 font-semibold">Featured on 3×3 Grid</span>
+                </label>
+                <label class="flex items-center space-x-2 cursor-pointer">
+                    <input type="checkbox" name="count_in_kpi" value="1" {{ $work->count_in_kpi ? 'checked' : '' }} class="rounded bg-[#0b0b0e] border-[#22222a] text-[#875af5] focus:ring-0">
+                    <span class="text-xs text-gray-300 font-semibold">Count towards Accomplished KPI</span>
                 </label>
                 <label class="flex items-center space-x-2 cursor-pointer">
                     <input type="checkbox" name="is_active" value="1" {{ $work->is_active ? 'checked' : '' }} class="rounded bg-[#0b0b0e] border-[#22222a] text-[#875af5] focus:ring-0">
@@ -404,7 +438,10 @@ const container = document.getElementById('notion-blocks-container');
 const slashMenu = document.getElementById('slash-menu');
 let activeSlashBlock = null;
 
-const rawBlocks = @json($work->body_content);
+let rawBlocks = @json($work->body_content);
+if (typeof rawBlocks === 'string' && rawBlocks.trim() !== '') {
+    try { rawBlocks = JSON.parse(rawBlocks); } catch(e) { rawBlocks = []; }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     if (rawBlocks && Array.isArray(rawBlocks) && rawBlocks.length > 0) {
@@ -619,6 +656,105 @@ async function handleImageUpload(file, imgWrap, blockEl) {
         }
     } catch(err) {
         imgWrap.innerHTML = '<div class="p-4 text-center text-xs text-red-400">Upload failed. Please try again.</div>';
+    }
+}
+
+// ─── 16:9 Card Cover Image Live Preview & Upload Handling ───
+const coverDropzone = document.getElementById('cover-dropzone');
+const coverInput = document.getElementById('cover_image_input');
+const coverPlaceholder = document.getElementById('cover-placeholder');
+const coverPreviewContainer = document.getElementById('cover-preview-container');
+const coverPreviewImg = document.getElementById('cover-preview-img');
+const coverUrlInput = document.getElementById('cover_image_url');
+const removeCoverInput = document.getElementById('remove_cover_image');
+const btnChangeCover = document.getElementById('btn-change-cover');
+const btnClearCover = document.getElementById('btn-clear-cover');
+
+if (coverDropzone && coverInput) {
+    coverDropzone.addEventListener('click', (e) => {
+        if (e.target.closest('#btn-clear-cover') || e.target.closest('#btn-change-cover')) return;
+        coverInput.click();
+    });
+
+    if (btnChangeCover) {
+        btnChangeCover.addEventListener('click', (e) => {
+            e.stopPropagation();
+            coverInput.click();
+        });
+    }
+
+    if (btnClearCover) {
+        btnClearCover.addEventListener('click', (e) => {
+            e.stopPropagation();
+            coverInput.value = '';
+            if (coverUrlInput) coverUrlInput.value = '';
+            if (removeCoverInput) removeCoverInput.value = '1';
+            document.getElementById('cover_image_base64').value = '';
+            coverPreviewImg.src = '';
+            coverPreviewContainer.classList.add('hidden');
+            coverPlaceholder.classList.remove('hidden');
+        });
+    }
+
+    coverInput.addEventListener('change', () => {
+        const file = coverInput.files[0];
+        if (file) {
+            if (removeCoverInput) removeCoverInput.value = '0';
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                coverPreviewImg.src = e.target.result;
+                coverPreviewContainer.classList.remove('hidden');
+                coverPlaceholder.classList.add('hidden');
+                if (coverUrlInput) coverUrlInput.value = '';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Drag & Drop
+    coverDropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        coverDropzone.classList.add('border-[#875af5]', 'bg-[#12121a]');
+    });
+
+    coverDropzone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        coverDropzone.classList.remove('border-[#875af5]', 'bg-[#12121a]');
+    });
+
+    coverDropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        coverDropzone.classList.remove('border-[#875af5]', 'bg-[#12121a]');
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            if (removeCoverInput) removeCoverInput.value = '0';
+            coverInput.files = e.dataTransfer.files;
+            const file = e.dataTransfer.files[0];
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                coverPreviewImg.src = ev.target.result;
+                coverPreviewContainer.classList.remove('hidden');
+                coverPlaceholder.classList.add('hidden');
+                if (coverUrlInput) coverUrlInput.value = '';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    if (coverUrlInput) {
+        coverUrlInput.addEventListener('input', () => {
+            const val = coverUrlInput.value.trim();
+            if (val) {
+                if (removeCoverInput) removeCoverInput.value = '0';
+                coverPreviewImg.src = val;
+                coverPreviewContainer.classList.remove('hidden');
+                coverPlaceholder.classList.add('hidden');
+                coverInput.value = '';
+            } else if (!coverInput.files.length && (!coverPreviewImg.src || removeCoverInput.value === '1')) {
+                coverPreviewImg.src = '';
+                coverPreviewContainer.classList.add('hidden');
+                coverPlaceholder.classList.remove('hidden');
+            }
+        });
     }
 }
 

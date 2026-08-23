@@ -26,6 +26,7 @@ class OddsWork extends Model
         'sort_order',
         'is_featured',
         'is_active',
+        'count_in_kpi',
     ];
 
     protected $casts = [
@@ -34,6 +35,7 @@ class OddsWork extends Model
         'body_content' => 'array',
         'is_featured' => 'boolean',
         'is_active' => 'boolean',
+        'count_in_kpi' => 'boolean',
         'sort_order' => 'integer',
     ];
 

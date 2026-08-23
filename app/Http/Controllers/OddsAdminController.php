@@ -151,7 +151,7 @@ class OddsAdminController extends Controller
         $settings = OddsSetting::current();
 
         $validated = $request->validate([
-            'hero_title' => 'required|string',
+            'hero_title' => 'nullable|string',
             'hero_subtitle' => 'nullable|string',
             'hero_btn_text' => 'nullable|string|max:100',
             'hero_btn_link' => 'nullable|string|max:255',
@@ -272,16 +272,19 @@ class OddsAdminController extends Controller
             'story_content' => 'nullable|string',
             'body_content' => 'nullable|string',
             'cover_image' => 'nullable|image|max:10240',
+            'cover_image_url' => 'nullable|string|max:1000',
             'cover_image_base64' => 'nullable|string',
             'demo_url' => 'nullable|url',
             'github_url' => 'nullable|url',
             'is_featured' => 'nullable|boolean',
             'is_active' => 'nullable|boolean',
+            'count_in_kpi' => 'nullable|boolean',
         ]);
 
         $validated['slug'] = Str::slug($validated['title'] . '-' . Str::random(4));
         $validated['is_featured'] = $request->has('is_featured');
         $validated['is_active'] = $request->has('is_active');
+        $validated['count_in_kpi'] = $request->has('count_in_kpi');
         $validated['sort_order'] = OddsWork::max('sort_order') + 1;
 
         if (!empty($validated['body_content'])) {
@@ -295,9 +298,11 @@ class OddsAdminController extends Controller
         } elseif ($request->hasFile('cover_image')) {
             $url = $this->uploadMedia($request->file('cover_image'), 'works');
             if ($url) $validated['cover_image'] = $url;
+        } elseif ($request->filled('cover_image_url')) {
+            $validated['cover_image'] = $request->input('cover_image_url');
         }
 
-        unset($validated['cover_image_base64']);
+        unset($validated['cover_image_base64'], $validated['cover_image_url']);
         OddsWork::create($validated);
 
         return redirect()->route('odds.admin.works.index')->with('success', 'Work project created successfully with Notion story!');
@@ -323,15 +328,19 @@ class OddsAdminController extends Controller
             'story_content' => 'nullable|string',
             'body_content' => 'nullable|string',
             'cover_image' => 'nullable|image|max:10240',
+            'cover_image_url' => 'nullable|string|max:1000',
             'cover_image_base64' => 'nullable|string',
+            'remove_cover_image' => 'nullable|string',
             'demo_url' => 'nullable|url',
             'github_url' => 'nullable|url',
             'is_featured' => 'nullable|boolean',
             'is_active' => 'nullable|boolean',
+            'count_in_kpi' => 'nullable|boolean',
         ]);
 
         $validated['is_featured'] = $request->has('is_featured');
         $validated['is_active'] = $request->has('is_active');
+        $validated['count_in_kpi'] = $request->has('count_in_kpi');
 
         if (!empty($validated['body_content'])) {
             $decoded = json_decode($validated['body_content'], true);
@@ -340,7 +349,10 @@ class OddsAdminController extends Controller
             $validated['body_content'] = null;
         }
 
-        if ($request->filled('cover_image_base64')) {
+        if ($request->input('remove_cover_image') === '1') {
+            if ($work->cover_image) $this->deleteMedia($work->cover_image);
+            $validated['cover_image'] = null;
+        } elseif ($request->filled('cover_image_base64')) {
             if ($work->cover_image) $this->deleteMedia($work->cover_image);
             $url = $this->uploadMedia($request->input('cover_image_base64'), 'works');
             if ($url) $validated['cover_image'] = $url;
@@ -348,9 +360,14 @@ class OddsAdminController extends Controller
             if ($work->cover_image) $this->deleteMedia($work->cover_image);
             $url = $this->uploadMedia($request->file('cover_image'), 'works');
             if ($url) $validated['cover_image'] = $url;
+        } elseif ($request->filled('cover_image_url')) {
+            if ($work->cover_image && $work->cover_image !== $request->input('cover_image_url')) {
+                $this->deleteMedia($work->cover_image);
+            }
+            $validated['cover_image'] = $request->input('cover_image_url');
         }
 
-        unset($validated['cover_image_base64']);
+        unset($validated['cover_image_base64'], $validated['cover_image_url'], $validated['remove_cover_image']);
         $work->update($validated);
 
         return redirect()->route('odds.admin.works.index')->with('success', 'Work project updated successfully!');
@@ -403,27 +420,36 @@ class OddsAdminController extends Controller
             'initials' => 'nullable|string|max:10',
             'stars' => 'required|integer|min:1|max:5',
             'text' => 'required|string',
-            'avatar' => 'nullable|image|max:4096',
+            'avatar' => 'nullable|image|max:6144',
+            'avatar_url' => 'nullable|string|max:1000',
+            'avatar_base64' => 'nullable|string',
             'is_active' => 'nullable|boolean',
         ]);
 
         if (empty($validated['initials'])) {
-            $parts = explode(' ', $validated['name']);
-            $validated['initials'] = strtoupper(substr($parts[0] ?? 'J', 0, 1) . substr($parts[1] ?? 'R', 0, 1));
+            $parts = preg_split('/\s+/', trim($validated['name']));
+            $first = isset($parts[0]) && $parts[0] !== '' ? mb_substr($parts[0], 0, 1) : 'J';
+            $second = isset($parts[1]) && $parts[1] !== '' ? mb_substr($parts[1], 0, 1) : '';
+            $validated['initials'] = strtoupper($first . $second);
         }
 
         $validated['is_active'] = $request->has('is_active');
         $validated['sort_order'] = OddsTestimonial::max('sort_order') + 1;
 
-        if ($request->hasFile('avatar')) {
+        if ($request->filled('avatar_base64')) {
+            $url = $this->uploadMedia($request->input('avatar_base64'), 'testimonials');
+            if ($url) $validated['avatar_path'] = $url;
+        } elseif ($request->hasFile('avatar')) {
             $url = $this->uploadMedia($request->file('avatar'), 'testimonials');
             if ($url) $validated['avatar_path'] = $url;
+        } elseif ($request->filled('avatar_url')) {
+            $validated['avatar_path'] = $request->input('avatar_url');
         }
 
-        unset($validated['avatar']);
+        unset($validated['avatar'], $validated['avatar_url'], $validated['avatar_base64']);
         OddsTestimonial::create($validated);
 
-        return redirect()->route('odds.admin.testimonials.index')->with('success', 'Testimonial added!');
+        return redirect()->route('odds.admin.testimonials.index')->with('success', 'Testimonial added successfully!');
     }
 
     public function testimonialsUpdate(Request $request, $id)
@@ -437,22 +463,44 @@ class OddsAdminController extends Controller
             'initials' => 'nullable|string|max:10',
             'stars' => 'required|integer|min:1|max:5',
             'text' => 'required|string',
-            'avatar' => 'nullable|image|max:4096',
+            'avatar' => 'nullable|image|max:6144',
+            'avatar_url' => 'nullable|string|max:1000',
+            'avatar_base64' => 'nullable|string',
+            'remove_avatar' => 'nullable|string',
             'is_active' => 'nullable|boolean',
         ]);
 
+        if (empty($validated['initials'])) {
+            $parts = preg_split('/\s+/', trim($validated['name']));
+            $first = isset($parts[0]) && $parts[0] !== '' ? mb_substr($parts[0], 0, 1) : 'J';
+            $second = isset($parts[1]) && $parts[1] !== '' ? mb_substr($parts[1], 0, 1) : '';
+            $validated['initials'] = strtoupper($first . $second);
+        }
+
         $validated['is_active'] = $request->has('is_active');
 
-        if ($request->hasFile('avatar')) {
+        if ($request->input('remove_avatar') === '1') {
+            if ($testimonial->avatar_path) $this->deleteMedia($testimonial->avatar_path);
+            $validated['avatar_path'] = null;
+        } elseif ($request->filled('avatar_base64')) {
+            if ($testimonial->avatar_path) $this->deleteMedia($testimonial->avatar_path);
+            $url = $this->uploadMedia($request->input('avatar_base64'), 'testimonials');
+            if ($url) $validated['avatar_path'] = $url;
+        } elseif ($request->hasFile('avatar')) {
             if ($testimonial->avatar_path) $this->deleteMedia($testimonial->avatar_path);
             $url = $this->uploadMedia($request->file('avatar'), 'testimonials');
             if ($url) $validated['avatar_path'] = $url;
+        } elseif ($request->filled('avatar_url')) {
+            if ($testimonial->avatar_path && $testimonial->avatar_path !== $request->input('avatar_url')) {
+                $this->deleteMedia($testimonial->avatar_path);
+            }
+            $validated['avatar_path'] = $request->input('avatar_url');
         }
 
-        unset($validated['avatar']);
+        unset($validated['avatar'], $validated['avatar_url'], $validated['avatar_base64'], $validated['remove_avatar']);
         $testimonial->update($validated);
 
-        return redirect()->route('odds.admin.testimonials.index')->with('success', 'Testimonial updated!');
+        return redirect()->route('odds.admin.testimonials.index')->with('success', 'Testimonial updated successfully!');
     }
 
     public function testimonialsDestroy($id)
