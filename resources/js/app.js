@@ -38,16 +38,14 @@ if (navbar) navbar.classList.add('scrolled');
 
     const secWorks = document.getElementById('works');
 
-    // Solid dominant color of each section — painted onto cols.
-    // Must visually match the section's background so bars are
-    // invisible when at scaleY:1 (exactly as GSAP branch #0e0e0e = hero)
-    const SECTION_BG = [
-        '#0e0e0e',  // 0: Hero          (solid match ✓)
-        '#6a3de8',  // 1: Services      (mid-gradient approximation)
-        '#ffffff',  // 2: Works         (solid match ✓)
-        '#f359b0',  // 3: Testimonials  (solid match ✓)
-        '#f0f0f5',  // 4: Why           (solid match ✓)
-        '#0e0e0e',  // 5: CTA           (solid match ✓)
+    // Translucent RGBA tint for each section — enables see-through glass bleed
+    const SECTION_BG_RGBA = [
+        'rgba(14, 14, 14, 0.85)',    // 0: Hero
+        'rgba(110, 60, 230, 0.82)',  // 1: Services
+        'rgba(255, 255, 255, 0.85)', // 2: Works
+        'rgba(243, 89, 176, 0.85)',  // 3: Testimonials
+        'rgba(240, 240, 245, 0.85)', // 4: Why
+        'rgba(14, 14, 14, 0.85)',    // 5: CTA
     ];
 
     const NAV = [
@@ -61,6 +59,23 @@ if (navbar) navbar.classList.add('scrolled');
 
     let current = 0;
     let isTransitioning = false;
+
+    // Helper to query key visual content elements in a section for element-level transitions
+    function getSectionElements(sec) {
+        if (!sec) return [];
+        const selectors = [
+            '.hero-title', '.hero-subtitle', '.btn-hero',
+            '.sec-label', '.services-title', '.svc-card', '.services-desc', '.btn-dark',
+            '.works-section-label', '.works-heading', '#stats-row', '.works-description', '.works-card-grid > .group', '.works-see-more',
+            '.testi-label', '.testi-title', '.testi-right-desc', '.testi-card',
+            '.why-title', '.why-desc', '.why-card',
+            '.cta-terminal', '.cta-title', '.cta-desc', '.cta-btn', '.cta-visual'
+        ];
+        const els = sec.querySelectorAll(selectors.join(', '));
+        if (els.length > 0) return Array.from(els);
+        const inner = sec.querySelector('.sec-inner, .hero-content, .works-content-wrap, .cta-outer') || sec;
+        return Array.from(inner.children);
+    }
 
     // Initialize — only hero visible
     sections.forEach((sec, i) => {
@@ -103,7 +118,7 @@ if (navbar) navbar.classList.add('scrolled');
         .to('#hero-p',   { opacity: 1, y: 0 }, '-=0.55')
         .to('#hero-btn', { opacity: 1, y: 0 }, '-=0.5');
 
-    // ── Transition: mirrors GSAP branch trans-col logic ──
+    // ── See-Through Bleeding Section Transition ──
     function goTo(target) {
         if (isTransitioning) return;
         if (target < 0 || target >= n || target === current) return;
@@ -115,45 +130,82 @@ if (navbar) navbar.classList.add('scrolled');
 
         if (target === 2 && secWorks) secWorks.scrollTop = 0;
 
-        // 1. Paint cols with FROM section's solid color.
-        //    This makes them look IDENTICAL to the current section bg.
-        cols.forEach(col => { col.style.background = SECTION_BG[current]; });
+        const fromEls = getSectionElements(fromSec);
+        const toEls   = getSectionElements(toSec);
 
-        // 2. Snap cols to scaleY:1 — they now fill the full overlay.
-        //    Visually: still looks like the from-section (cols = same color).
+        // 1. Paint translucent glass cols with FROM section RGBA
+        cols.forEach(col => { col.style.background = SECTION_BG_RGBA[current]; });
+
+        // 2. Stacking & Initial state:
+        //    fromSec stays visible (zIndex 10) bleeding behind.
+        //    toSec starts invisible at zIndex 20, fading in over fromSec.
+        //    overlay sits at zIndex 30.
+        gsap.set(fromSec, { visibility: 'visible', opacity: 1, zIndex: 10, pointerEvents: 'none' });
+        gsap.set(toSec,   { visibility: 'visible', opacity: 0, zIndex: 20, pointerEvents: 'none' });
+        if (overlay) gsap.set(overlay, { zIndex: 30 });
+
+        // Preset incoming section elements (faded out + offset)
+        gsap.set(toEls, { opacity: 0, y: isForward ? 35 : -35, scale: 0.96 });
+
+        // Snap overlay columns to scaleY: 1
         gsap.set(cols, { scaleY: 1 });
-        if (overlay) gsap.set(overlay, { zIndex: 50 });
-
-        // 3. Immediately hide fromSec and show toSec below.
-        //    No visual change — overlay covers everything.
-        gsap.set(fromSec, { visibility: 'hidden', opacity: 0, zIndex: 0, pointerEvents: 'none' });
-        gsap.set(toSec,   { visibility: 'visible', opacity: 1, zIndex: 10, pointerEvents: 'none' });
 
         const tl = gsap.timeline({
             onComplete() {
                 current = target;
                 isTransitioning = false;
-                // Reset overlay
+
+                // Hide fromSec and reset element styles cleanly
+                gsap.set(fromSec, { visibility: 'hidden', opacity: 0, zIndex: 0, pointerEvents: 'none' });
+                gsap.set(fromEls, { clearProps: 'transform,opacity,scale' });
+
+                // Settle toSec as active
                 gsap.set(overlay, { zIndex: 0 });
                 gsap.set(cols, { scaleY: 0 });
-                gsap.set(toSec, { zIndex: 10, pointerEvents: 'auto' });
+                gsap.set(toSec, { zIndex: 10, opacity: 1, pointerEvents: 'auto' });
+                gsap.set(toEls, { clearProps: 'transform,opacity,scale' });
+
                 applyNav(target);
                 checkStatsTrigger(target);
             }
         });
 
-        // 4. Collapse cols staggered (comb wipe) — toSec reveals through gaps.
-        //    forward: left-to-right  |  backward: right-to-left
-        //    Even cols: transform-origin top (CSS)   → collapse downward
-        //    Odd cols:  transform-origin bottom (CSS) → collapse upward
-        tl.to(cols, {
-            scaleY:   0,
-            duration: 0.55,
-            ease:     'power2.inOut',
-            stagger:  { each: 0.028, from: isForward ? 'start' : 'end' }
+        // Step A: Outgoing section elements fade out & dissolve upward/downward
+        tl.to(fromEls, {
+            opacity: 0,
+            y: isForward ? -30 : 30,
+            scale: 0.95,
+            duration: 0.45,
+            ease: 'power2.in',
+            stagger: { each: 0.02, from: isForward ? 'start' : 'end' }
         }, 0);
 
-        // 5. Navbar morphs slightly after first bar starts collapsing
+        // Step B: toSec background opacity crossfades in
+        tl.to(toSec, {
+            opacity: 1,
+            duration: 0.5,
+            ease: 'power2.inOut'
+        }, 0.05);
+
+        // Step C: Translucent overlay columns collapse staggered (glass wipe reveal)
+        tl.to(cols, {
+            scaleY: 0,
+            duration: 0.55,
+            ease: 'power2.inOut',
+            stagger: { each: 0.025, from: isForward ? 'start' : 'end' }
+        }, 0.1);
+
+        // Step D: Incoming section elements fade in and slide into position
+        tl.to(toEls, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.55,
+            ease: 'power3.out',
+            stagger: { each: 0.03, from: 'start' }
+        }, 0.15);
+
+        // Step E: Navbar morphs smoothly
         tl.to(navbar, {
             '--nav-bg':     NAV[target].bg,
             '--nav-border': NAV[target].border,

@@ -198,7 +198,9 @@ html, body {
     height: 100%;
     pointer-events: none;
     transform: scaleY(0);
-    will-change: transform;
+    will-change: transform, opacity;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 .fp-col:nth-child(even) { transform-origin: top; }
 .fp-col:nth-child(odd)  { transform-origin: bottom; }
@@ -527,7 +529,7 @@ html, body {
     background: radial-gradient(ellipse 55% 70% at 0% 65%, rgba(185,155,235,0.48) 0%, transparent 100%),
                 radial-gradient(ellipse 55% 70% at 100% 65%, rgba(185,155,235,0.48) 0%, transparent 100%),
                 #ffffff;
-    padding: 80px 0 100px;
+    padding: calc(10vh + 40px) 0 100px;
     font-family: var(--font-primary), sans-serif;
     display: flex;
     justify-content: center;
