@@ -1,39 +1,22 @@
 <x-layout>
-    <div class="hero-services-wrapper">
-        <div class="services-bg-color"></div>
-        <div class="shared-glow-left"></div>
-        <div class="shared-glow-right"></div>
-        
-        <div class="services-transition-overlay">
-            <div class="trans-col"></div>
-            <div class="trans-col"></div>
-            <div class="trans-col"></div>
-            <div class="trans-col"></div>
-            <div class="trans-col"></div>
-            <div class="trans-col"></div>
-            <div class="trans-col"></div>
-            <div class="trans-col"></div>
-            <div class="trans-col"></div>
-            <div class="trans-col"></div>
-            <div class="trans-col"></div>
-            <div class="trans-col"></div>
-            <div class="trans-col"></div>
-            <div class="trans-col"></div>
-            <div class="trans-col"></div>
-            <div class="trans-col"></div>
-            <div class="trans-col"></div>
-            <div class="trans-col"></div>
-            <div class="trans-col"></div>
-            <div class="trans-col"></div>
+    <div class="fp-container" id="fp-container">
+        {{-- 20-col transition overlay — bars are painted with FROM section's bg color,
+             so at scaleY:1 they are invisible against the current section.
+             Staggered collapse reveals the incoming section below (no visible grid). --}}
+        <div class="fp-overlay" id="fp-overlay" aria-hidden="true">
+            @for ($i = 0; $i < 20; $i++)
+                <div class="fp-col"></div>
+            @endfor
         </div>
 
-        @include('sections.services')
+        {{-- All 6 Full-Page Sections --}}
         @include('sections.hero')
+        @include('sections.services')
+        @include('sections.works')
+        @include('sections.testimonials')
+        @include('sections.why')
+        @include('sections.cta')
     </div>
-    @include('sections.works')
-    @include('sections.testimonials')
-    @include('sections.why')
-    @include('sections.cta')
-    
+
     <x-odds-chat-widget />
 </x-layout>

@@ -10,7 +10,12 @@ $reasons = [
 ];
 @endphp
 
-<section class="why" id="why">
+<section class="why fp-section" id="why">
+    {{-- Gradient orbs --}}
+    <div class="why-orb why-orb-1" aria-hidden="true"></div>
+    <div class="why-orb why-orb-2" aria-hidden="true"></div>
+    <div class="why-orb why-orb-3" aria-hidden="true"></div>
+
     <div class="sec-inner">
         <div class="why-center">
             <h2 class="why-title fade-up">Why bet on <img src="{{ asset('assets/img/ODDS_logo.svg') }}" alt="ODDS" style="display: inline-block; height: 0.75em; vertical-align: baseline; filter: invert(1); margin-left: 4px;"> ?</h2>

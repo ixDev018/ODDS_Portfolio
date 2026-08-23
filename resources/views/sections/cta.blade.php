@@ -1,4 +1,9 @@
-<section class="cta" id="cta">
+<section class="cta fp-section" id="cta">
+    {{-- Gradient orbs --}}
+    <div class="cta-orb cta-orb-1" aria-hidden="true"></div>
+    <div class="cta-orb cta-orb-2" aria-hidden="true"></div>
+    <div class="cta-orb cta-orb-3" aria-hidden="true"></div>
+
     <div class="cta-outer">
 
         <!-- Terminal Window Card -->

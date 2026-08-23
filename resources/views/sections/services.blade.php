@@ -10,7 +10,7 @@ $services = [
 ];
 @endphp
 
-<section class="services" id="services">
+<section class="services fp-section" id="services">
     <div class="services-glow-left"></div>
     <div class="services-glow-right"></div>
     <div class="sec-inner services-header">

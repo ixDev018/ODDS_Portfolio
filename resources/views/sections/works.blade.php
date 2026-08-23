@@ -12,7 +12,7 @@ $works = [
 ];
 @endphp
 
-<section class="works relative w-full overflow-hidden" id="works">
+<section class="works fp-section" id="works">
   <div class="works-content-wrap">
 
     {{-- Section label --}}

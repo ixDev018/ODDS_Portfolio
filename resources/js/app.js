@@ -1,399 +1,269 @@
 import './bootstrap';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-gsap.registerPlugin(ScrollTrigger);
-
-// ─── Navbar scroll ────────────────────────────────────
+// ─── Navbar setup ──────────────────────────────────────
 const navbar = document.getElementById('navbar');
-if (navbar) {
-    const checkScroll = () => {
-        navbar.classList.toggle('scrolled', window.scrollY > 30);
-    };
-    window.addEventListener('scroll', checkScroll, { passive: true });
-    checkScroll();
-}
+if (navbar) navbar.classList.add('scrolled');
 
-// ─── Hero entrance ───────────────────────────────────
-gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.9 } })
-    .to('#hero-h1',  { opacity: 1, y: 0, delay: 0.2 })
-    .to('#hero-p',   { opacity: 1, y: 0 }, '-=0.55')
-    .to('#hero-btn', { opacity: 1, y: 0 }, '-=0.5');
+// ═══════════════════════════════════════════════════════
+//  FULL-PAGE ENGINE — mirrors GSAP branch trans-col logic
+//
+//  KEY INSIGHT from git diff:
+//  trans-col bars have `background: #0e0e0e` = EXACT same
+//  color as the Hero section. At scaleY:1 the bars are
+//  invisible (indistinguishable from the section behind them).
+//  They only reveal themselves as they collapse staggered,
+//  briefly showing the new section through the gaps.
+//  NO GRID because there are never visible bar edges against
+//  a contrasting background.
+//
+//  Sequence per transition:
+//  1. Paint cols with FROM section's solid color
+//  2. gsap.set cols scaleY:1  → instantly cover everything
+//     with from-section color → visually identical to current page
+//  3. Immediately hide fromSec (cols cover it, no visual change)
+//  4. Show toSec below (z:10)
+//  5. Animate cols scaleY→0 staggered (comb collapse)
+//     → toSec revealed through the gaps as bars collapse
+// ═══════════════════════════════════════════════════════
+(function fullPageEngine() {
+    const container = document.getElementById('fp-container');
+    if (!container) return;
 
-// ─── Hero → Services Pinned Transition ──────────
-if (document.querySelector('.hero-services-wrapper') && document.querySelector('.trans-col')) {
-    // Hide services content initially so it doesn't overlap the Hero section
-    gsap.set(['.services .sec-inner', '.services .services-cards'], { opacity: 0, y: 40 });
+    const overlay  = document.getElementById('fp-overlay');
+    const cols     = overlay ? Array.from(overlay.querySelectorAll('.fp-col')) : [];
+    const sections = Array.from(container.querySelectorAll('.fp-section'));
+    const n        = sections.length;
+    if (!n || !cols.length) return;
 
-    let currentState = 0; // 0 = Hero, 1 = Services
-    let isTransitioning = false;
-    let isReady = false;
-    const transitionDuration = 1.6;
+    const secWorks = document.getElementById('works');
 
-    const transitionTimeline = gsap.timeline({ paused: true });
-
-    // Set initial pointer-events state for services
-    gsap.set('.services', { pointerEvents: 'none' });
-
-    // 1. Fade out Hero content first (from 0 to 0.25)
-    transitionTimeline.to('.hero-content', {
-        opacity: 0, y: -40, duration: 0.25, ease: 'power2.inOut'
-    }, 0);
-
-    // Disable pointer events and hide hero section
-    transitionTimeline.to('.hero', {
-        pointerEvents: 'none', visibility: 'hidden', duration: 0.1
-    }, 0.2);
-
-    // Enable pointer events on the services section once revealed
-    transitionTimeline.to('.services', {
-        pointerEvents: 'auto', duration: 0.1
-    }, 0.65);
-
-    // 2. Collapse the transition overlay columns
-    transitionTimeline.to('.trans-col', {
-        scaleY: 0, duration: 0.45, ease: 'power2.inOut',
-        stagger: { each: 0.02, from: 'start' }
-    }, 0.2);
-
-    // 3. Morph glow colors in sync
-    transitionTimeline.to(':root', {
-        '--glow-color-inner': '#0d0d0d',
-        '--glow-color-mid': '#060606',
-        '--glow-color-outer': '#000000',
-        duration: 0.4, ease: 'power2.inOut'
-    }, 0.2);
-
-    // 3b. Transition navbar background
-    if (navbar) {
-        transitionTimeline.fromTo(navbar,
-            { '--nav-bg': 'rgba(14, 14, 14, 0.65)', '--nav-border': 'rgba(255, 255, 255, 0.08)' },
-            { '--nav-bg': 'rgba(135, 90, 245, 0.65)', '--nav-border': 'rgba(255, 255, 255, 0.08)', duration: 0.4, ease: 'power2.inOut' },
-            0.2
-        );
-    }
-
-    // 4. Fade in and slide up Services content
-    transitionTimeline.to(['.services .sec-inner', '.services .services-cards'], {
-        opacity: 1, y: 0, duration: 0.35, ease: 'power2.out', stagger: 0.08
-    }, 0.65);
-
-    // ── Scroll prevention helpers ──
-    function preventScroll(e) { e.preventDefault(); }
-    const scrollKeys = { 32:1, 33:1, 34:1, 35:1, 36:1, 37:1, 38:1, 39:1, 40:1 };
-    function preventDefaultScrollKeys(e) { if (scrollKeys[e.keyCode]) { e.preventDefault(); return false; } }
-    function disableScroll() {
-        window.addEventListener('wheel', preventScroll, { passive: false });
-        window.addEventListener('touchmove', preventScroll, { passive: false });
-        window.addEventListener('keydown', preventDefaultScrollKeys, { passive: false });
-    }
-    function enableScroll() {
-        window.removeEventListener('wheel', preventScroll);
-        window.removeEventListener('touchmove', preventScroll);
-        window.removeEventListener('keydown', preventDefaultScrollKeys);
-    }
-
-    function triggerTransition(targetState) {
-        if (isTransitioning || !isReady) return;
-        isTransitioning = true;
-        disableScroll();
-
-        const targetScroll = targetState === 1 ? mainPin.end : mainPin.start;
-        const scrollObj = { y: window.scrollY };
-
-        gsap.to(scrollObj, {
-            y: targetScroll, duration: transitionDuration, ease: 'power2.inOut',
-            onUpdate: () => { window.scrollTo(0, scrollObj.y); }
-        });
-
-        gsap.to(transitionTimeline, {
-            progress: targetState, duration: transitionDuration, ease: 'power2.inOut',
-            onComplete: () => {
-                currentState = targetState;
-                isTransitioning = false;
-                enableScroll();
-            }
-        });
-    }
-
-    const mainPin = ScrollTrigger.create({
-        trigger: '.hero-services-wrapper',
-        start: 'top top',
-        end: '+=100%',
-        pin: true,
-        pinSpacing: true,
-        onRefresh: (self) => {
-            currentState = self.progress >= 0.5 ? 1 : 0;
-            transitionTimeline.progress(currentState);
-            setTimeout(() => { isReady = true; }, 100);
-        },
-        onUpdate: (self) => {
-            if (isTransitioning || !isReady) return;
-            if (self.direction === 1 && self.progress > 0.01 && currentState === 0) {
-                triggerTransition(1);
-            } else if (self.direction === -1 && self.progress < 0.99 && currentState === 1) {
-                triggerTransition(0);
-            }
-        }
-    });
-
-    // Anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(link => {
-        link.addEventListener('click', (e) => {
-            const targetId = link.getAttribute('href');
-            if (!targetId) return;
-
-            if (targetId === '#' || targetId === '#hero') {
-                e.preventDefault();
-                isReady = false;
-                disableScroll();
-                const scrollObj = { y: window.scrollY };
-                gsap.to(transitionTimeline, { progress: 0, duration: transitionDuration, ease: 'power2.inOut', onComplete: () => { currentState = 0; } });
-                gsap.to(scrollObj, { y: 0, duration: transitionDuration, ease: 'power2.inOut', onUpdate: () => window.scrollTo(0, scrollObj.y), onComplete: () => { isReady = true; enableScroll(); } });
-                return;
-            }
-
-            const targetEl = document.querySelector(targetId);
-            if (!targetEl) return;
-            e.preventDefault();
-            isReady = false;
-            disableScroll();
-
-            let targetScroll = 0;
-            if (targetId === '#services') {
-                targetScroll = mainPin.end;
-            } else {
-                const rect = targetEl.getBoundingClientRect();
-                targetScroll = rect.top + window.scrollY;
-            }
-
-            const scrollObj = { y: window.scrollY };
-            const targetProgress = (targetId === '#services' || targetScroll >= mainPin.end) ? 1 : 0;
-
-            gsap.to(transitionTimeline, { progress: targetProgress, duration: transitionDuration, ease: 'power2.inOut', onComplete: () => { currentState = targetProgress; } });
-            gsap.to(scrollObj, {
-                y: targetScroll, duration: transitionDuration, ease: 'power2.inOut',
-                onUpdate: () => { window.scrollTo(0, scrollObj.y); },
-                onComplete: () => { isReady = true; enableScroll(); }
-            });
-        });
-    });
-}
-
-// ─── Navbar Dynamic Background and Theme ScrollTriggers ───
-if (navbar) {
-    const boundaries = [
-        {
-            trigger: '#works',
-            colorFrom: 'rgba(135, 90, 245, 0.65)',
-            colorTo: 'rgba(227, 227, 227, 0.65)',
-            borderFrom: 'rgba(255, 255, 255, 0.08)',
-            borderTo: 'rgba(0, 0, 0, 0.06)',
-            themeFrom: 'dark',
-            themeTo: 'light'
-        },
-        {
-            trigger: '#testimonials',
-            colorFrom: 'rgba(227, 227, 227, 0.65)',
-            colorTo: 'rgba(243, 89, 176, 0.65)',
-            borderFrom: 'rgba(0, 0, 0, 0.06)',
-            borderTo: 'rgba(255, 255, 255, 0.08)',
-            themeFrom: 'light',
-            themeTo: 'dark'
-        },
-        {
-            trigger: '#why',
-            colorFrom: 'rgba(243, 89, 176, 0.65)',
-            colorTo: 'rgba(239, 239, 239, 0.65)',
-            borderFrom: 'rgba(255, 255, 255, 0.08)',
-            borderTo: 'rgba(0, 0, 0, 0.06)',
-            themeFrom: 'dark',
-            themeTo: 'light'
-        },
-        {
-            trigger: '#cta',
-            colorFrom: 'rgba(239, 239, 239, 0.65)',
-            colorTo: 'rgba(0, 0, 0, 0.65)',
-            borderFrom: 'rgba(0, 0, 0, 0.06)',
-            borderTo: 'rgba(255, 255, 255, 0.08)',
-            themeFrom: 'light',
-            themeTo: 'dark'
-        }
+    // Solid dominant color of each section — painted onto cols.
+    // Must visually match the section's background so bars are
+    // invisible when at scaleY:1 (exactly as GSAP branch #0e0e0e = hero)
+    const SECTION_BG = [
+        '#0e0e0e',  // 0: Hero          (solid match ✓)
+        '#6a3de8',  // 1: Services      (mid-gradient approximation)
+        '#ffffff',  // 2: Works         (solid match ✓)
+        '#f359b0',  // 3: Testimonials  (solid match ✓)
+        '#f0f0f5',  // 4: Why           (solid match ✓)
+        '#0e0e0e',  // 5: CTA           (solid match ✓)
     ];
 
-    boundaries.forEach(b => {
-        const el = document.querySelector(b.trigger);
-        if (!el) return;
+    const NAV = [
+        { bg: 'rgba(14,14,14,0.65)',    border: 'rgba(255,255,255,0.08)', light: false },
+        { bg: 'rgba(135,90,245,0.65)',  border: 'rgba(255,255,255,0.08)', light: false },
+        { bg: 'rgba(227,227,227,0.65)', border: 'rgba(0,0,0,0.06)',       light: true  },
+        { bg: 'rgba(243,89,176,0.65)',  border: 'rgba(255,255,255,0.08)', light: false },
+        { bg: 'rgba(239,239,239,0.65)', border: 'rgba(0,0,0,0.06)',       light: true  },
+        { bg: 'rgba(0,0,0,0.65)',       border: 'rgba(255,255,255,0.08)', light: false },
+    ];
 
-        // Scrub background color transition
-        gsap.fromTo(navbar,
-            { 
-                '--nav-bg': b.colorFrom,
-                '--nav-border': b.borderFrom
-            },
-            {
-                '--nav-bg': b.colorTo,
-                '--nav-border': b.borderTo,
-                ease: 'none',
-                scrollTrigger: {
-                    trigger: el,
-                    start: 'top 84px',
-                    end: 'top top',
-                    scrub: true,
-                }
-            }
-        );
+    let current = 0;
+    let isTransitioning = false;
 
-        // Toggle light/dark theme class midway (at 42px scrolled navbar center)
-        ScrollTrigger.create({
-            trigger: el,
-            start: 'top 42px',
-            onEnter: () => {
-                navbar.classList.toggle('light-theme', b.themeTo === 'light');
-            },
-            onLeaveBack: () => {
-                navbar.classList.toggle('light-theme', b.themeFrom === 'light');
-            }
+    // Initialize — only hero visible
+    sections.forEach((sec, i) => {
+        gsap.set(sec, {
+            zIndex:        i === 0 ? 10 : 0,
+            visibility:    i === 0 ? 'visible' : 'hidden',
+            opacity:       i === 0 ? 1 : 0,
+            pointerEvents: i === 0 ? 'auto' : 'none'
         });
     });
-}
+    // Overlay starts inactive
+    if (overlay) gsap.set(overlay, { zIndex: 0, pointerEvents: 'none' });
 
-// ─── Generic fade-up on scroll ───────────────────────
-gsap.utils.toArray('.fade-up:not(#hero-h1):not(#hero-p):not(#hero-btn)').forEach((el) => {
-    gsap.to(el, {
-        opacity: 1, y: 0, duration: 0.75, ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-    });
-});
+    function applyNav(idx) {
+        if (!navbar) return;
+        const t = NAV[idx] ?? NAV[0];
+        gsap.to(navbar, { '--nav-bg': t.bg, '--nav-border': t.border, duration: 0.35, ease: 'none' });
+        navbar.classList.toggle('light-theme', t.light);
+    }
+    applyNav(0);
 
-// ─── Scale-in cards ──────────────────────────────────
-gsap.utils.toArray('.scale-in').forEach((el, i) => {
-    gsap.to(el, {
-        opacity: 1, scale: 1, duration: 0.65, ease: 'back.out(1.5)',
-        delay: (i % 3) * 0.08,
-        scrollTrigger: { trigger: el, start: 'top 90%', once: true },
-    });
-});
-
-// ─── Animated stat counters ──────────────────────────
-document.querySelectorAll('[data-target]').forEach((el) => {
-    const target = parseInt(el.dataset.target, 10);
-    const suffix = el.dataset.suffix ?? '';
-    ScrollTrigger.create({
-        trigger: el,
-        start: 'top 85%',
-        once: true,
-        onEnter: () => {
+    let statsFired = false;
+    function checkStatsTrigger(idx) {
+        if (idx !== 2 || statsFired || !secWorks) return;
+        statsFired = true;
+        secWorks.querySelectorAll('[data-target]').forEach(el => {
+            const target = parseInt(el.dataset.target, 10);
+            const suffix = el.dataset.suffix ?? '';
             const obj = { val: 0 };
             gsap.to(obj, {
-                val: target, duration: 1.8, ease: 'power2.out',
-                onUpdate() { el.textContent = Math.round(obj.val) + suffix; },
+                val: target, duration: 1.6, ease: 'power2.out', delay: 0.2,
+                onUpdate() { el.textContent = Math.round(obj.val) + suffix; }
             });
-        },
-    });
-});
+        });
+    }
 
-// ─── Draggable testimonials ──────────────────────────
+    // Hero entrance
+    gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.9 } })
+        .to('#hero-h1',  { opacity: 1, y: 0, delay: 0.2 })
+        .to('#hero-p',   { opacity: 1, y: 0 }, '-=0.55')
+        .to('#hero-btn', { opacity: 1, y: 0 }, '-=0.5');
+
+    // ── Transition: mirrors GSAP branch trans-col logic ──
+    function goTo(target) {
+        if (isTransitioning) return;
+        if (target < 0 || target >= n || target === current) return;
+
+        isTransitioning = true;
+        const fromSec   = sections[current];
+        const toSec     = sections[target];
+        const isForward = target > current;
+
+        if (target === 2 && secWorks) secWorks.scrollTop = 0;
+
+        // 1. Paint cols with FROM section's solid color.
+        //    This makes them look IDENTICAL to the current section bg.
+        cols.forEach(col => { col.style.background = SECTION_BG[current]; });
+
+        // 2. Snap cols to scaleY:1 — they now fill the full overlay.
+        //    Visually: still looks like the from-section (cols = same color).
+        gsap.set(cols, { scaleY: 1 });
+        if (overlay) gsap.set(overlay, { zIndex: 50 });
+
+        // 3. Immediately hide fromSec and show toSec below.
+        //    No visual change — overlay covers everything.
+        gsap.set(fromSec, { visibility: 'hidden', opacity: 0, zIndex: 0, pointerEvents: 'none' });
+        gsap.set(toSec,   { visibility: 'visible', opacity: 1, zIndex: 10, pointerEvents: 'none' });
+
+        const tl = gsap.timeline({
+            onComplete() {
+                current = target;
+                isTransitioning = false;
+                // Reset overlay
+                gsap.set(overlay, { zIndex: 0 });
+                gsap.set(cols, { scaleY: 0 });
+                gsap.set(toSec, { zIndex: 10, pointerEvents: 'auto' });
+                applyNav(target);
+                checkStatsTrigger(target);
+            }
+        });
+
+        // 4. Collapse cols staggered (comb wipe) — toSec reveals through gaps.
+        //    forward: left-to-right  |  backward: right-to-left
+        //    Even cols: transform-origin top (CSS)   → collapse downward
+        //    Odd cols:  transform-origin bottom (CSS) → collapse upward
+        tl.to(cols, {
+            scaleY:   0,
+            duration: 0.55,
+            ease:     'power2.inOut',
+            stagger:  { each: 0.028, from: isForward ? 'start' : 'end' }
+        }, 0);
+
+        // 5. Navbar morphs slightly after first bar starts collapsing
+        tl.to(navbar, {
+            '--nav-bg':     NAV[target].bg,
+            '--nav-border': NAV[target].border,
+            duration: 0.42,
+            ease: 'power2.inOut',
+            onStart: () => { if (navbar) navbar.classList.toggle('light-theme', NAV[target].light); }
+        }, 0.06);
+    }
+
+    // ── Scroll / Wheel / Touch / Key lock ─────────────
+    let wheelAcc = 0, wheelTmr = null;
+    const THRESH = 50;
+
+    window.addEventListener('wheel', e => {
+        if (isTransitioning) { e.preventDefault(); return; }
+
+        // Works: allow internal scroll, transition only at top/bottom boundary
+        if (current === 2 && secWorks) {
+            const atTop    = secWorks.scrollTop <= 5;
+            const atBottom = secWorks.scrollTop + secWorks.clientHeight >= secWorks.scrollHeight - 10;
+            if (e.deltaY > 0 && !atBottom) return; // still scrolling inside Works
+            if (e.deltaY < 0 && !atTop)    return;
+            e.preventDefault();
+            wheelAcc += e.deltaY;
+            clearTimeout(wheelTmr);
+            wheelTmr = setTimeout(() => { wheelAcc = 0; }, 150);
+            if (Math.abs(wheelAcc) >= THRESH) { wheelAcc = 0; goTo(current + (e.deltaY > 0 ? 1 : -1)); }
+            return;
+        }
+
+        e.preventDefault();
+        wheelAcc += e.deltaY;
+        clearTimeout(wheelTmr);
+        wheelTmr = setTimeout(() => { wheelAcc = 0; }, 150);
+        if (Math.abs(wheelAcc) >= THRESH) { wheelAcc = 0; goTo(current + (e.deltaY > 0 ? 1 : -1)); }
+    }, { passive: false });
+
+    let touchY0 = 0;
+    window.addEventListener('touchstart', e => { touchY0 = e.touches[0].clientY; }, { passive: true });
+    window.addEventListener('touchend',   e => {
+        if (isTransitioning) return;
+        const dy = touchY0 - e.changedTouches[0].clientY;
+        if (Math.abs(dy) < 40) return;
+        if (current === 2 && secWorks) {
+            const atTop    = secWorks.scrollTop <= 5;
+            const atBottom = secWorks.scrollTop + secWorks.clientHeight >= secWorks.scrollHeight - 10;
+            if (dy > 0 && atBottom)  goTo(3);
+            else if (dy < 0 && atTop) goTo(1);
+            return;
+        }
+        goTo(current + (dy > 0 ? 1 : -1));
+    }, { passive: true });
+
+    window.addEventListener('keydown', e => {
+        if (isTransitioning) return;
+        if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+            if (current === 2 && secWorks && secWorks.scrollTop + secWorks.clientHeight < secWorks.scrollHeight - 10) return;
+            e.preventDefault(); goTo(current + 1);
+        } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+            if (current === 2 && secWorks && secWorks.scrollTop > 5) return;
+            e.preventDefault(); goTo(current - 1);
+        }
+    });
+
+    const ids = ['hero','services','works','testimonials','why','cta'];
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', e => {
+            const hash = link.getAttribute('href').replace('#','');
+            const idx  = (hash === 'hero' || hash === '') ? 0 : ids.indexOf(hash);
+            if (idx !== -1) { e.preventDefault(); goTo(idx); }
+        });
+    });
+
+    window.fp = { goTo, current: () => current };
+})();
+
+// ─── Draggable testimonials ─────────────────────────────
 const track = document.getElementById('testi-track');
 if (track) {
     let down = false, startX, scrollLeft;
-    track.addEventListener('mousedown', (e) => {
-        down = true; track.classList.add('active');
-        startX = e.pageX - track.offsetLeft;
-        scrollLeft = track.scrollLeft;
-    });
-    ['mouseleave', 'mouseup'].forEach(ev =>
-        track.addEventListener(ev, () => { down = false; track.classList.remove('active'); })
-    );
-    track.addEventListener('mousemove', (e) => {
-        if (!down) return;
-        e.preventDefault();
-        const x = e.pageX - track.offsetLeft;
-        track.scrollLeft = scrollLeft - (x - startX) * 1.5;
-    });
+    track.addEventListener('mousedown', e => { down = true; track.classList.add('active'); startX = e.pageX - track.offsetLeft; scrollLeft = track.scrollLeft; });
+    ['mouseleave','mouseup'].forEach(ev => track.addEventListener(ev, () => { down = false; track.classList.remove('active'); }));
+    track.addEventListener('mousemove', e => { if (!down) return; e.preventDefault(); track.scrollLeft = scrollLeft - (e.pageX - track.offsetLeft - startX) * 1.5; });
 }
 
-// ─── Service card selection ──────────────────────────
+// ─── Service card selection ─────────────────────────────
 document.querySelectorAll('.svc-card').forEach(card => {
     card.addEventListener('click', () => {
-        const track = card.closest('.services-track');
-        if (!track) return;
-        
+        const trackEl = card.closest('.services-track');
+        if (!trackEl) return;
         const isSelected = card.classList.contains('selected');
-        
-        // Clear selection from all cards first
         document.querySelectorAll('.svc-card').forEach(c => c.classList.remove('selected'));
-        
-        if (isSelected) {
-            track.classList.remove('has-selected');
-        } else {
-            // Select all instances of this card (including duplicate marquee instances)
-            const nameEl = card.querySelector('.svc-card-name');
-            if (nameEl) {
-                const serviceName = nameEl.textContent.trim();
-                document.querySelectorAll('.svc-card').forEach(c => {
-                    const cNameEl = c.querySelector('.svc-card-name');
-                    if (cNameEl && cNameEl.textContent.trim() === serviceName) {
-                        c.classList.add('selected');
-                    }
-                });
-            } else {
-                card.classList.add('selected');
-            }
-            track.classList.add('has-selected');
-        }
+        if (isSelected) { trackEl.classList.remove('has-selected'); return; }
+        const nameEl = card.querySelector('.svc-card-name');
+        if (nameEl) {
+            const name = nameEl.textContent.trim();
+            document.querySelectorAll('.svc-card').forEach(c => { const cn = c.querySelector('.svc-card-name'); if (cn?.textContent.trim() === name) c.classList.add('selected'); });
+        } else { card.classList.add('selected'); }
+        trackEl.classList.add('has-selected');
     });
 });
 
-// ─── Auto-hide custom scrollbar ───────────────────────
-let scrollTimeout;
-window.addEventListener('scroll', () => {
-    document.documentElement.classList.add('is-scrolling');
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => {
-        document.documentElement.classList.remove('is-scrolling');
-    }, 800);
-}, { passive: true });
-
-// ─── Render CTA ASCII Video to Canvas ────────────────
-const ctaVideo = document.getElementById('cta-video-source');
+// ─── CTA ASCII Video Canvas ─────────────────────────────
+const ctaVideo  = document.getElementById('cta-video-source');
 const ctaCanvas = document.getElementById('cta-video-canvas');
 if (ctaVideo && ctaCanvas) {
     const ctx = ctaCanvas.getContext('2d');
-    
-    function updateDimensions() {
-        if (ctaVideo.videoWidth) {
-            ctaCanvas.width = ctaVideo.videoWidth;
-            ctaCanvas.height = ctaVideo.videoHeight;
-        }
-    }
-    
-    ctaVideo.addEventListener('loadedmetadata', updateDimensions);
-    
-    function renderFrame() {
-        if (!ctaVideo.paused && !ctaVideo.ended) {
-            ctx.clearRect(0, 0, ctaCanvas.width, ctaCanvas.height);
-            ctx.drawImage(ctaVideo, 0, 0, ctaCanvas.width, ctaCanvas.height);
-        }
-        requestAnimationFrame(renderFrame);
-    }
-    
-    ctaVideo.addEventListener('play', () => {
-        updateDimensions();
-        renderFrame();
-    });
-    
-    // Trigger playback programmatically if needed, and handle if already playing
-    if (!ctaVideo.paused) {
-        updateDimensions();
-        renderFrame();
-    } else {
-        // Attempt play
-        ctaVideo.play().then(() => {
-            updateDimensions();
-            renderFrame();
-        }).catch(() => {
-            // Browsers might block autoplay, but since it's muted it should succeed
-        });
-    }
+    const upd = () => { if (ctaVideo.videoWidth) { ctaCanvas.width = ctaVideo.videoWidth; ctaCanvas.height = ctaVideo.videoHeight; } };
+    ctaVideo.addEventListener('loadedmetadata', upd);
+    const render = () => { if (!ctaVideo.paused && !ctaVideo.ended) { ctx.clearRect(0,0,ctaCanvas.width,ctaCanvas.height); ctx.drawImage(ctaVideo,0,0,ctaCanvas.width,ctaCanvas.height); } requestAnimationFrame(render); };
+    ctaVideo.addEventListener('play', () => { upd(); render(); });
+    if (!ctaVideo.paused) { upd(); render(); } else { ctaVideo.play().then(() => { upd(); render(); }).catch(()=>{}); }
 }

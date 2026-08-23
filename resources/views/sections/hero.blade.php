@@ -1,4 +1,6 @@
-<section class="hero" id="hero">
+<section class="hero fp-section" id="hero">
+    <div class="shared-glow-left" aria-hidden="true"></div>
+    <div class="shared-glow-right" aria-hidden="true"></div>
     <div class="hero-content">
         <h1 class="hero-title fade-up" id="hero-h1">
             We build what your<br>business needs <strong>FAST</strong>

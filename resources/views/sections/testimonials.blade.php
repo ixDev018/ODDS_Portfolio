@@ -43,7 +43,7 @@ $cards = [
 ];
 @endphp
 
-<section class="testimonials" id="testimonials">
+<section class="testimonials fp-section" id="testimonials">
 
     {{-- Decorative glow blobs --}}
     <img class="testi-glow testi-glow--left"
