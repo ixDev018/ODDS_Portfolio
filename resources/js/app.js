@@ -1,9 +1,43 @@
 import './bootstrap';
 import { gsap } from 'gsap';
 
-// ─── Navbar setup ──────────────────────────────────────
+// ─── Navbar & Mobile Drawer setup ──────────────────────
 const navbar = document.getElementById('navbar');
 if (navbar) navbar.classList.add('scrolled');
+
+const mobileToggle = document.getElementById('mobile-toggle');
+const mobileDrawer = document.getElementById('mobile-drawer');
+const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+if (mobileToggle && mobileDrawer) {
+    mobileToggle.addEventListener('click', () => {
+        const isOpen = mobileDrawer.classList.contains('active');
+        if (isOpen) {
+            mobileDrawer.classList.remove('active');
+            mobileToggle.classList.remove('active');
+            mobileToggle.setAttribute('aria-expanded', 'false');
+            mobileDrawer.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        } else {
+            mobileDrawer.classList.add('active');
+            mobileToggle.classList.add('active');
+            mobileToggle.setAttribute('aria-expanded', 'true');
+            mobileDrawer.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
+    });
+
+    mobileNavLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            mobileDrawer.classList.remove('active');
+            mobileToggle.classList.remove('active');
+            mobileToggle.setAttribute('aria-expanded', 'false');
+            mobileDrawer.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        });
+    });
+}
+
 
 // ═══════════════════════════════════════════════════════
 //  FULL-PAGE ENGINE — mirrors GSAP branch trans-col logic
@@ -30,10 +64,10 @@ if (navbar) navbar.classList.add('scrolled');
     const container = document.getElementById('fp-container');
     if (!container) return;
 
-    const overlay  = document.getElementById('fp-overlay');
-    const cols     = overlay ? Array.from(overlay.querySelectorAll('.fp-col')) : [];
+    const overlay = document.getElementById('fp-overlay');
+    const cols = overlay ? Array.from(overlay.querySelectorAll('.fp-col')) : [];
     const sections = Array.from(container.querySelectorAll('.fp-section'));
-    const n        = sections.length;
+    const n = sections.length;
     if (!n || !cols.length) return;
 
     const secWorks = document.getElementById('works');
@@ -49,16 +83,27 @@ if (navbar) navbar.classList.add('scrolled');
     ];
 
     const NAV = [
-        { bg: 'rgba(14,14,14,0.65)',    border: 'rgba(255,255,255,0.08)', light: false },
-        { bg: 'rgba(135,90,245,0.65)',  border: 'rgba(255,255,255,0.08)', light: false },
-        { bg: 'rgba(227,227,227,0.65)', border: 'rgba(0,0,0,0.06)',       light: true  },
-        { bg: 'rgba(243,89,176,0.65)',  border: 'rgba(255,255,255,0.08)', light: false },
-        { bg: 'rgba(239,239,239,0.65)', border: 'rgba(0,0,0,0.06)',       light: true  },
-        { bg: 'rgba(0,0,0,0.65)',       border: 'rgba(255,255,255,0.08)', light: false },
+        { bg: 'rgba(14,14,14,0.65)', border: 'rgba(255,255,255,0.08)', light: false },
+        { bg: 'rgba(135,90,245,0.65)', border: 'rgba(255,255,255,0.08)', light: false },
+        { bg: 'rgba(227,227,227,0.65)', border: 'rgba(0,0,0,0.06)', light: true },
+        { bg: 'rgba(243,89,176,0.65)', border: 'rgba(255,255,255,0.08)', light: false },
+        { bg: 'rgba(239,239,239,0.65)', border: 'rgba(0,0,0,0.06)', light: true },
+        { bg: 'rgba(0,0,0,0.65)', border: 'rgba(255,255,255,0.08)', light: false },
     ];
 
     let current = 0;
-    let isTransitioning = false;
+    let target = null;
+
+    // Active scrubbing state
+    let activeTimeline = null;
+    let fromElsCache = [];
+    let toElsCache = [];
+    let stateObj = { progress: 0 };
+    let targetProgress = 0;
+    let snapTimer = null;
+    let isSnapping = false;
+    let isNavJumping = false;
+    let lastScrollDir = 1; // 1 for down/next, -1 for up/prev
 
     // Helper to query key visual content elements in a section for element-level transitions
     function getSectionElements(sec) {
@@ -80,9 +125,9 @@ if (navbar) navbar.classList.add('scrolled');
     // Initialize — only hero visible
     sections.forEach((sec, i) => {
         gsap.set(sec, {
-            zIndex:        i === 0 ? 10 : 0,
-            visibility:    i === 0 ? 'visible' : 'hidden',
-            opacity:       i === 0 ? 1 : 0,
+            zIndex: i === 0 ? 10 : 0,
+            visibility: i === 0 ? 'visible' : 'hidden',
+            opacity: i === 0 ? 1 : 0,
             pointerEvents: i === 0 ? 'auto' : 'none'
         });
     });
@@ -97,16 +142,24 @@ if (navbar) navbar.classList.add('scrolled');
     }
     applyNav(0);
 
+    function updateNavTheme(fromIdx, toIdx, prog) {
+        if (!navbar) return;
+        const fromNav = NAV[fromIdx] ?? NAV[0];
+        const toNav = NAV[toIdx] ?? NAV[0];
+
+        navbar.classList.toggle('light-theme', prog >= 0.5 ? toNav.light : fromNav.light);
+    }
+
     let statsFired = false;
     function checkStatsTrigger(idx) {
         if (idx !== 2 || statsFired || !secWorks) return;
         statsFired = true;
         secWorks.querySelectorAll('[data-target]').forEach(el => {
-            const target = parseInt(el.dataset.target, 10);
+            const targetVal = parseInt(el.dataset.target, 10);
             const suffix = el.dataset.suffix ?? '';
             const obj = { val: 0 };
             gsap.to(obj, {
-                val: target, duration: 1.6, ease: 'power2.out', delay: 0.2,
+                val: targetVal, duration: 1.6, ease: 'power2.out', delay: 0.2,
                 onUpdate() { el.textContent = Math.round(obj.val) + suffix; }
             });
         });
@@ -114,64 +167,37 @@ if (navbar) navbar.classList.add('scrolled');
 
     // Hero entrance
     gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.9 } })
-        .to('#hero-h1',  { opacity: 1, y: 0, delay: 0.2 })
-        .to('#hero-p',   { opacity: 1, y: 0 }, '-=0.55')
+        .to('#hero-h1', { opacity: 1, y: 0, delay: 0.2 })
+        .to('#hero-p', { opacity: 1, y: 0 }, '-=0.55')
         .to('#hero-btn', { opacity: 1, y: 0 }, '-=0.5');
 
-    // ── See-Through Bleeding Section Transition ──
-    function goTo(target) {
-        if (isTransitioning) return;
-        if (target < 0 || target >= n || target === current) return;
+    // ── Build Scrubbable Timeline ─────────────────────────────
+    function prepareTransition(targetIdx) {
+        if (targetIdx < 0 || targetIdx >= n || targetIdx === current) return false;
 
-        isTransitioning = true;
-        const fromSec   = sections[current];
-        const toSec     = sections[target];
-        const isForward = target > current;
+        const fromSec = sections[current];
+        const toSec = sections[targetIdx];
+        const isForward = targetIdx > current;
 
-        if (target === 2 && secWorks) secWorks.scrollTop = 0;
+        if (targetIdx === 2 && secWorks) secWorks.scrollTop = 0;
 
-        const fromEls = getSectionElements(fromSec);
-        const toEls   = getSectionElements(toSec);
+        fromElsCache = getSectionElements(fromSec);
+        toElsCache = getSectionElements(toSec);
 
-        // 1. Paint translucent glass cols with FROM section RGBA
+        // Paint translucent glass cols with FROM section RGBA
         cols.forEach(col => { col.style.background = SECTION_BG_RGBA[current]; });
 
-        // 2. Stacking & Initial state:
-        //    fromSec stays visible (zIndex 10) bleeding behind.
-        //    toSec starts invisible at zIndex 20, fading in over fromSec.
-        //    overlay sits at zIndex 30.
         gsap.set(fromSec, { visibility: 'visible', opacity: 1, zIndex: 10, pointerEvents: 'none' });
-        gsap.set(toSec,   { visibility: 'visible', opacity: 0, zIndex: 20, pointerEvents: 'none' });
+        gsap.set(toSec, { visibility: 'visible', opacity: 0, zIndex: 20, pointerEvents: 'none' });
         if (overlay) gsap.set(overlay, { zIndex: 30 });
 
-        // Preset incoming section elements (faded out + offset)
-        gsap.set(toEls, { opacity: 0, y: isForward ? 35 : -35, scale: 0.96 });
-
-        // Snap overlay columns to scaleY: 1
+        gsap.set(toElsCache, { opacity: 0, y: isForward ? 35 : -35, scale: 0.96 });
         gsap.set(cols, { scaleY: 1 });
 
-        const tl = gsap.timeline({
-            onComplete() {
-                current = target;
-                isTransitioning = false;
+        activeTimeline = gsap.timeline({ paused: true });
 
-                // Hide fromSec and reset element styles cleanly
-                gsap.set(fromSec, { visibility: 'hidden', opacity: 0, zIndex: 0, pointerEvents: 'none' });
-                gsap.set(fromEls, { clearProps: 'transform,opacity,scale' });
-
-                // Settle toSec as active
-                gsap.set(overlay, { zIndex: 0 });
-                gsap.set(cols, { scaleY: 0 });
-                gsap.set(toSec, { zIndex: 10, opacity: 1, pointerEvents: 'auto' });
-                gsap.set(toEls, { clearProps: 'transform,opacity,scale' });
-
-                applyNav(target);
-                checkStatsTrigger(target);
-            }
-        });
-
-        // Step A: Outgoing section elements fade out & dissolve upward/downward
-        tl.to(fromEls, {
+        // Step A: Outgoing section elements fade out
+        activeTimeline.to(fromElsCache, {
             opacity: 0,
             y: isForward ? -30 : 30,
             scale: 0.95,
@@ -181,14 +207,14 @@ if (navbar) navbar.classList.add('scrolled');
         }, 0);
 
         // Step B: toSec background opacity crossfades in
-        tl.to(toSec, {
+        activeTimeline.to(toSec, {
             opacity: 1,
             duration: 0.5,
             ease: 'power2.inOut'
         }, 0.05);
 
-        // Step C: Translucent overlay columns collapse staggered (glass wipe reveal)
-        tl.to(cols, {
+        // Step C: Translucent overlay columns collapse staggered
+        activeTimeline.to(cols, {
             scaleY: 0,
             duration: 0.55,
             ease: 'power2.inOut',
@@ -196,7 +222,7 @@ if (navbar) navbar.classList.add('scrolled');
         }, 0.1);
 
         // Step D: Incoming section elements fade in and slide into position
-        tl.to(toEls, {
+        activeTimeline.to(toElsCache, {
             opacity: 1,
             y: 0,
             scale: 1,
@@ -206,61 +232,226 @@ if (navbar) navbar.classList.add('scrolled');
         }, 0.15);
 
         // Step E: Navbar morphs smoothly
-        tl.to(navbar, {
-            '--nav-bg':     NAV[target].bg,
-            '--nav-border': NAV[target].border,
+        activeTimeline.to(navbar, {
+            '--nav-bg': NAV[targetIdx].bg,
+            '--nav-border': NAV[targetIdx].border,
             duration: 0.42,
-            ease: 'power2.inOut',
-            onStart: () => { if (navbar) navbar.classList.toggle('light-theme', NAV[target].light); }
+            ease: 'power2.inOut'
         }, 0.06);
+
+        target = targetIdx;
+        stateObj.progress = 0;
+        targetProgress = 0;
+        activeTimeline.progress(0);
+        return true;
     }
 
-    // ── Scroll / Wheel / Touch / Key lock ─────────────
-    let wheelAcc = 0, wheelTmr = null;
-    const THRESH = 50;
+    function clearActiveTransition(completedTarget) {
+        if (!activeTimeline) return;
+
+        const fromSec = sections[current];
+        const toSec = target !== null ? sections[target] : null;
+
+        if (completedTarget) {
+            // Settled at target section
+            current = target;
+            gsap.set(fromSec, { visibility: 'hidden', opacity: 0, zIndex: 0, pointerEvents: 'none' });
+            gsap.set(fromElsCache, { clearProps: 'transform,opacity,scale' });
+
+            gsap.set(overlay, { zIndex: 0 });
+            gsap.set(cols, { scaleY: 0 });
+            if (toSec) {
+                gsap.set(toSec, { zIndex: 10, opacity: 1, pointerEvents: 'auto' });
+                gsap.set(toElsCache, { clearProps: 'transform,opacity,scale' });
+            }
+
+            applyNav(current);
+            checkStatsTrigger(current);
+        } else {
+            // Reverted back to current section
+            if (toSec) {
+                gsap.set(toSec, { visibility: 'hidden', opacity: 0, zIndex: 0, pointerEvents: 'none' });
+                gsap.set(toElsCache, { clearProps: 'transform,opacity,scale' });
+            }
+            gsap.set(fromSec, { zIndex: 10, opacity: 1, pointerEvents: 'auto' });
+            gsap.set(fromElsCache, { clearProps: 'transform,opacity,scale' });
+
+            gsap.set(overlay, { zIndex: 0 });
+            gsap.set(cols, { scaleY: 0 });
+
+            applyNav(current);
+        }
+
+        activeTimeline.kill();
+        activeTimeline = null;
+        target = null;
+        stateObj.progress = 0;
+        targetProgress = 0;
+        isSnapping = false;
+        isNavJumping = false;
+    }
+
+    function snapTo(endProgress) {
+        if (!activeTimeline) return;
+        isSnapping = true;
+        clearTimeout(snapTimer);
+
+        const currentProg = stateObj.progress;
+        const dist = Math.abs(endProgress - currentProg);
+        const duration = Math.max(0.35, dist * 0.75);
+
+        gsap.to(stateObj, {
+            progress: endProgress,
+            duration: duration,
+            ease: 'power2.out',
+            overwrite: true,
+            onUpdate() {
+                if (activeTimeline) {
+                    activeTimeline.progress(stateObj.progress);
+                    if (target !== null) updateNavTheme(current, target, stateObj.progress);
+                }
+            },
+            onComplete() {
+                clearActiveTransition(endProgress === 1);
+            }
+        });
+    }
+
+    // Direct section jump (e.g. navbar click)
+    function goTo(targetIdx) {
+        if (targetIdx < 0 || targetIdx >= n || targetIdx === current) return;
+
+        if (activeTimeline) {
+            gsap.killTweensOf(stateObj);
+            clearActiveTransition(false);
+        }
+
+        isNavJumping = true;
+        if (!prepareTransition(targetIdx)) return;
+        snapTo(1);
+    }
+
+    // ── Reactive Scroll / Wheel Input Handling ──────────────────────
+    const WHEEL_SENSITIVITY = 1000; // wheel pixels required for a complete section transition
 
     window.addEventListener('wheel', e => {
-        if (isTransitioning) { e.preventDefault(); return; }
+        if (document.body.classList.contains('modal-open')) return;
 
         // Works: allow internal scroll, transition only at top/bottom boundary
-        if (current === 2 && secWorks) {
-            const atTop    = secWorks.scrollTop <= 5;
+        if (current === 2 && secWorks && !activeTimeline) {
+            const atTop = secWorks.scrollTop <= 5;
             const atBottom = secWorks.scrollTop + secWorks.clientHeight >= secWorks.scrollHeight - 10;
-            if (e.deltaY > 0 && !atBottom) return; // still scrolling inside Works
-            if (e.deltaY < 0 && !atTop)    return;
-            e.preventDefault();
-            wheelAcc += e.deltaY;
-            clearTimeout(wheelTmr);
-            wheelTmr = setTimeout(() => { wheelAcc = 0; }, 150);
-            if (Math.abs(wheelAcc) >= THRESH) { wheelAcc = 0; goTo(current + (e.deltaY > 0 ? 1 : -1)); }
-            return;
+            if (e.deltaY > 0 && !atBottom) return; // scroll inside Works
+            if (e.deltaY < 0 && !atTop) return;
         }
 
         e.preventDefault();
-        wheelAcc += e.deltaY;
-        clearTimeout(wheelTmr);
-        wheelTmr = setTimeout(() => { wheelAcc = 0; }, 150);
-        if (Math.abs(wheelAcc) >= THRESH) { wheelAcc = 0; goTo(current + (e.deltaY > 0 ? 1 : -1)); }
+
+        if (isNavJumping) return;
+
+        const delta = e.deltaY;
+        if (Math.abs(delta) < 1) return;
+
+        const dir = delta > 0 ? 1 : -1;
+        lastScrollDir = dir;
+
+        if (!activeTimeline) {
+            // Start scrub towards next/prev section
+            const nextIdx = current + dir;
+            if (nextIdx < 0 || nextIdx >= n) return;
+            prepareTransition(nextIdx);
+        }
+
+        if (!activeTimeline) return;
+
+        // Calculate progress delta relative to current target direction:
+        // Going down (target > current): +delta advances progress
+        // Going up (target < current): -delta advances progress
+        const deltaProgress = (target > current) ? (delta / WHEEL_SENSITIVITY) : (-delta / WHEEL_SENSITIVITY);
+        targetProgress += deltaProgress;
+
+        // Clamp targetProgress between 0.0 and 1.0 — freezes midway whenever wheel stops!
+        targetProgress = Math.max(0, Math.min(1, targetProgress));
+
+        // Smooth reactive update
+        gsap.to(stateObj, {
+            progress: targetProgress,
+            duration: 0.25,
+            ease: 'power2.out',
+            overwrite: 'auto',
+            onUpdate() {
+                if (activeTimeline) {
+                    activeTimeline.progress(stateObj.progress);
+                    if (target !== null) updateNavTheme(current, target, stateObj.progress);
+                }
+            },
+            onComplete() {
+                if (stateObj.progress >= 1.0) {
+                    clearActiveTransition(true);
+                } else if (stateObj.progress <= 0.0) {
+                    clearActiveTransition(false);
+                }
+            }
+        });
     }, { passive: false });
 
+    // Touch swipe handling with step response
     let touchY0 = 0;
     window.addEventListener('touchstart', e => { touchY0 = e.touches[0].clientY; }, { passive: true });
-    window.addEventListener('touchend',   e => {
-        if (isTransitioning) return;
-        const dy = touchY0 - e.changedTouches[0].clientY;
-        if (Math.abs(dy) < 40) return;
-        if (current === 2 && secWorks) {
-            const atTop    = secWorks.scrollTop <= 5;
+    window.addEventListener('touchmove', e => {
+        if (document.body.classList.contains('modal-open')) return;
+
+        if (!touchY0) return;
+        const dy = touchY0 - e.touches[0].clientY;
+
+        if (current === 2 && secWorks && !activeTimeline) {
+            const atTop = secWorks.scrollTop <= 5;
             const atBottom = secWorks.scrollTop + secWorks.clientHeight >= secWorks.scrollHeight - 10;
-            if (dy > 0 && atBottom)  goTo(3);
-            else if (dy < 0 && atTop) goTo(1);
-            return;
+            if (dy > 0 && !atBottom) return;
+            if (dy < 0 && !atTop) return;
         }
-        goTo(current + (dy > 0 ? 1 : -1));
+
+        if (Math.abs(dy) > 10) {
+            const dir = dy > 0 ? 1 : -1;
+            lastScrollDir = dir;
+            if (!activeTimeline) {
+                const nextIdx = current + dir;
+                if (nextIdx >= 0 && nextIdx < n) prepareTransition(nextIdx);
+            }
+            if (activeTimeline) {
+                targetProgress = Math.max(0, Math.min(1, Math.abs(dy) / 300));
+                gsap.to(stateObj, {
+                    progress: targetProgress,
+                    duration: 0.2,
+                    overwrite: 'auto',
+                    onUpdate() {
+                        if (activeTimeline) {
+                            activeTimeline.progress(stateObj.progress);
+                            if (target !== null) updateNavTheme(current, target, stateObj.progress);
+                        }
+                    },
+                    onComplete() {
+                        if (stateObj.progress >= 1.0) clearActiveTransition(true);
+                        else if (stateObj.progress <= 0.0) clearActiveTransition(false);
+                    }
+                });
+            }
+        }
+    }, { passive: true });
+
+    window.addEventListener('touchend', e => {
+        touchY0 = 0;
     }, { passive: true });
 
     window.addEventListener('keydown', e => {
-        if (isTransitioning) return;
+        if (document.body.classList.contains('modal-open')) {
+            if (e.key === 'Escape') {
+                if (window.closeProjectModal) window.closeProjectModal();
+            }
+            return;
+        }
+
+        if (activeTimeline || isNavJumping) return;
         if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
             if (current === 2 && secWorks && secWorks.scrollTop + secWorks.clientHeight < secWorks.scrollHeight - 10) return;
             e.preventDefault(); goTo(current + 1);
@@ -270,11 +461,11 @@ if (navbar) navbar.classList.add('scrolled');
         }
     });
 
-    const ids = ['hero','services','works','testimonials','why','cta'];
+    const ids = ['hero', 'services', 'works', 'testimonials', 'why', 'cta'];
     document.querySelectorAll('a[href^="#"]').forEach(link => {
         link.addEventListener('click', e => {
-            const hash = link.getAttribute('href').replace('#','');
-            const idx  = (hash === 'hero' || hash === '') ? 0 : ids.indexOf(hash);
+            const hash = link.getAttribute('href').replace('#', '');
+            const idx = (hash === 'hero' || hash === '') ? 0 : ids.indexOf(hash);
             if (idx !== -1) { e.preventDefault(); goTo(idx); }
         });
     });
@@ -282,14 +473,6 @@ if (navbar) navbar.classList.add('scrolled');
     window.fp = { goTo, current: () => current };
 })();
 
-// ─── Draggable testimonials ─────────────────────────────
-const track = document.getElementById('testi-track');
-if (track) {
-    let down = false, startX, scrollLeft;
-    track.addEventListener('mousedown', e => { down = true; track.classList.add('active'); startX = e.pageX - track.offsetLeft; scrollLeft = track.scrollLeft; });
-    ['mouseleave','mouseup'].forEach(ev => track.addEventListener(ev, () => { down = false; track.classList.remove('active'); }));
-    track.addEventListener('mousemove', e => { if (!down) return; e.preventDefault(); track.scrollLeft = scrollLeft - (e.pageX - track.offsetLeft - startX) * 1.5; });
-}
 
 // ─── Service card selection ─────────────────────────────
 document.querySelectorAll('.svc-card').forEach(card => {
@@ -309,13 +492,186 @@ document.querySelectorAll('.svc-card').forEach(card => {
 });
 
 // ─── CTA ASCII Video Canvas ─────────────────────────────
-const ctaVideo  = document.getElementById('cta-video-source');
+const ctaVideo = document.getElementById('cta-video-source');
 const ctaCanvas = document.getElementById('cta-video-canvas');
 if (ctaVideo && ctaCanvas) {
     const ctx = ctaCanvas.getContext('2d');
     const upd = () => { if (ctaVideo.videoWidth) { ctaCanvas.width = ctaVideo.videoWidth; ctaCanvas.height = ctaVideo.videoHeight; } };
     ctaVideo.addEventListener('loadedmetadata', upd);
-    const render = () => { if (!ctaVideo.paused && !ctaVideo.ended) { ctx.clearRect(0,0,ctaCanvas.width,ctaCanvas.height); ctx.drawImage(ctaVideo,0,0,ctaCanvas.width,ctaCanvas.height); } requestAnimationFrame(render); };
+    const render = () => { if (!ctaVideo.paused && !ctaVideo.ended) { ctx.clearRect(0, 0, ctaCanvas.width, ctaCanvas.height); ctx.drawImage(ctaVideo, 0, 0, ctaCanvas.width, ctaCanvas.height); } requestAnimationFrame(render); };
     ctaVideo.addEventListener('play', () => { upd(); render(); });
-    if (!ctaVideo.paused) { upd(); render(); } else { ctaVideo.play().then(() => { upd(); render(); }).catch(()=>{}); }
+    if (!ctaVideo.paused) { upd(); render(); } else { ctaVideo.play().then(() => { upd(); render(); }).catch(() => { }); }
 }
+
+// ─── Project Detail Modal Controller ────────────────────
+(function projectModalController() {
+    const modal = document.getElementById('project-modal');
+    if (!modal) return;
+
+    const closeBtn = document.getElementById('project-modal-close-btn');
+    const pathEl = document.getElementById('project-modal-path');
+    const titleEl = document.getElementById('project-modal-title');
+    const categoryEl = document.getElementById('project-modal-category');
+    const yearEl = document.getElementById('project-modal-year');
+    const descEl = document.getElementById('project-modal-desc');
+    const blocksContainer = document.getElementById('project-modal-blocks');
+    const linksContainer = document.getElementById('project-modal-links');
+    const modalCard = modal.querySelector('.project-modal-card');
+
+    function renderNotionBlocks(blocksJson, fallbackStory) {
+        if (!blocksContainer) return;
+        blocksContainer.innerHTML = '';
+
+        let blocks = [];
+        try {
+            blocks = typeof blocksJson === 'string' ? JSON.parse(blocksJson) : blocksJson;
+        } catch(e) {
+            blocks = [];
+        }
+
+        if (Array.isArray(blocks) && blocks.length > 0) {
+            blocks.forEach(b => {
+                const type = b.type || 'paragraph';
+                if (type === 'heading2') {
+                    const h2 = document.createElement('h2');
+                    h2.className = 'text-xl md:text-2xl font-bold text-white mt-6 mb-2 tracking-tight flex items-center';
+                    h2.innerHTML = b.content || '';
+                    blocksContainer.appendChild(h2);
+                } else if (type === 'heading3') {
+                    const h3 = document.createElement('h3');
+                    h3.className = 'text-lg font-bold text-gray-200 mt-4 mb-1.5';
+                    h3.innerHTML = b.content || '';
+                    blocksContainer.appendChild(h3);
+                } else if (type === 'quote') {
+                    const blockquote = document.createElement('blockquote');
+                    blockquote.className = 'border-l-4 border-[#875af5] pl-4 py-1 italic text-gray-300 bg-[#875af5]/5 rounded-r-lg my-3';
+                    blockquote.innerHTML = b.content || '';
+                    blocksContainer.appendChild(blockquote);
+                } else if (type === 'callout') {
+                    const callout = document.createElement('div');
+                    callout.className = 'bg-[#875af5]/10 border border-[#875af5]/30 rounded-xl p-4 text-gray-200 my-4 flex items-start space-x-3';
+                    callout.innerHTML = `<i class="fa-solid fa-lightbulb text-[#875af5] mt-1"></i><div class="flex-1">${b.content || ''}</div>`;
+                    blocksContainer.appendChild(callout);
+                } else if (type === 'code') {
+                    const pre = document.createElement('pre');
+                    pre.className = 'bg-[#0a0a0c] border border-[#22222a] p-4 rounded-xl font-mono text-xs text-[#38bdf8] overflow-x-auto my-3';
+                    pre.textContent = b.content || '';
+                    blocksContainer.appendChild(pre);
+                } else if (type === 'bullet') {
+                    const li = document.createElement('div');
+                    li.className = 'flex items-start space-x-2 pl-2 my-1';
+                    li.innerHTML = `<span class="text-[#875af5] font-bold">•</span><div>${b.content || ''}</div>`;
+                    blocksContainer.appendChild(li);
+                } else if (type === 'numbered') {
+                    const num = document.createElement('div');
+                    num.className = 'flex items-start space-x-2 pl-2 my-1';
+                    num.innerHTML = `<span class="text-[#875af5] font-mono text-xs font-bold">1.</span><div>${b.content || ''}</div>`;
+                    blocksContainer.appendChild(num);
+                } else if (type === 'divider') {
+                    const hr = document.createElement('hr');
+                    hr.className = 'border-t border-[#22222a] my-6';
+                    blocksContainer.appendChild(hr);
+                } else if (type === 'image' && b.src) {
+                    const fig = document.createElement('figure');
+                    fig.className = 'my-6 rounded-2xl overflow-hidden border border-[#262632] bg-[#0c0c0e]';
+                    fig.innerHTML = `
+                        <img src="${b.src}" class="w-full h-auto max-h-[480px] object-contain mx-auto">
+                        ${b.caption ? `<figcaption class="p-2.5 text-center text-xs text-gray-500 italic bg-[#141418] border-t border-[#22222a]">${b.caption}</figcaption>` : ''}
+                    `;
+                    blocksContainer.appendChild(fig);
+                } else {
+                    const p = document.createElement('p');
+                    p.className = 'text-gray-300 leading-relaxed my-2';
+                    p.innerHTML = b.content || '';
+                    blocksContainer.appendChild(p);
+                }
+            });
+        } else if (fallbackStory) {
+            blocksContainer.innerHTML = fallbackStory;
+        } else {
+            blocksContainer.innerHTML = '<p class="text-gray-400">Story documentation coming soon.</p>';
+        }
+    }
+
+    function openProjectModal(meta) {
+        if (titleEl) titleEl.textContent = meta.title || 'PROJECT';
+        if (pathEl) pathEl.textContent = meta.pathStr || `ODDS_Project/${meta.title}/Project_Story`;
+        if (categoryEl) categoryEl.textContent = meta.category || 'Software Architecture';
+        if (yearEl) yearEl.textContent = meta.year || '2024';
+        if (descEl) descEl.textContent = meta.desc || '';
+
+        if (linksContainer) {
+            linksContainer.innerHTML = '';
+            if (meta.demoUrl) {
+                linksContainer.innerHTML += `<a href="${meta.demoUrl}" target="_blank" class="px-3 py-1 bg-[#875af5] text-white text-xs font-bold rounded-full hover:bg-[#7343e8] transition-colors"><i class="fa-solid fa-arrow-up-right-from-square mr-1"></i>Live Demo</a>`;
+            }
+            if (meta.githubUrl) {
+                linksContainer.innerHTML += `<a href="${meta.githubUrl}" target="_blank" class="px-3 py-1 bg-[#202026] text-gray-300 text-xs font-bold rounded-full hover:text-white transition-colors"><i class="fa-brands fa-github mr-1"></i>Code</a>`;
+            }
+        }
+
+        renderNotionBlocks(meta.blocks, meta.story);
+
+        modal.scrollTop = 0;
+        modal.classList.remove('hidden');
+        void modal.offsetWidth;
+        modal.classList.add('is-active');
+        modal.setAttribute('aria-hidden', 'false');
+
+        document.body.classList.add('modal-open');
+    }
+
+    function closeProjectModal() {
+        modal.classList.remove('is-active');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+
+        setTimeout(() => {
+            if (!modal.classList.contains('is-active')) {
+                modal.classList.add('hidden');
+            }
+        }, 300);
+    }
+
+    // Attach trigger to every project card in works grid
+    document.querySelectorAll('.project-card-trigger').forEach(trigger => {
+        trigger.addEventListener('click', e => {
+            e.stopPropagation();
+            const meta = {
+                title: trigger.getAttribute('data-project-title') || 'PROJECT',
+                category: trigger.getAttribute('data-project-category'),
+                year: trigger.getAttribute('data-project-year'),
+                desc: trigger.getAttribute('data-project-desc'),
+                blocks: trigger.getAttribute('data-project-blocks'),
+                story: trigger.getAttribute('data-project-story'),
+                demoUrl: trigger.getAttribute('data-project-demo'),
+                githubUrl: trigger.getAttribute('data-project-github'),
+                pathStr: trigger.getAttribute('data-project-path')
+            };
+            openProjectModal(meta);
+        });
+    });
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            closeProjectModal();
+        });
+    }
+
+    modal.addEventListener('click', e => {
+        if (modalCard && !modalCard.contains(e.target)) {
+            closeProjectModal();
+        }
+    });
+
+    window.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && modal.classList.contains('is-active')) {
+            closeProjectModal();
+        }
+    });
+
+    window.openProjectModal = openProjectModal;
+    window.closeProjectModal = closeProjectModal;
+})();
+

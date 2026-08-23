@@ -10,13 +10,31 @@
                 <path d="M25.597 27.4219V24.16H80.0172C80.9127 24.16 81.6802 23.9553 82.3198 23.546C82.9594 23.1111 83.4582 22.561 83.8164 21.8959C84.1746 21.2307 84.3537 20.5271 84.3537 19.7852C84.3537 19.0177 84.1746 18.3141 83.8164 17.6746C83.4838 17.0094 82.9977 16.4849 82.3581 16.1012C81.7441 15.6918 80.9894 15.4872 80.094 15.4872H75.0284C73.519 15.4872 72.1886 15.1801 71.0374 14.5661C69.8861 13.9265 68.9779 13.0567 68.3127 11.9566C67.6731 10.8309 67.3533 9.56453 67.3533 8.15743C67.3533 6.72475 67.6603 5.43277 68.2743 4.28151C68.9139 3.13024 69.7966 2.22202 70.9222 1.55685C72.0735 0.89167 73.3911 0.559082 74.8749 0.559082H86.2724V3.821H75.2203C74.376 3.821 73.6341 4.02567 72.9945 4.43501C72.3549 4.81876 71.8688 5.33044 71.5362 5.97003C71.2037 6.58404 71.0374 7.24921 71.0374 7.96555C71.0374 8.65631 71.1909 9.32149 71.4979 9.96108C71.8305 10.5751 72.3038 11.074 72.9178 11.4577C73.5574 11.8415 74.2865 12.0334 75.1052 12.0334H80.2859C81.8976 12.0334 83.2791 12.3532 84.4304 12.9927C85.5817 13.6323 86.4643 14.5022 87.0783 15.6023C87.6923 16.7024 87.9993 17.956 87.9993 19.3631C87.9993 20.9237 87.6795 22.318 87.0399 23.546C86.4259 24.7484 85.5433 25.695 84.392 26.3858C83.2408 27.0766 81.9232 27.4219 80.4394 27.4219H25.597Z" fill="currentColor"/>
             </svg>
         </a>
-        <div class="nav-right" style="display: flex; align-items: center; gap: 40px;">
+        <div class="nav-right">
             <ul class="nav-links">
                 <li><a href="#services">Services</a></li>
                 <li><a href="#works">Our Work</a></li>
                 <li><a href="#why">About Us</a></li>
             </ul>
             <a href="#cta" class="btn-nav">Let's Talk</a>
+            <button class="nav-toggle" id="mobile-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+                <span class="hamburger-bar"></span>
+                <span class="hamburger-bar"></span>
+                <span class="hamburger-bar"></span>
+            </button>
         </div>
     </div>
 </nav>
+
+<!-- Mobile Navigation Drawer -->
+<div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+    <div class="mobile-drawer-inner">
+        <ul class="mobile-nav-links">
+            <li><a href="#services" class="mobile-nav-link">Services</a></li>
+            <li><a href="#works" class="mobile-nav-link">Our Work</a></li>
+            <li><a href="#why" class="mobile-nav-link">About Us</a></li>
+        </ul>
+        <a href="#cta" class="mobile-btn-nav mobile-nav-link">Let's Talk</a>
+    </div>
+</div>
+

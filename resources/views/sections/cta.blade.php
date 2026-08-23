@@ -20,25 +20,22 @@
             <div class="cta-terminal-body">
                 <!-- Meta info -->
                 <div class="cta-meta">
-                    <p class="cta-meta-line">ODDS Development Team 2025. All rights reserved</p>
-                    <p class="cta-meta-prompt">client\ODDS_Project&gt; project init</p>
+                    <p class="cta-meta-line">{{ $settings->cta_meta_line ?? 'ODDS Development Team 2025. All rights reserved' }}</p>
+                    <p class="cta-meta-prompt">{{ $settings->cta_terminal_prompt ?? 'client\ODDS_Project> project init' }}</p>
                 </div>
 
                 <!-- Two-column row: content left, graphic right -->
                 <div class="cta-row">
                     <div class="cta-content">
                         <h2 class="cta-title">
-                            Let's Build<br>Something Real.
+                            {!! nl2br(e($settings->cta_title ?? "Let's Build\nSomething Real.")) !!}
                         </h2>
 
                         <p class="cta-desc">
-                            Tell us what you're facing.<br>
-                            Whether you need a quick technical module or an end-to-end<br>
-                            package solution, our team is ready to execute. Expect a<br>
-                            response with clear next steps within 24 hours
+                            {!! nl2br(e($settings->cta_desc ?? "Tell us what you're facing.\nWhether you need a quick technical module or an end-to-end\npackage solution, our team is ready to execute. Expect a\nresponse with clear next steps within 24 hours")) !!}
                         </p>
 
-                        <a href="mailto:hello@odds.dev" class="cta-btn">Let's Build!</a>
+                        <a href="mailto:{{ $settings->cta_email ?? 'hello@odds.dev' }}" class="cta-btn">Let's Build!</a>
                     </div>
 
                     <div class="cta-visual">
@@ -51,11 +48,11 @@
 
                 <!-- Footer social bar inside terminal -->
                 <div class="cta-terminal-footer">
-                    <span>facebook: ODDS Comp.</span>
-                    <span>instagram: ODDS Comp.</span>
-                    <span>mail: odds_company@gmail.com</span>
-                    <span>youtube: ODDS Comp.</span>
-                    <span>contact: 0999999999</span>
+                    <span>facebook: {{ $settings->cta_facebook ?? 'ODDS Comp.' }}</span>
+                    <span>instagram: {{ $settings->cta_instagram ?? 'ODDS Comp.' }}</span>
+                    <span>mail: {{ $settings->cta_email ?? 'hello@odds.dev' }}</span>
+                    <span>youtube: {{ $settings->cta_youtube ?? 'ODDS Comp.' }}</span>
+                    <span>contact: {{ $settings->cta_phone ?? '0999999999' }}</span>
                 </div>
             </div>
 

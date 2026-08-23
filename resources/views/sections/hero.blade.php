@@ -3,13 +3,13 @@
     <div class="shared-glow-right" aria-hidden="true"></div>
     <div class="hero-content">
         <h1 class="hero-title fade-up" id="hero-h1">
-            We build what your<br>business needs <strong>FAST</strong>
+            {!! nl2br(e($settings->hero_title ?? "We build what your\nbusiness needs FAST")) !!}
         </h1>
         <p class="hero-subtitle fade-up" id="hero-p">
-            Driven by technical excellence and a commitment to discomfort-driven growth,
-            we rapidly execute our deployment sequences. At the end of the day,
-            our mission is simple: we ship.
+            {{ $settings->hero_subtitle ?? "Driven by technical excellence and a commitment to discomfort-driven growth, we rapidly execute our deployment sequences. At the end of the day, our mission is simple: we ship." }}
         </p>
-        <a href="#cta" class="btn-hero fade-up" id="hero-btn">Let's Build</a>
+        <a href="{{ $settings->hero_btn_link ?? '#cta' }}" class="btn-hero fade-up" id="hero-btn">
+            {{ $settings->hero_btn_text ?? "Let's Build" }}
+        </a>
     </div>
 </section>
