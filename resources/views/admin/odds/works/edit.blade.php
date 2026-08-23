@@ -28,7 +28,7 @@
     .pe-editor-col {
         flex: 1 1 0; min-width: 0;
         display: flex; flex-direction: column;
-        background: #141418; border: 1px solid #22222a;
+        background: var(--bg-card); border: 1px solid var(--border-color);
         border-radius: 1rem; overflow: hidden;
     }
 
@@ -39,22 +39,22 @@
     .pe-title-input {
         width: 100%; border: none; outline: none;
         font-size: 1.65rem;
-        font-weight: 800; color: #ffffff;
+        font-weight: 800; color: var(--text-title);
         letter-spacing: -0.02em; background: transparent;
         padding: 0; margin-bottom: 0.35rem;
     }
-    .pe-title-input::placeholder { color: #3c3c4e; }
+    .pe-title-input::placeholder { color: var(--text-faint); }
     .pe-desc-input {
         width: 100%; border: none; outline: none;
         font-size: 0.85rem;
-        color: #a1a1aa; background: transparent;
+        color: var(--text-muted); background: transparent;
         padding: 0; margin-bottom: 0.5rem;
         resize: none; line-height: 1.5;
     }
-    .pe-desc-input::placeholder { color: #404050; }
+    .pe-desc-input::placeholder { color: var(--text-faint); }
 
     .pe-editor-divider {
-        height: 1px; background: #22222a;
+        height: 1px; background: var(--border-color);
         margin: 0 1.5rem;
     }
 
@@ -73,7 +73,7 @@
         transition: background 0.12s;
         margin: 0 0.5rem;
     }
-    .pe-block:hover { background: rgba(255, 255, 255, 0.02); }
+    .pe-block:hover { background: var(--tr-hover); }
     .pe-block:hover .pe-block-handle { opacity: 1; }
 
     .pe-block-handle {
@@ -81,74 +81,74 @@
         display: flex; align-items: center; justify-content: center;
         width: 22px; height: 22px;
         flex-shrink: 0; cursor: grab;
-        color: #555562; border-radius: 0.25rem;
+        color: var(--text-muted); border-radius: 0.25rem;
         margin-top: 0.2rem;
         transition: all 0.12s;
     }
-    .pe-block-handle:hover { color: #875af5; background: rgba(135, 90, 245, 0.15); }
+    .pe-block-handle:hover { color: var(--odds-purple); background: var(--tr-selected); }
     .pe-block-handle:active { cursor: grabbing; }
 
     .pe-block-content {
         flex: 1; min-width: 0;
         outline: none;
         font-size: 0.875rem;
-        color: #e2e2e8;
+        color: var(--text-body);
         line-height: 1.65;
         padding: 0.2rem 0.4rem;
         border-radius: 0.25rem;
         word-break: break-word;
     }
-    .pe-block-content:focus { background: rgba(135, 90, 245, 0.04); }
+    .pe-block-content:focus { background: var(--tr-selected); }
     .pe-block-content:empty::before {
         content: attr(data-placeholder);
-        color: #4a4a58;
+        color: var(--text-faint);
         pointer-events: none;
     }
 
     .pe-block-content[data-type="heading2"] {
         font-size: 1.25rem; font-weight: 700;
-        color: #ffffff; margin-top: 0.4rem;
+        color: var(--text-title); margin-top: 0.4rem;
     }
     .pe-block-content[data-type="heading3"] {
         font-size: 1.05rem; font-weight: 700;
-        color: #ffffff; margin-top: 0.25rem;
+        color: var(--text-title); margin-top: 0.25rem;
     }
     .pe-block-content[data-type="quote"] {
-        border-left: 3px solid #875af5;
+        border-left: 3px solid var(--odds-purple);
         padding-left: 0.85rem;
-        color: #a1a1aa; font-style: italic;
+        color: var(--text-muted); font-style: italic;
     }
     .pe-block-content[data-type="callout"] {
-        background: rgba(135, 90, 245, 0.1);
+        background: var(--tr-selected);
         border: 1px solid rgba(135, 90, 245, 0.3);
         border-radius: 0.5rem;
         padding: 0.75rem 1rem;
-        color: #e4e4e7;
+        color: var(--text-title);
     }
     .pe-block-content[data-type="code"] {
         font-family: var(--font-mono);
         font-size: 0.8rem;
-        background: #0b0b0e;
-        border: 1px solid #22222a;
+        background: var(--bg-input);
+        border: 1px solid var(--border-color);
         border-radius: 0.4rem;
         padding: 0.6rem 0.8rem;
         white-space: pre-wrap;
-        color: #38bdf8;
+        color: #0284c7;
     }
     .pe-block.bullet-block .pe-block-bullet {
         display: flex; align-items: center; justify-content: center;
         width: 18px; height: 24px;
-        flex-shrink: 0; color: #875af5; font-size: 1.2rem;
+        flex-shrink: 0; color: var(--odds-purple); font-size: 1.2rem;
     }
     .pe-block.numbered-block .pe-block-number {
         display: flex; align-items: center;
         min-width: 18px; height: 24px;
-        flex-shrink: 0; color: #875af5;
+        flex-shrink: 0; color: var(--odds-purple);
         font-family: var(--font-mono);
         font-size: 0.72rem; font-weight: 700;
     }
     .pe-block-content[data-type="divider"] {
-        height: 1px; background: #22222a;
+        height: 1px; background: var(--border-color);
         margin: 0.6rem 0; padding: 0;
         pointer-events: none;
     }
@@ -156,21 +156,21 @@
     .pe-block-image-wrap { width: 100%; display: flex; flex-direction: column; gap: 0.35rem; }
     .pe-block-image-upload {
         width: 100%; min-height: 110px;
-        background: #0b0b0e; border: 2px dashed #262632;
+        background: var(--bg-input); border: 2px dashed var(--border-color);
         border-radius: 0.6rem;
         display: flex; align-items: center; justify-content: center;
         flex-direction: column; gap: 0.35rem;
         cursor: pointer; transition: all 0.15s;
         padding: 1.25rem;
     }
-    .pe-block-image-upload:hover { border-color: #875af5; background: rgba(135, 90, 245, 0.05); }
+    .pe-block-image-upload:hover { border-color: var(--odds-purple); background: var(--tr-selected); }
 
     /* Slash menu */
     .pe-slash-menu {
         position: fixed; z-index: 100;
-        background: #181820; border: 1px solid #2c2c36;
+        background: var(--bg-card); border: 1px solid var(--border-color);
         border-radius: 0.75rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         min-width: 240px; max-height: 320px;
         overflow-y: auto; padding: 0.35rem;
     }
@@ -179,31 +179,31 @@
         padding: 0.45rem 0.65rem; border-radius: 0.4rem;
         cursor: pointer; transition: background 0.1s;
     }
-    .pe-slash-item:hover, .pe-slash-item.active { background: rgba(135, 90, 245, 0.15); }
+    .pe-slash-item:hover, .pe-slash-item.active { background: var(--tr-selected); }
     .pe-slash-icon {
         width: 26px; height: 26px;
         display: flex; align-items: center; justify-content: center;
-        background: #202028; border: 1px solid #2c2c36;
+        background: var(--bg-input); border: 1px solid var(--border-color);
         border-radius: 0.35rem; flex-shrink: 0;
-        color: #875af5; font-size: 0.75rem;
+        color: var(--odds-purple); font-size: 0.75rem;
     }
 
     /* ─── RIGHT: Settings Sidebar ─── */
     .pe-sidebar {
         width: 320px; flex-shrink: 0;
         display: flex; flex-direction: column;
-        background: #141418; border: 1px solid #22222a;
+        background: var(--bg-card); border: 1px solid var(--border-color);
         border-radius: 1rem; overflow: hidden;
     }
     .pe-sidebar-header {
         display: flex; align-items: center; justify-content: space-between;
         padding: 0.85rem 1.25rem 0.65rem; flex-shrink: 0;
-        border-bottom: 1px solid #22222a; background: #111115;
+        border-bottom: 1px solid var(--border-color); background: var(--bg-sidebar);
     }
     .pe-sidebar-header-label {
         font-family: var(--font-mono);
         font-size: 0.6rem; text-transform: uppercase;
-        letter-spacing: 0.1em; color: #8a8a99;
+        letter-spacing: 0.1em; color: var(--text-muted);
     }
     .pe-sidebar-scroll {
         flex: 1; overflow-y: auto;
@@ -213,8 +213,8 @@
 
     .pe-sidebar-footer {
         padding: 0.85rem 1.25rem;
-        border-top: 1px solid #22222a;
-        background: #111115; flex-shrink: 0;
+        border-top: 1px solid var(--border-color);
+        background: var(--bg-sidebar); flex-shrink: 0;
     }
 
     @media (max-width: 900px) {

@@ -20,8 +20,8 @@
         min-width: 0;
         display: flex;
         flex-direction: column;
-        background: #141418;
-        border: 1px solid #22222a;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
         border-radius: 1rem;
         overflow: hidden;
     }
@@ -32,8 +32,8 @@
         align-items: center;
         gap: 0.75rem;
         padding: 0.75rem 1rem;
-        background: #111115;
-        border-bottom: 1px solid #22222a;
+        background: var(--bg-sidebar);
+        border-bottom: 1px solid var(--border-color);
         flex-shrink: 0;
         flex-wrap: wrap;
     }
@@ -42,22 +42,22 @@
     .op-search-wrap svg {
         position: absolute; left: 0.75rem; top: 50%;
         transform: translateY(-50%);
-        color: #6c6c7d; pointer-events: none;
+        color: var(--text-muted); pointer-events: none;
     }
     .op-search {
         width: 100%;
-        background: #0b0b0e;
-        border: 1px solid #22222a;
+        background: var(--bg-input);
+        border: 1px solid var(--border-color);
         border-radius: 100px;
         padding: 0.42rem 0.85rem 0.42rem 2.2rem;
-        color: #ffffff;
+        color: var(--text-title);
         font-size: 0.8125rem;
         outline: none;
         transition: border-color 0.18s, box-shadow 0.18s;
     }
-    .op-search::placeholder { color: #555562; }
+    .op-search::placeholder { color: var(--text-faint); }
     .op-search:focus {
-        border-color: #875af5;
+        border-color: var(--odds-purple);
         box-shadow: 0 0 0 2px rgba(135, 90, 245, 0.2);
     }
 
@@ -67,10 +67,10 @@
         padding: 0.3rem 0.75rem;
         margin: 0 0.25rem 0 0;
         flex-shrink: 0;
-        background: #181820;
-        border: 1px solid #262632;
+        background: var(--btn-sec-bg);
+        border: 1px solid var(--btn-sec-border);
         border-radius: 100px;
-        color: #8a8a99;
+        color: var(--btn-sec-text);
         font-size: 0.62rem;
         font-family: var(--font-mono);
         font-weight: 700;
@@ -81,14 +81,14 @@
         white-space: nowrap;
     }
     .op-filter-btn:hover {
-        border-color: #875af5;
-        color: #ffffff;
-        background: rgba(135, 90, 245, 0.15);
+        border-color: var(--odds-purple);
+        color: var(--odds-purple);
+        background: var(--tr-selected);
     }
     .op-filter-btn.active {
-        background: #875af5;
-        border-color: #875af5;
-        color: #ffffff;
+        background: var(--odds-purple);
+        border-color: var(--odds-purple);
+        color: #ffffff !important;
     }
 
     .op-hide-scroll::-webkit-scrollbar { display: none; }
@@ -99,42 +99,42 @@
     .op-table { width: 100%; border-collapse: collapse; }
 
     .op-table thead tr {
-        background: #111115;
-        border-bottom: 1px solid #22222a;
+        background: var(--bg-sidebar);
+        border-bottom: 1px solid var(--border-color);
         position: sticky; top: 0; z-index: 1;
     }
     .op-table th {
         font-family: var(--font-mono);
         font-size: 0.6rem; text-transform: uppercase;
-        letter-spacing: 0.1em; color: #6c6c7d;
+        letter-spacing: 0.1em; color: var(--text-muted);
         padding: 0.65rem 1rem; text-align: left;
         white-space: nowrap;
     }
     .op-table td {
         padding: 0.65rem 1rem;
-        border-bottom: 1px solid #1c1c24;
-        font-size: 0.8125rem; color: #d1d1db;
+        border-bottom: 1px solid var(--border-color);
+        font-size: 0.8125rem; color: var(--text-body);
         vertical-align: middle;
     }
     .op-table tr:last-child td { border-bottom: none; }
     .op-table tbody tr { cursor: pointer; transition: background 0.12s; }
-    .op-table tbody tr:hover td { background: #181820; }
-    .op-table tbody tr.selected td { background: rgba(135, 90, 245, 0.12); }
+    .op-table tbody tr:hover td { background: var(--tr-hover); }
+    .op-table tbody tr.selected td { background: var(--tr-selected); }
     .op-table tbody tr.selected td:first-child {
-        box-shadow: inset 3px 0 0 #875af5;
+        box-shadow: inset 3px 0 0 var(--odds-purple);
     }
 
     /* footer */
     .op-table-footer {
         display: flex; align-items: center; justify-content: space-between;
         padding: 0.6rem 1rem;
-        border-top: 1px solid #22222a;
-        background: #111115;
+        border-top: 1px solid var(--border-color);
+        background: var(--bg-sidebar);
         flex-shrink: 0;
     }
     .op-count-label {
         font-family: var(--font-mono);
-        font-size: 0.6rem; color: #6c6c7d;
+        font-size: 0.6rem; color: var(--text-muted);
         text-transform: uppercase; letter-spacing: 0.1em;
     }
 
@@ -147,22 +147,22 @@
         background: transparent;
         border: 1px solid transparent;
         cursor: pointer;
-        color: #8a8a99;
+        color: var(--text-muted);
         transition: all 0.15s;
     }
     .op-dots-btn:hover {
-        background: #1e1e26;
-        border-color: #2c2c36;
-        color: #ffffff;
+        background: var(--btn-sec-bg);
+        border-color: var(--btn-sec-border);
+        color: var(--text-title);
     }
     .op-dropdown {
         position: absolute;
         right: 0; top: calc(100% + 4px);
         z-index: 50;
-        background: #181820;
-        border: 1px solid #2c2c36;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
         border-radius: 0.6rem;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
         min-width: 140px;
         overflow: hidden;
     }
@@ -171,37 +171,37 @@
         width: 100%; text-align: left;
         padding: 0.55rem 0.85rem;
         font-size: 0.8rem; font-weight: 600;
-        color: #d1d1db; background: transparent;
+        color: var(--text-body); background: transparent;
         border: none; cursor: pointer;
         text-decoration: none;
         transition: background 0.12s;
     }
-    .op-dropdown a:hover { background: #22222c; color: #ffffff; }
-    .op-dropdown button:hover { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+    .op-dropdown a:hover { background: var(--tr-hover); color: var(--text-title); }
+    .op-dropdown button:hover { background: rgba(239, 68, 68, 0.15); color: #dc2626; }
     .op-dropdown .op-dd-divider {
-        height: 1px; background: #262632; margin: 0.25rem 0;
+        height: 1px; background: var(--border-color); margin: 0.25rem 0;
     }
 
     /* ─── RIGHT panel ────────────────────────────────────────── */
     .op-right {
         width: 320px; flex-shrink: 0;
         display: flex; flex-direction: column;
-        background: #141418;
-        border: 1px solid #22222a;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
         border-radius: 1rem; overflow: hidden;
     }
 
     .op-right-header {
         display: flex; align-items: center; justify-content: space-between;
         padding: 0.75rem 1rem;
-        border-bottom: 1px solid #22222a;
-        background: #111115;
+        border-bottom: 1px solid var(--border-color);
+        background: var(--bg-sidebar);
         flex-shrink: 0;
     }
     .op-right-header-label {
         font-family: var(--font-mono);
         font-size: 0.6rem; text-transform: uppercase;
-        letter-spacing: 0.1em; color: #8a8a99;
+        letter-spacing: 0.1em; color: var(--text-muted);
     }
 
     .op-thumb-container {
@@ -209,7 +209,7 @@
         height: 170px;
         flex-shrink: 0;
         overflow: hidden;
-        background: #0b0b0e;
+        background: var(--bg-subtle);
         display: flex; align-items: center; justify-content: center;
         position: relative;
     }
@@ -228,11 +228,11 @@
         display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.85rem;
     }
     .op-meta-title {
-        font-size: 1.15rem; font-weight: 800; color: #ffffff; line-height: 1.3; text-align: center;
+        font-size: 1.15rem; font-weight: 800; color: var(--text-title); line-height: 1.3; text-align: center;
     }
     .op-meta-slug {
         font-family: var(--font-mono); font-size: 0.6rem;
-        color: #6c6c7d; margin-top: 0.2rem;
+        color: var(--text-muted); margin-top: 0.2rem;
         word-break: break-all; text-align: center;
     }
     .op-meta-grid {
@@ -240,24 +240,24 @@
     }
     .op-meta-item {
         display: flex; flex-direction: column; align-items: center; justify-content: center;
-        background: #0f0f13; border: 1px solid #22222a; border-radius: 0.5rem; padding: 0.5rem;
+        background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 0.5rem;
         text-align: center;
     }
     .op-meta-item label {
         display: block; font-family: var(--font-mono);
         font-size: 0.55rem; text-transform: uppercase;
-        letter-spacing: 0.1em; color: #6c6c7d; margin-bottom: 0.15rem; text-align: center;
+        letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 0.15rem; text-align: center;
     }
     .op-meta-item .val {
-        font-size: 0.8rem; color: #e2e2e8; font-weight: 600; text-align: center;
+        font-size: 0.8rem; color: var(--text-title); font-weight: 600; text-align: center;
     }
 
     /* preview actions */
     .op-preview-actions {
         padding: 0.75rem 1rem;
-        border-top: 1px solid #22222a;
+        border-top: 1px solid var(--border-color);
         display: flex; gap: 0.5rem;
-        flex-shrink: 0; background: #111115;
+        flex-shrink: 0; background: var(--bg-sidebar);
     }
     .op-preview-actions a, .op-preview-actions button {
         flex: 1; display: inline-flex;
@@ -268,18 +268,18 @@
         text-decoration: none;
     }
     .op-btn-edit {
-        background: #875af5; border: 1px solid #875af5; color: #fff;
+        background: var(--odds-purple); border: 1px solid var(--odds-purple); color: #fff !important;
     }
     .op-btn-edit:hover { background: #966bf7; }
 
     .op-btn-view {
-        background: #1e1e26; border: 1px solid #2c2c36; color: #d1d1db;
+        background: var(--btn-sec-bg); border: 1px solid var(--btn-sec-border); color: var(--btn-sec-text);
     }
-    .op-btn-view:hover { background: #282834; color: #fff; }
+    .op-btn-view:hover { background: var(--bg-card-hover); color: var(--text-title); }
 
     .op-btn-del {
         background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3);
-        color: #f87171; flex: 0; padding: 0.5rem 0.65rem;
+        color: #ef4444; flex: 0; padding: 0.5rem 0.65rem;
     }
     .op-btn-del:hover { background: rgba(239, 68, 68, 0.25); }
 
@@ -291,7 +291,7 @@
     }
     .op-empty-preview p {
         font-family: var(--font-mono); font-size: 0.65rem;
-        text-transform: uppercase; letter-spacing: 0.1em; color: #555562;
+        text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-faint);
     }
 
     /* page header */
@@ -302,19 +302,19 @@
 
     .op-row-thumb {
         width: 38px; height: 38px; border-radius: 0.4rem;
-        object-fit: cover; border: 1px solid #262632; flex-shrink: 0;
+        object-fit: cover; border: 1px solid var(--border-color); flex-shrink: 0;
     }
     .op-row-thumb-ph {
         width: 38px; height: 38px; border-radius: 0.4rem;
-        background: #0b0b0e; border: 1px solid #22222a;
+        background: var(--bg-subtle); border: 1px solid var(--border-color);
         display: flex; align-items: center; justify-content: center;
-        flex-shrink: 0; color: #555562; font-family: var(--font-mono); font-size: 9px;
+        flex-shrink: 0; color: var(--text-faint); font-family: var(--font-mono); font-size: 9px;
     }
 
     .op-drag-handle {
-        cursor: grab; color: #555562; transition: color 0.15s;
+        cursor: grab; color: var(--text-faint); transition: color 0.15s;
     }
-    .op-drag-handle:hover { color: #875af5; }
+    .op-drag-handle:hover { color: var(--odds-purple); }
     .op-drag-handle:active { cursor: grabbing; }
 
     @media (max-width: 900px) {
@@ -429,18 +429,18 @@
 
                                 <!-- Title & Client -->
                                 <td>
-                                    <div class="font-bold text-white text-sm" x-text="p.title"></div>
-                                    <div class="font-mono text-xs text-gray-500" x-text="p.client || 'ODDS Project'"></div>
+                                    <div class="font-bold text-sm" style="color: var(--text-title);" x-text="p.title"></div>
+                                    <div class="font-mono text-xs" style="color: var(--text-faint);" x-text="p.client || 'ODDS Project'"></div>
                                 </td>
 
                                 <!-- Category -->
                                 <td>
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#1e1e28] text-[#875af5] border border-[#875af5]/25" x-text="p.category || 'General'"></span>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#875af5]/10 text-[#875af5] border border-[#875af5]/25" x-text="p.category || 'General'"></span>
                                 </td>
 
                                 <!-- Year -->
                                 <td>
-                                    <span class="font-mono text-xs text-gray-400" x-text="p.year || '2024'"></span>
+                                    <span class="font-mono text-xs" style="color: var(--text-muted);" x-text="p.year || '2024'"></span>
                                 </td>
 
                                 <!-- Featured Status -->
@@ -449,7 +449,7 @@
                                         <span class="odds-badge odds-badge-purple text-[9px]"><i class="fa-solid fa-check text-[8px]"></i> 3×3 Grid</span>
                                     </template>
                                     <template x-if="!p.is_featured">
-                                        <span class="odds-badge bg-gray-800/40 text-gray-500 border border-gray-700/30 text-[9px]">Hidden</span>
+                                        <span class="odds-badge text-[9px]" style="background: var(--bg-subtle); color: var(--text-faint); border: 1px solid var(--border-color);">Hidden</span>
                                     </template>
                                 </td>
 
@@ -478,7 +478,7 @@
 
                         <template x-if="filteredProjects.length === 0">
                             <tr>
-                                <td colspan="7" class="text-center py-12 text-gray-500 font-mono text-xs">
+                                <td colspan="7" class="text-center py-12 font-mono text-xs" style="color: var(--text-faint);">
                                     No project outputs match your query.
                                 </td>
                             </tr>
@@ -490,9 +490,9 @@
             <!-- Footer -->
             <div class="op-table-footer">
                 <span class="op-count-label">
-                    Total Outputs: <strong class="text-white" x-text="filteredProjects.length"></strong>
+                    Total Outputs: <strong style="color: var(--text-title);" x-text="filteredProjects.length"></strong>
                 </span>
-                <span class="font-mono text-[10px] text-gray-500">
+                <span class="font-mono text-[10px]" style="color: var(--text-faint);">
                     DRAG ROW TO REORDER ON HOMEPAGE
                 </span>
             </div>
@@ -548,13 +548,14 @@
 
                         <div class="op-meta-item w-full text-center">
                             <label class="text-center">Overview Hook</label>
-                            <p class="text-xs text-gray-400 leading-relaxed text-center" x-text="selectedProject.description || 'No overview summary provided.'"></p>
+                            <p class="text-xs leading-relaxed text-center" style="color: var(--text-muted);" x-text="selectedProject.description || 'No overview summary provided.'"></p>
                         </div>
 
                         <!-- Story block metric -->
-                        <div class="p-3 rounded-xl bg-[#0b0b0e] border border-[#22222a] text-xs font-mono space-y-1 w-full text-center">
-                            <div class="text-[10px] text-gray-500 uppercase font-bold text-center">Notion Story Status</div>
-                            <div class="text-white font-semibold text-center">
+                        <div class="p-3 rounded-xl text-xs font-mono space-y-1 w-full text-center border"
+                             style="background: var(--bg-input); border-color: var(--border-color);">
+                            <div class="text-[10px] uppercase font-bold text-center" style="color: var(--text-faint);">Notion Story Status</div>
+                            <div class="font-semibold text-center" style="color: var(--text-title);">
                                 <span x-text="selectedProject.body_content && selectedProject.body_content.length ? selectedProject.body_content.length + ' Content Blocks' : 'Default Outline'"></span>
                             </div>
                         </div>
