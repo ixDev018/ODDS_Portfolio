@@ -79,7 +79,7 @@ if (mobileToggle && mobileDrawer) {
     // Translucent RGBA tint for each section — enables see-through glass bleed
     const SECTION_BG_RGBA = [
         'rgba(14, 14, 14, 0.85)',    // 0: Hero
-        'rgba(110, 60, 230, 0.82)',  // 1: Services
+        'rgba(143, 60, 111, 0.88)',  // 1: Services (#8F3C6F Plum Purple)
         'rgba(255, 255, 255, 0.85)', // 2: Works
         'rgba(243, 89, 176, 0.85)',  // 3: Testimonials
         'rgba(240, 240, 245, 0.85)', // 4: Why
@@ -88,7 +88,7 @@ if (mobileToggle && mobileDrawer) {
 
     const NAV = [
         { bg: 'rgba(14,14,14,0.65)', border: 'rgba(255,255,255,0.08)', light: false },
-        { bg: 'rgba(135,90,245,0.65)', border: 'rgba(255,255,255,0.08)', light: false },
+        { bg: 'rgba(143,60,111,0.65)', border: 'rgba(255,255,255,0.08)', light: false },
         { bg: 'rgba(227,227,227,0.65)', border: 'rgba(0,0,0,0.06)', light: true },
         { bg: 'rgba(243,89,176,0.65)', border: 'rgba(255,255,255,0.08)', light: false },
         { bg: 'rgba(239,239,239,0.65)', border: 'rgba(0,0,0,0.06)', light: true },
@@ -104,7 +104,7 @@ if (mobileToggle && mobileDrawer) {
         if (!sec) return [];
         const selectors = [
             '.hero-title', '.hero-subtitle', '.btn-hero',
-            '.sec-label', '.services-title', '.svc-card', '.services-desc', '.btn-dark',
+            '.sec-label', '.services-title', '.services-subline', '.services-cards', '.btn-dark',
             '.works-section-label', '.works-heading', '#stats-row', '.works-description', '.works-card-grid > .group', '.works-see-more',
             '.testi-label', '.testi-title', '.testi-right-desc', '.testi-card',
             '.why-title', '.why-desc', '.why-deck-wrap', '.why-card',
