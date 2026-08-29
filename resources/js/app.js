@@ -71,6 +71,7 @@ if (mobileToggle && mobileDrawer) {
     if (!n || !cols.length) return;
 
     const secWorks = document.getElementById('works');
+    const secWhy = document.getElementById('why');
 
     // Translucent RGBA tint for each section — enables see-through glass bleed
     const SECTION_BG_RGBA = [
@@ -113,7 +114,7 @@ if (mobileToggle && mobileDrawer) {
             '.sec-label', '.services-title', '.svc-card', '.services-desc', '.btn-dark',
             '.works-section-label', '.works-heading', '#stats-row', '.works-description', '.works-card-grid > .group', '.works-see-more',
             '.testi-label', '.testi-title', '.testi-right-desc', '.testi-card',
-            '.why-title', '.why-desc', '.why-card',
+            '.why-title', '.why-desc', '.why-deck-wrap', '.why-card',
             '.cta-terminal', '.cta-title', '.cta-desc', '.cta-btn', '.cta-visual'
         ];
         const els = sec.querySelectorAll(selectors.join(', '));
@@ -398,13 +399,25 @@ if (mobileToggle && mobileDrawer) {
     }, { passive: false });
 
     // Touch swipe handling with step response
+    let touchX0 = 0;
     let touchY0 = 0;
-    window.addEventListener('touchstart', e => { touchY0 = e.touches[0].clientY; }, { passive: true });
+    window.addEventListener('touchstart', e => { 
+        touchX0 = e.touches[0].clientX;
+        touchY0 = e.touches[0].clientY; 
+    }, { passive: true });
     window.addEventListener('touchmove', e => {
         if (document.body.classList.contains('modal-open')) return;
 
         if (!touchY0) return;
+        const dx = touchX0 - e.touches[0].clientX;
         const dy = touchY0 - e.touches[0].clientY;
+
+        // If touching inside Why section 3D deck or dragging card horizontally, do not trigger fullpage section transition
+        if (current === 4 && e.target && e.target.closest('#why-deck-wrap')) {
+            if (Math.abs(dx) > Math.abs(dy) || window.whyIsDragging) {
+                return;
+            }
+        }
 
         if (current === 2 && secWorks && !activeTimeline) {
             const atTop = secWorks.scrollTop <= 5;
@@ -442,6 +455,7 @@ if (mobileToggle && mobileDrawer) {
     }, { passive: true });
 
     window.addEventListener('touchend', e => {
+        touchX0 = 0;
         touchY0 = 0;
     }, { passive: true });
 
@@ -795,6 +809,298 @@ if (ctaVideo && ctaCanvas) {
 
     window.openProjectModal = openProjectModal;
     window.closeProjectModal = closeProjectModal;
+})();
+
+
+// ─── Why Bet on ODDS: Interactive 3D Card Deck ─────────────────
+(function initWhyDeckController() {
+    const deckWrap = document.getElementById('why-deck-wrap');
+    const deck = document.getElementById('why-deck');
+    if (!deck) return;
+
+    const cards = Array.from(deck.querySelectorAll('.why-card'));
+    const segments = Array.from(document.querySelectorAll('.why-bar-segment'));
+    const currentIdxEl = document.getElementById('why-current-idx');
+    const prevBtn = document.getElementById('why-nav-prev');
+    const nextBtn = document.getElementById('why-nav-next');
+    const total = cards.length;
+
+    if (total === 0) return;
+
+    let activeIndex = 0;
+    let isMobile = window.innerWidth <= 768;
+    let isSwiping = false;
+    let startX = 0;
+    let startY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let deltaX = 0;
+    let deltaY = 0;
+
+    function isDeckMode() {
+        return window.innerWidth <= 768;
+    }
+
+    function updateStack(animate = true) {
+        if (!isDeckMode()) {
+            // Reset to pure CSS grid on desktop
+            cards.forEach(card => {
+                gsap.killTweensOf(card);
+                gsap.set(card, {
+                    clearProps: 'transform,opacity,zIndex,pointerEvents,visibility',
+                });
+                card.classList.remove('is-active', 'is-next', 'is-back', 'is-hidden');
+            });
+            return;
+        }
+
+        cards.forEach((card, i) => {
+            const offset = (i - activeIndex + total) % total;
+
+            card.classList.remove('is-active', 'is-next', 'is-back', 'is-hidden');
+
+            let targetX = 0;
+            let targetY = 0;
+            let targetScale = 1;
+            let targetRot = 0;
+            let targetOpacity = 1;
+            let zIndex = 10;
+            let pointerEvents = 'auto';
+
+            if (offset === 0) {
+                // Front Active Card
+                targetX = 0;
+                targetY = 0;
+                targetScale = 1;
+                targetRot = 0;
+                targetOpacity = 1;
+                zIndex = 10;
+                pointerEvents = 'auto';
+                card.classList.add('is-active');
+            } else if (offset === 1) {
+                // Second Card - Peek behind
+                targetX = 0;
+                targetY = 12;
+                targetScale = 0.94;
+                targetRot = 0;
+                targetOpacity = 0.72;
+                zIndex = 8;
+                pointerEvents = 'auto';
+                card.classList.add('is-next');
+            } else if (offset === 2) {
+                // Third Card - Deeper back
+                targetX = 0;
+                targetY = 24;
+                targetScale = 0.88;
+                targetRot = 0;
+                targetOpacity = 0.38;
+                zIndex = 6;
+                pointerEvents = 'none';
+                card.classList.add('is-back');
+            } else {
+                // Any extra cards (if > 3)
+                targetX = 0;
+                targetY = 32;
+                targetScale = 0.82;
+                targetRot = 0;
+                targetOpacity = 0;
+                zIndex = 1;
+                pointerEvents = 'none';
+                card.classList.add('is-hidden');
+            }
+
+            card.style.zIndex = zIndex;
+            card.style.pointerEvents = pointerEvents;
+
+            if (animate) {
+                gsap.to(card, {
+                    x: targetX,
+                    y: targetY,
+                    scale: targetScale,
+                    rotation: targetRot,
+                    opacity: targetOpacity,
+                    duration: 0.42,
+                    ease: 'power2.out',
+                    overwrite: 'auto'
+                });
+            } else {
+                gsap.set(card, {
+                    x: targetX,
+                    y: targetY,
+                    scale: targetScale,
+                    rotation: targetRot,
+                    opacity: targetOpacity
+                });
+            }
+        });
+
+        // Update Progress Segments
+        segments.forEach((seg, idx) => {
+            seg.classList.toggle('active', idx === activeIndex);
+        });
+
+        // Update Index Counter
+        if (currentIdxEl) {
+            currentIdxEl.textContent = String(activeIndex + 1).padStart(2, '0');
+        }
+    }
+
+    function goToIndex(idx) {
+        if (idx === activeIndex || idx < 0 || idx >= total) return;
+        activeIndex = idx;
+        updateStack(true);
+    }
+
+    function goNext() {
+        activeIndex = (activeIndex + 1) % total;
+        updateStack(true);
+    }
+
+    function goPrev() {
+        activeIndex = (activeIndex - 1 + total) % total;
+        updateStack(true);
+    }
+
+    // Arrow controls
+    if (prevBtn) prevBtn.addEventListener('click', goPrev);
+    if (nextBtn) nextBtn.addEventListener('click', goNext);
+
+    // Clicking peeking card brings it to front
+    cards.forEach((card) => {
+        card.addEventListener('click', () => {
+            if (!isDeckMode()) return;
+            if (card.classList.contains('is-next')) {
+                goNext();
+            }
+        });
+    });
+
+    // Touch and Gesture Drag Physics
+    deck.addEventListener('touchstart', (e) => {
+        if (!isDeckMode() || e.touches.length > 1) return;
+        const touch = e.touches[0];
+        startX = touch.clientX;
+        startY = touch.clientY;
+        currentX = startX;
+        currentY = startY;
+        deltaX = 0;
+        deltaY = 0;
+        isSwiping = false;
+    }, { passive: true });
+
+    deck.addEventListener('touchmove', (e) => {
+        if (!isDeckMode() || e.touches.length > 1) return;
+        const touch = e.touches[0];
+        currentX = touch.clientX;
+        currentY = touch.clientY;
+        deltaX = currentX - startX;
+        deltaY = currentY - startY;
+
+        const absX = Math.abs(deltaX);
+        const absY = Math.abs(deltaY);
+
+        if (!isSwiping && absX > 8 && absX > absY) {
+            isSwiping = true;
+            window.whyIsDragging = true;
+        }
+
+        if (isSwiping) {
+            const activeCard = cards[activeIndex];
+            const nextIdx = (activeIndex + 1) % total;
+            const nextCard = cards[nextIdx];
+
+            if (activeCard) {
+                const rot = (deltaX / 220) * 12;
+                gsap.set(activeCard, {
+                    x: deltaX,
+                    y: Math.abs(deltaX) * 0.05,
+                    rotation: rot,
+                    scale: 1,
+                    opacity: Math.max(0.65, 1 - absX / 500)
+                });
+            }
+
+            if (nextCard) {
+                const peekRatio = Math.min(1, absX / 160);
+                gsap.set(nextCard, {
+                    y: 12 - (peekRatio * 12),
+                    scale: 0.94 + (peekRatio * 0.06),
+                    opacity: 0.72 + (peekRatio * 0.28)
+                });
+            }
+        }
+    }, { passive: true });
+
+    deck.addEventListener('touchend', () => {
+        if (!isDeckMode()) return;
+        window.whyIsDragging = false;
+
+        if (isSwiping) {
+            const absX = Math.abs(deltaX);
+            const activeCard = cards[activeIndex];
+
+            if (absX > 65) {
+                // Significant swipe: fling active card away and advance
+                const isForward = deltaX < 0;
+                const flingX = isForward ? -320 : 320;
+                const flingRot = isForward ? -16 : 16;
+
+                if (activeCard) {
+                    gsap.to(activeCard, {
+                        x: flingX,
+                        rotation: flingRot,
+                        opacity: 0,
+                        duration: 0.24,
+                        ease: 'power2.in',
+                        onComplete() {
+                            if (isForward) {
+                                activeIndex = (activeIndex + 1) % total;
+                            } else {
+                                activeIndex = (activeIndex - 1 + total) % total;
+                            }
+                            updateStack(true);
+                        }
+                    });
+                } else {
+                    if (isForward) goNext(); else goPrev();
+                }
+            } else {
+                // Snap back to neutral
+                updateStack(true);
+            }
+        }
+        isSwiping = false;
+        deltaX = 0;
+        deltaY = 0;
+    }, { passive: true });
+
+    // Handle viewport resize smoothly
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            const nowMobile = isDeckMode();
+            if (nowMobile !== isMobile) {
+                isMobile = nowMobile;
+            }
+            updateStack(false);
+        }, 150);
+    });
+
+    // Keyboard navigation when Why section is in view
+    window.addEventListener('keydown', (e) => {
+        if (document.body.classList.contains('modal-open')) return;
+        if (window.fp && window.fp.current && window.fp.current() === 4) {
+            if (e.key === 'ArrowLeft') {
+                goPrev();
+            } else if (e.key === 'ArrowRight') {
+                goNext();
+            }
+        }
+    });
+
+    // Initialize initial view
+    updateStack(false);
 })();
 
 

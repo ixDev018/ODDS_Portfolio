@@ -20,7 +20,8 @@ $workItems = isset($works) && count($works) > 0 ? $works : collect([
 
     {{-- Main heading --}}
     <h2 class="works-heading animate-fade-up fade-up" style="animation-delay: 100ms;">
-      We Don't Just Build. We Deliver.
+      <span class="works-heading-lead">We Don't Just Build.</span><br>
+      <span class="works-heading-deliver">We Deliver.</span>
     </h2>
 
     {{-- Stats row --}}
@@ -58,7 +59,7 @@ $workItems = isset($works) && count($works) > 0 ? $works : collect([
 
     {{-- Description --}}
     <p class="works-description animate-fade-up fade-up" style="animation-delay: 200ms;">
-      Real-world solutions, custom-engineered for rapid deployment<br>and measurable business impact.
+      Real-world solutions, custom-engineered for rapid deployment and measurable business impact.
     </p>
 
     {{-- 3×3 Folder Card Grid --}}
@@ -69,7 +70,7 @@ $workItems = isset($works) && count($works) > 0 ? $works : collect([
         $rowNum = floor($index / 3) + 1;
         $delayClass = "delay-row-{$rowNum}";
       @endphp
-      <div class="project-card-trigger group relative w-[406px] max-w-full h-[246px] drop-shadow-2xl cursor-pointer select-none
+      <div class="project-card-trigger works-folder-card group relative drop-shadow-2xl
                   transition-transform duration-150 ease-out active:scale-[0.97] active:drop-shadow-lg
                   animate-fade-up {{ $delayClass }}"
            data-project-index="{{ $index }}"
