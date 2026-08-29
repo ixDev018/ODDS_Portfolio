@@ -20,7 +20,7 @@ $reasonsList = isset($whyReasons) && count($whyReasons) > 0 ? $whyReasons : coll
 $accentThemes = ['purple', 'pink', 'cyan'];
 @endphp
 
-<section class="why fp-section" id="why">
+<section class="why" id="why">
     {{-- Gradient orbs --}}
     <div class="why-orb why-orb-1" aria-hidden="true"></div>
     <div class="why-orb why-orb-2" aria-hidden="true"></div>

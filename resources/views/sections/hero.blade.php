@@ -1,4 +1,4 @@
-<section class="hero fp-section" id="hero">
+<section class="hero" id="hero">
     <div class="shared-glow-left" aria-hidden="true"></div>
     <div class="shared-glow-right" aria-hidden="true"></div>
     <div class="hero-content">

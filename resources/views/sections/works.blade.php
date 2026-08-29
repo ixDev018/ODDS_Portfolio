@@ -12,7 +12,7 @@ $workItems = isset($works) && count($works) > 0 ? $works : collect([
 ]);
 @endphp
 
-<section class="works fp-section" id="works">
+<section class="works" id="works">
   <div class="works-content-wrap">
 
     {{-- Section label --}}

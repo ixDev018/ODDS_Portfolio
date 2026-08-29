@@ -1,4 +1,4 @@
-<section class="cta fp-section" id="cta">
+<section class="cta" id="cta">
     {{-- Gradient orbs --}}
     <div class="cta-orb cta-orb-1" aria-hidden="true"></div>
     <div class="cta-orb cta-orb-2" aria-hidden="true"></div>

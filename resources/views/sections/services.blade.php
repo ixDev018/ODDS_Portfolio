@@ -41,7 +41,7 @@ foreach ($defaultServices as $ds) {
 $serviceItems = isset($services) && count($services) > 0 ? $services : collect(array_map(fn($s) => (object)$s, $defaultServices));
 @endphp
 
-<section class="services fp-section" id="services">
+<section class="services" id="services">
     <div class="services-glow-left"></div>
     <div class="services-glow-right"></div>
 

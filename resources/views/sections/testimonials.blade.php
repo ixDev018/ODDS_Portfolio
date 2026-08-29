@@ -27,7 +27,7 @@ $testimonialCards = isset($testimonials) && count($testimonials) > 0 ? $testimon
 ]);
 @endphp
 
-<section class="testimonials fp-section" id="testimonials">
+<section class="testimonials" id="testimonials">
 
     {{-- Decorative glow blobs --}}
     <img class="testi-glow testi-glow--left"
