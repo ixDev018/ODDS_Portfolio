@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}">
-    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/img/ODDS_logo.svg') }}">
+    <link rel="alternate icon" href="{{ asset('assets/img/ODDS_logo.svg') }}">
     <title>ODDS Studio | Admin Login</title>
 
     <!-- Google Fonts -->

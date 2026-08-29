@@ -7,8 +7,8 @@
     <title>{{ $title ?? 'ODDS — We Build What Your Business Needs' }}</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}">
-    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/img/ODDS_logo.svg') }}">
+    <link rel="alternate icon" href="{{ asset('assets/img/ODDS_logo.svg') }}">
 
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

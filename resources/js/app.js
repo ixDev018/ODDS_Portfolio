@@ -65,10 +65,13 @@ if (mobileToggle && mobileDrawer) {
     if (!container) return;
 
     const overlay = document.getElementById('fp-overlay');
-    const cols = overlay ? Array.from(overlay.querySelectorAll('.fp-col')) : [];
+    const blades = overlay ? Array.from(overlay.querySelectorAll('.cyber-blade')) : [];
+    const rgbCyan = overlay ? overlay.querySelector('.rgb-cyan') : null;
+    const rgbPink = overlay ? overlay.querySelector('.rgb-pink') : null;
+    const scanlines = overlay ? overlay.querySelector('.cyber-scanlines') : null;
     const sections = Array.from(container.querySelectorAll('.fp-section'));
     const n = sections.length;
-    if (!n || !cols.length) return;
+    if (!n || !blades.length) return;
 
     const secWorks = document.getElementById('works');
     const secWhy = document.getElementById('why');
@@ -93,18 +96,8 @@ if (mobileToggle && mobileDrawer) {
     ];
 
     let current = 0;
-    let target = null;
-
-    // Active scrubbing state
-    let activeTimeline = null;
-    let fromElsCache = [];
-    let toElsCache = [];
-    let stateObj = { progress: 0 };
-    let targetProgress = 0;
-    let snapTimer = null;
-    let isSnapping = false;
-    let isNavJumping = false;
-    let lastScrollDir = 1; // 1 for down/next, -1 for up/prev
+    let isTransitioning = false;
+    let lastTransitionTime = 0;
 
     // Helper to query key visual content elements in a section for element-level transitions
     function getSectionElements(sec) {
@@ -132,7 +125,6 @@ if (mobileToggle && mobileDrawer) {
             pointerEvents: i === 0 ? 'auto' : 'none'
         });
     });
-    // Overlay starts inactive
     if (overlay) gsap.set(overlay, { zIndex: 0, pointerEvents: 'none' });
 
     function applyNav(idx) {
@@ -142,14 +134,6 @@ if (mobileToggle && mobileDrawer) {
         navbar.classList.toggle('light-theme', t.light);
     }
     applyNav(0);
-
-    function updateNavTheme(fromIdx, toIdx, prog) {
-        if (!navbar) return;
-        const fromNav = NAV[fromIdx] ?? NAV[0];
-        const toNav = NAV[toIdx] ?? NAV[0];
-
-        navbar.classList.toggle('light-theme', prog >= 0.5 ? toNav.light : fromNav.light);
-    }
 
     let statsFired = false;
     function checkStatsTrigger(idx) {
@@ -174,306 +158,242 @@ if (mobileToggle && mobileDrawer) {
         .to('#hero-p', { opacity: 1, y: 0 }, '-=0.55')
         .to('#hero-btn', { opacity: 1, y: 0 }, '-=0.5');
 
-    // ── Build Scrubbable Timeline ─────────────────────────────
-    function prepareTransition(targetIdx) {
-        if (targetIdx < 0 || targetIdx >= n || targetIdx === current) return false;
+    // ── Single Fluid Cinematic Transition Runner ───────────────────────
+    function goTo(targetIdx) {
+        if (targetIdx < 0 || targetIdx >= n || targetIdx === current || isTransitioning) return;
 
+        isTransitioning = true;
         const fromSec = sections[current];
         const toSec = sections[targetIdx];
         const isForward = targetIdx > current;
 
         if (targetIdx === 2 && secWorks) secWorks.scrollTop = 0;
 
-        fromElsCache = getSectionElements(fromSec);
-        toElsCache = getSectionElements(toSec);
+        const fromEls = getSectionElements(fromSec);
+        const toEls = getSectionElements(toSec);
 
-        // Paint translucent glass cols with FROM section RGBA
-        cols.forEach(col => { col.style.background = SECTION_BG_RGBA[current]; });
+        // Tint blade surfaces with outgoing section's theme
+        const fromBg = SECTION_BG_RGBA[current];
+        blades.forEach(blade => {
+            const surf = blade.querySelector('.cyber-blade-surface');
+            if (surf) surf.style.background = fromBg;
+        });
 
-        gsap.set(fromSec, { visibility: 'visible', opacity: 1, zIndex: 10, pointerEvents: 'none' });
-        gsap.set(toSec, { visibility: 'visible', opacity: 0, zIndex: 20, pointerEvents: 'none' });
+        // Stage the layers
+        gsap.set(fromSec, { visibility: 'visible', opacity: 1, scale: 1, zIndex: 10, pointerEvents: 'none' });
+        gsap.set(toSec, { visibility: 'visible', opacity: 0, scale: 1.03, zIndex: 20, pointerEvents: 'none' });
         if (overlay) gsap.set(overlay, { zIndex: 30 });
 
-        gsap.set(toElsCache, { opacity: 0, y: isForward ? 35 : -35, scale: 0.96 });
-        gsap.set(cols, { scaleY: 1 });
+        gsap.set(toEls, { opacity: 0, y: isForward ? 35 : -35, skewX: isForward ? -5 : 5 });
+        gsap.set(blades, { x: '0%', opacity: 1, skewX: 0 });
+        if (rgbCyan) gsap.set(rgbCyan, { opacity: 0, x: -18 });
+        if (rgbPink) gsap.set(rgbPink, { opacity: 0, x: 18 });
+        if (scanlines) gsap.set(scanlines, { opacity: 0 });
 
-        activeTimeline = gsap.timeline({ paused: true });
-
-        // Step A: Outgoing section elements fade out
-        activeTimeline.to(fromElsCache, {
-            opacity: 0,
-            y: isForward ? -30 : 30,
-            scale: 0.95,
-            duration: 0.45,
-            ease: 'power2.in',
-            stagger: { each: 0.02, from: isForward ? 'start' : 'end' }
-        }, 0);
-
-        // Step B: toSec background opacity crossfades in
-        activeTimeline.to(toSec, {
-            opacity: 1,
-            duration: 0.5,
-            ease: 'power2.inOut'
-        }, 0.05);
-
-        // Step C: Translucent overlay columns collapse staggered
-        activeTimeline.to(cols, {
-            scaleY: 0,
-            duration: 0.55,
-            ease: 'power2.inOut',
-            stagger: { each: 0.025, from: isForward ? 'start' : 'end' }
-        }, 0.1);
-
-        // Step D: Incoming section elements fade in and slide into position
-        activeTimeline.to(toElsCache, {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.55,
-            ease: 'power3.out',
-            stagger: { each: 0.03, from: 'start' }
-        }, 0.15);
-
-        // Step E: Navbar morphs smoothly
-        activeTimeline.to(navbar, {
-            '--nav-bg': NAV[targetIdx].bg,
-            '--nav-border': NAV[targetIdx].border,
-            duration: 0.42,
-            ease: 'power2.inOut'
-        }, 0.06);
-
-        target = targetIdx;
-        stateObj.progress = 0;
-        targetProgress = 0;
-        activeTimeline.progress(0);
-        return true;
-    }
-
-    function clearActiveTransition(completedTarget) {
-        if (!activeTimeline) return;
-
-        const fromSec = sections[current];
-        const toSec = target !== null ? sections[target] : null;
-
-        if (completedTarget) {
-            // Settled at target section
-            current = target;
-            gsap.set(fromSec, { visibility: 'hidden', opacity: 0, zIndex: 0, pointerEvents: 'none' });
-            gsap.set(fromElsCache, { clearProps: 'transform,opacity,scale' });
-
-            gsap.set(overlay, { zIndex: 0 });
-            gsap.set(cols, { scaleY: 0 });
-            if (toSec) {
-                gsap.set(toSec, { zIndex: 10, opacity: 1, pointerEvents: 'auto' });
-                gsap.set(toElsCache, { clearProps: 'transform,opacity,scale' });
-            }
-
-            applyNav(current);
-            checkStatsTrigger(current);
-        } else {
-            // Reverted back to current section
-            if (toSec) {
-                gsap.set(toSec, { visibility: 'hidden', opacity: 0, zIndex: 0, pointerEvents: 'none' });
-                gsap.set(toElsCache, { clearProps: 'transform,opacity,scale' });
-            }
-            gsap.set(fromSec, { zIndex: 10, opacity: 1, pointerEvents: 'auto' });
-            gsap.set(fromElsCache, { clearProps: 'transform,opacity,scale' });
-
-            gsap.set(overlay, { zIndex: 0 });
-            gsap.set(cols, { scaleY: 0 });
-
-            applyNav(current);
-        }
-
-        activeTimeline.kill();
-        activeTimeline = null;
-        target = null;
-        stateObj.progress = 0;
-        targetProgress = 0;
-        isSnapping = false;
-        isNavJumping = false;
-    }
-
-    function snapTo(endProgress) {
-        if (!activeTimeline) return;
-        isSnapping = true;
-        clearTimeout(snapTimer);
-
-        const currentProg = stateObj.progress;
-        const dist = Math.abs(endProgress - currentProg);
-        const duration = Math.max(0.35, dist * 0.75);
-
-        gsap.to(stateObj, {
-            progress: endProgress,
-            duration: duration,
-            ease: 'power2.out',
-            overwrite: true,
-            onUpdate() {
-                if (activeTimeline) {
-                    activeTimeline.progress(stateObj.progress);
-                    if (target !== null) updateNavTheme(current, target, stateObj.progress);
-                }
-            },
+        const tl = gsap.timeline({
             onComplete() {
-                clearActiveTransition(endProgress === 1);
+                const prevSec = sections[current];
+                current = targetIdx;
+
+                gsap.set(prevSec, { visibility: 'hidden', opacity: 0, zIndex: 0, scale: 1, pointerEvents: 'none' });
+                gsap.set(fromEls, { clearProps: 'transform,opacity,scale,skewX,x,y' });
+
+                gsap.set(overlay, { zIndex: 0 });
+                gsap.set(blades, { clearProps: 'transform,opacity,skewX,x,y' });
+                if (rgbCyan) gsap.set(rgbCyan, { opacity: 0 });
+                if (rgbPink) gsap.set(rgbPink, { opacity: 0 });
+                if (scanlines) gsap.set(scanlines, { opacity: 0 });
+
+                gsap.set(toSec, { zIndex: 10, opacity: 1, scale: 1, pointerEvents: 'auto' });
+                gsap.set(toEls, { clearProps: 'transform,opacity,scale,skewX,x,y' });
+
+                applyNav(current);
+                checkStatsTrigger(current);
+
+                // Small buffer to prevent input bounce
+                setTimeout(() => {
+                    isTransitioning = false;
+                }, 120);
             }
         });
-    }
 
-    // Direct section jump (e.g. navbar click)
-    function goTo(targetIdx) {
-        if (targetIdx < 0 || targetIdx >= n || targetIdx === current) return;
+        // Step 1: Outgoing elements digital fade & skew
+        tl.to(fromEls, {
+            opacity: 0,
+            x: isForward ? -30 : 30,
+            skewX: isForward ? -4 : 4,
+            duration: 0.48,
+            ease: 'power2.in',
+            stagger: 0.018
+        }, 0);
 
-        if (activeTimeline) {
-            gsap.killTweensOf(stateObj);
-            clearActiveTransition(false);
+        // Step 2: Outgoing section smooth scale down
+        tl.to(fromSec, {
+            scale: 0.94,
+            opacity: 0.25,
+            duration: 0.65,
+            ease: 'power2.inOut'
+        }, 0);
+
+        // Step 3: Chromatic RGB Pulse & Scanlines
+        if (rgbCyan && rgbPink && scanlines) {
+            tl.to([rgbCyan, rgbPink], {
+                opacity: 0.7,
+                duration: 0.32,
+                ease: 'power1.inOut'
+            }, 0.06);
+            tl.to(scanlines, {
+                opacity: 0.75,
+                duration: 0.32,
+                ease: 'power1.inOut'
+            }, 0.06);
+            tl.to([rgbCyan, rgbPink, scanlines], {
+                opacity: 0,
+                duration: 0.42,
+                ease: 'power2.out'
+            }, 0.38);
         }
 
-        isNavJumping = true;
-        if (!prepareTransition(targetIdx)) return;
-        snapTo(1);
+        // Step 4: Incoming section zooms smoothly into view
+        tl.to(toSec, {
+            opacity: 1,
+            scale: 1,
+            duration: 0.92,
+            ease: 'power3.out'
+        }, 0.08);
+
+        // Step 5: 8 Diagonal Kinetic Blades Alternating Shear Explosion
+        blades.forEach((blade, i) => {
+            const isEven = (i % 2 === 0);
+            const shearDir = isEven ? -1 : 1;
+            const mult = isForward ? shearDir : -shearDir;
+            const delay = (i % 4) * 0.04;
+
+            tl.to(blade, {
+                x: (mult * 140) + '%',
+                skewX: mult * 14,
+                opacity: 0,
+                duration: 0.95,
+                ease: 'power3.inOut'
+            }, 0.06 + delay);
+        });
+
+        // Step 6: Incoming elements glide into place
+        tl.to(toEls, {
+            opacity: 1,
+            y: 0,
+            skewX: 0,
+            duration: 0.78,
+            ease: 'power3.out',
+            stagger: 0.038
+        }, 0.25);
+
+        // Step 7: Navbar theme morph
+        tl.to(navbar, {
+            '--nav-bg': NAV[targetIdx].bg,
+            '--nav-border': NAV[targetIdx].border,
+            duration: 0.65,
+            ease: 'power2.inOut'
+        }, 0.08);
     }
 
-    // ── Reactive Scroll / Wheel Input Handling ──────────────────────
-    const WHEEL_SENSITIVITY = 1000; // wheel pixels required for a complete section transition
-
+    // ── Mouse Wheel Input ──────────────────────
     window.addEventListener('wheel', e => {
         if (document.body.classList.contains('modal-open')) return;
 
-        // Works: allow internal scroll, transition only at top/bottom boundary
-        if (current === 2 && secWorks && !activeTimeline) {
+        // Internal scroll handling for Works section
+        if (current === 2 && secWorks) {
             const atTop = secWorks.scrollTop <= 5;
             const atBottom = secWorks.scrollTop + secWorks.clientHeight >= secWorks.scrollHeight - 10;
-            if (e.deltaY > 0 && !atBottom) return; // scroll inside Works
+            if (e.deltaY > 0 && !atBottom) return; // scroll naturally inside Works
             if (e.deltaY < 0 && !atTop) return;
         }
 
         e.preventDefault();
 
-        if (isNavJumping) return;
+        if (isTransitioning) return;
+
+        const now = Date.now();
+        if (now - lastTransitionTime < 950) return; // prevent micro-jitter
 
         const delta = e.deltaY;
-        if (Math.abs(delta) < 1) return;
+        if (Math.abs(delta) < 15) return; // filter accidental trackpad noise
 
         const dir = delta > 0 ? 1 : -1;
-        lastScrollDir = dir;
+        const nextIdx = current + dir;
 
-        if (!activeTimeline) {
-            // Start scrub towards next/prev section
-            const nextIdx = current + dir;
-            if (nextIdx < 0 || nextIdx >= n) return;
-            prepareTransition(nextIdx);
+        if (nextIdx >= 0 && nextIdx < n) {
+            lastTransitionTime = now;
+            goTo(nextIdx);
         }
-
-        if (!activeTimeline) return;
-
-        // Calculate progress delta relative to current target direction:
-        // Going down (target > current): +delta advances progress
-        // Going up (target < current): -delta advances progress
-        const deltaProgress = (target > current) ? (delta / WHEEL_SENSITIVITY) : (-delta / WHEEL_SENSITIVITY);
-        targetProgress += deltaProgress;
-
-        // Clamp targetProgress between 0.0 and 1.0 — freezes midway whenever wheel stops!
-        targetProgress = Math.max(0, Math.min(1, targetProgress));
-
-        // Smooth reactive update
-        gsap.to(stateObj, {
-            progress: targetProgress,
-            duration: 0.25,
-            ease: 'power2.out',
-            overwrite: 'auto',
-            onUpdate() {
-                if (activeTimeline) {
-                    activeTimeline.progress(stateObj.progress);
-                    if (target !== null) updateNavTheme(current, target, stateObj.progress);
-                }
-            },
-            onComplete() {
-                if (stateObj.progress >= 1.0) {
-                    clearActiveTransition(true);
-                } else if (stateObj.progress <= 0.0) {
-                    clearActiveTransition(false);
-                }
-            }
-        });
     }, { passive: false });
 
-    // Touch swipe handling with step response
-    let touchX0 = 0;
+    // ── Touch Swipe Handling ──────────────────
     let touchY0 = 0;
-    window.addEventListener('touchstart', e => { 
+    let touchX0 = 0;
+    window.addEventListener('touchstart', e => {
         touchX0 = e.touches[0].clientX;
-        touchY0 = e.touches[0].clientY; 
+        touchY0 = e.touches[0].clientY;
     }, { passive: true });
-    window.addEventListener('touchmove', e => {
-        if (document.body.classList.contains('modal-open')) return;
 
-        if (!touchY0) return;
-        const dx = touchX0 - e.touches[0].clientX;
-        const dy = touchY0 - e.touches[0].clientY;
+    window.addEventListener('touchend', e => {
+        if (document.body.classList.contains('modal-open') || isTransitioning) return;
 
-        // If touching inside Why section 3D deck or dragging card horizontally, do not trigger fullpage section transition
+        const touchEndY = e.changedTouches[0].clientY;
+        const touchEndX = e.changedTouches[0].clientX;
+        const dy = touchY0 - touchEndY;
+        const dx = touchX0 - touchEndX;
+
+        // If touching inside Why section 3D deck or dragging card horizontally, do not trigger section transition
         if (current === 4 && e.target && e.target.closest('#why-deck-wrap')) {
-            if (Math.abs(dx) > Math.abs(dy) || window.whyIsDragging) {
-                return;
-            }
+            if (Math.abs(dx) > Math.abs(dy) || window.whyIsDragging) return;
         }
 
-        if (current === 2 && secWorks && !activeTimeline) {
+        if (current === 2 && secWorks) {
             const atTop = secWorks.scrollTop <= 5;
             const atBottom = secWorks.scrollTop + secWorks.clientHeight >= secWorks.scrollHeight - 10;
             if (dy > 0 && !atBottom) return;
             if (dy < 0 && !atTop) return;
         }
 
-        if (Math.abs(dy) > 10) {
+        if (Math.abs(dy) > 35) {
             const dir = dy > 0 ? 1 : -1;
-            lastScrollDir = dir;
-            if (!activeTimeline) {
-                const nextIdx = current + dir;
-                if (nextIdx >= 0 && nextIdx < n) prepareTransition(nextIdx);
-            }
-            if (activeTimeline) {
-                targetProgress = Math.max(0, Math.min(1, Math.abs(dy) / 300));
-                gsap.to(stateObj, {
-                    progress: targetProgress,
-                    duration: 0.2,
-                    overwrite: 'auto',
-                    onUpdate() {
-                        if (activeTimeline) {
-                            activeTimeline.progress(stateObj.progress);
-                            if (target !== null) updateNavTheme(current, target, stateObj.progress);
-                        }
-                    },
-                    onComplete() {
-                        if (stateObj.progress >= 1.0) clearActiveTransition(true);
-                        else if (stateObj.progress <= 0.0) clearActiveTransition(false);
-                    }
-                });
+            const nextIdx = current + dir;
+            if (nextIdx >= 0 && nextIdx < n) {
+                goTo(nextIdx);
             }
         }
     }, { passive: true });
 
-    window.addEventListener('touchend', e => {
-        touchX0 = 0;
-        touchY0 = 0;
-    }, { passive: true });
-
+    // ── Keyboard Navigation ───────────────────
     window.addEventListener('keydown', e => {
         if (document.body.classList.contains('modal-open')) {
-            if (e.key === 'Escape') {
-                if (window.closeProjectModal) window.closeProjectModal();
-            }
+            if (e.key === 'Escape' && window.closeProjectModal) window.closeProjectModal();
             return;
         }
 
-        if (activeTimeline || isNavJumping) return;
-        if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
-            if (current === 2 && secWorks && secWorks.scrollTop + secWorks.clientHeight < secWorks.scrollHeight - 10) return;
-            e.preventDefault(); goTo(current + 1);
-        } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
-            if (current === 2 && secWorks && secWorks.scrollTop > 5) return;
-            e.preventDefault(); goTo(current - 1);
+        if (isTransitioning) return;
+
+        let dir = 0;
+        if (e.key === 'ArrowDown' || e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey)) {
+            dir = 1;
+        } else if (e.key === 'ArrowUp' || e.key === 'PageUp' || (e.key === ' ' && e.shiftKey)) {
+            dir = -1;
+        }
+
+        if (dir !== 0) {
+            if (current === 2 && secWorks) {
+                const atTop = secWorks.scrollTop <= 5;
+                const atBottom = secWorks.scrollTop + secWorks.clientHeight >= secWorks.scrollHeight - 10;
+                if (dir > 0 && !atBottom) return;
+                if (dir < 0 && !atTop) return;
+            }
+
+            e.preventDefault();
+            const nextIdx = current + dir;
+            if (nextIdx >= 0 && nextIdx < n) {
+                goTo(nextIdx);
+            }
         }
     });
 
