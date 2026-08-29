@@ -470,6 +470,12 @@
                 <span>Outputs / Works</span>
             </a>
 
+            <a href="{{ route('odds.admin.about.index') }}" 
+               class="odds-nav-link {{ request()->routeIs('odds.admin.about*') ? 'active' : '' }}">
+                <i class="fa-solid fa-newspaper w-4 text-center"></i>
+                <span>About Us (Blog)</span>
+            </a>
+
             <a href="{{ route('odds.admin.services.index') }}" 
                class="odds-nav-link {{ request()->routeIs('odds.admin.services*') ? 'active' : '' }}">
                 <i class="fa-solid fa-cubes w-4 text-center"></i>

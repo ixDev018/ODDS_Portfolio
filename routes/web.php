@@ -8,6 +8,7 @@ use App\Models\OddsWork;
 use App\Models\OddsTestimonial;
 use App\Models\OddsWhyReason;
 use App\Models\OddsInquiry;
+use App\Models\OddsAboutSection;
 use App\Http\Middleware\AdminAuthMiddleware;
 
 /*
@@ -52,6 +53,13 @@ Route::get('/', function () {
         'clientSatisfactionDenom'
     ));
 })->name('portfolio.index');
+
+// Public About Us Blog-Style Page
+Route::get('/about', function () {
+    $settings = OddsSetting::current();
+    $sections = OddsAboutSection::where('is_active', true)->orderBy('sort_order')->get();
+    return view('about', compact('settings', 'sections'));
+})->name('portfolio.about');
 
 // Public Contact / Lead Form Submission
 Route::post('/contact', function (\Illuminate\Http\Request $request) {
@@ -135,6 +143,16 @@ Route::middleware([AdminAuthMiddleware::class])->prefix('admin')->group(function
     Route::post('/testimonials/update/{id}', [OddsAdminController::class, 'testimonialsUpdate'])->name('odds.admin.testimonials.update');
     Route::post('/testimonials/delete/{id}', [OddsAdminController::class, 'testimonialsDestroy'])->name('odds.admin.testimonials.delete');
     Route::post('/testimonials/reorder', [OddsAdminController::class, 'testimonialsReorder'])->name('odds.admin.testimonials.reorder');
+
+    // About Us Sections CRUD (Notion CMS Editor)
+    Route::get('/about', [OddsAdminController::class, 'aboutIndex'])->name('odds.admin.about.index');
+    Route::get('/about/create', [OddsAdminController::class, 'aboutCreate'])->name('odds.admin.about.create');
+    Route::post('/about/store', [OddsAdminController::class, 'aboutStore'])->name('odds.admin.about.store');
+    Route::get('/about/edit/{id}', [OddsAdminController::class, 'aboutEdit'])->name('odds.admin.about.edit');
+    Route::post('/about/update/{id}', [OddsAdminController::class, 'aboutUpdate'])->name('odds.admin.about.update');
+    Route::post('/about/delete/{id}', [OddsAdminController::class, 'aboutDestroy'])->name('odds.admin.about.delete');
+    Route::post('/about/reorder', [OddsAdminController::class, 'aboutReorder'])->name('odds.admin.about.reorder');
+    Route::post('/about/upload-body-media', [OddsAdminController::class, 'uploadAboutBodyMedia'])->name('odds.admin.about.upload_body_media');
 
     // Why Reasons CRUD
     Route::get('/why', [OddsAdminController::class, 'whyReasonsIndex'])->name('odds.admin.why.index');

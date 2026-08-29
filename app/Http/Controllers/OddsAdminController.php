@@ -9,6 +9,7 @@ use App\Models\OddsWork;
 use App\Models\OddsTestimonial;
 use App\Models\OddsWhyReason;
 use App\Models\OddsInquiry;
+use App\Models\OddsAboutSection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
@@ -592,5 +593,142 @@ class OddsAdminController extends Controller
         $inquiry = OddsInquiry::findOrFail($id);
         $inquiry->delete();
         return redirect()->route('odds.admin.inquiries.index')->with('success', 'Inquiry deleted.');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | About Us Sections Management (Notion CMS Editor)
+    |--------------------------------------------------------------------------
+    */
+    public function aboutIndex()
+    {
+        $sections = OddsAboutSection::orderBy('sort_order')->get();
+        return view('admin.odds.about.index', compact('sections'));
+    }
+
+    public function aboutCreate()
+    {
+        return view('admin.odds.about.create');
+    }
+
+    public function aboutStore(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'subtitle' => 'nullable|string',
+            'category' => 'nullable|string|max:100',
+            'author' => 'nullable|string|max:255',
+            'read_time' => 'nullable|string|max:100',
+            'body_content' => 'nullable|string',
+            'cover_image' => 'nullable|image|max:10240',
+            'cover_image_url' => 'nullable|string|max:1000',
+            'cover_image_base64' => 'nullable|string',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $validated['slug'] = Str::slug($validated['title'] . '-' . Str::random(4));
+        $validated['is_active'] = $request->has('is_active');
+        $validated['sort_order'] = OddsAboutSection::max('sort_order') + 1;
+
+        if (!empty($validated['body_content'])) {
+            $decoded = json_decode($validated['body_content'], true);
+            $validated['body_content'] = is_array($decoded) ? $decoded : null;
+        }
+
+        if ($request->filled('cover_image_base64')) {
+            $url = $this->uploadMedia($request->input('cover_image_base64'), 'about');
+            if ($url) $validated['cover_image'] = $url;
+        } elseif ($request->hasFile('cover_image')) {
+            $url = $this->uploadMedia($request->file('cover_image'), 'about');
+            if ($url) $validated['cover_image'] = $url;
+        } elseif ($request->filled('cover_image_url')) {
+            $validated['cover_image'] = $request->input('cover_image_url');
+        }
+
+        unset($validated['cover_image_base64'], $validated['cover_image_url']);
+        OddsAboutSection::create($validated);
+
+        return redirect()->route('odds.admin.about.index')->with('success', 'About section published successfully!');
+    }
+
+    public function aboutEdit($id)
+    {
+        $section = OddsAboutSection::findOrFail($id);
+        return view('admin.odds.about.edit', compact('section'));
+    }
+
+    public function aboutUpdate(Request $request, $id)
+    {
+        $section = OddsAboutSection::findOrFail($id);
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'subtitle' => 'nullable|string',
+            'category' => 'nullable|string|max:100',
+            'author' => 'nullable|string|max:255',
+            'read_time' => 'nullable|string|max:100',
+            'body_content' => 'nullable|string',
+            'cover_image' => 'nullable|image|max:10240',
+            'cover_image_url' => 'nullable|string|max:1000',
+            'cover_image_base64' => 'nullable|string',
+            'remove_cover_image' => 'nullable|string',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+
+        if (!empty($validated['body_content'])) {
+            $decoded = json_decode($validated['body_content'], true);
+            $validated['body_content'] = is_array($decoded) ? $decoded : null;
+        } else {
+            $validated['body_content'] = null;
+        }
+
+        if ($request->filled('remove_cover_image') && $request->input('remove_cover_image') === '1') {
+            if ($section->cover_image) $this->deleteMedia($section->cover_image);
+            $validated['cover_image'] = null;
+        } elseif ($request->filled('cover_image_base64')) {
+            if ($section->cover_image) $this->deleteMedia($section->cover_image);
+            $url = $this->uploadMedia($request->input('cover_image_base64'), 'about');
+            if ($url) $validated['cover_image'] = $url;
+        } elseif ($request->hasFile('cover_image')) {
+            if ($section->cover_image) $this->deleteMedia($section->cover_image);
+            $url = $this->uploadMedia($request->file('cover_image'), 'about');
+            if ($url) $validated['cover_image'] = $url;
+        } elseif ($request->filled('cover_image_url')) {
+            $validated['cover_image'] = $request->input('cover_image_url');
+        }
+
+        unset($validated['cover_image_base64'], $validated['cover_image_url'], $validated['remove_cover_image']);
+        $section->update($validated);
+
+        return redirect()->route('odds.admin.about.index')->with('success', 'About section updated successfully!');
+    }
+
+    public function aboutDestroy($id)
+    {
+        $section = OddsAboutSection::findOrFail($id);
+        if ($section->cover_image) $this->deleteMedia($section->cover_image);
+        $section->delete();
+        return redirect()->route('odds.admin.about.index')->with('success', 'About section deleted.');
+    }
+
+    public function aboutReorder(Request $request)
+    {
+        $request->validate(['order' => 'required|array']);
+        foreach ($request->order as $position => $id) {
+            OddsAboutSection::where('id', $id)->update(['sort_order' => $position + 1]);
+        }
+        return response()->json(['ok' => true]);
+    }
+
+    public function uploadAboutBodyMedia(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|image|max:10240'
+        ]);
+
+        $url = $this->uploadMedia($request->file('file'), 'about/body');
+        return response()->json(['url' => $url]);
     }
 }

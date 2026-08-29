@@ -1,6 +1,6 @@
 <nav class="navbar" id="navbar">
     <div class="nav-inner">
-        <a href="#" class="nav-logo" id="logo" aria-label="ODDS Home">
+        <a href="{{ url('/') }}" class="nav-logo" id="logo" aria-label="ODDS Home">
             <svg width="88" height="28" viewBox="0 0 88 28" fill="none" xmlns="http://www.w3.org/2000/svg" style="height: 28px; width: auto;">
                 <path d="M11.3567 12.2224C11.376 12.4818 11.5355 12.7099 11.7726 12.817L19.6574 16.378C20.1484 16.5998 20.6978 16.2154 20.6579 15.6782L20.2762 10.5463C20.2569 10.287 20.0974 10.0589 19.8603 9.95181L11.9755 6.39075C11.4845 6.169 10.9351 6.55335 10.975 7.09063L11.3567 12.2224Z" fill="currentColor"/>
                 <path d="M10.8914 13.253C11.0988 13.096 11.3754 13.0649 11.6124 13.172L19.4972 16.733C19.9882 16.9548 20.0631 17.6211 19.6336 17.9463L15.5312 21.053C15.3239 21.21 15.0472 21.2411 14.8102 21.1341L6.92539 17.573C6.43438 17.3512 6.35946 16.6849 6.78897 16.3597L10.8914 13.253Z" fill="currentColor"/>
@@ -12,11 +12,11 @@
         </a>
         <div class="nav-right">
             <ul class="nav-links">
-                <li><a href="#services">Services</a></li>
-                <li><a href="#works">Our Work</a></li>
-                <li><a href="#why">About Us</a></li>
+                <li><a href="{{ request()->is('about*') ? url('/#services') : '#services' }}">Services</a></li>
+                <li><a href="{{ request()->is('about*') ? url('/#works') : '#works' }}">Our Work</a></li>
+                <li><a href="{{ route('portfolio.about') }}" class="{{ request()->routeIs('portfolio.about') ? 'active' : '' }}">About Us</a></li>
             </ul>
-            <a href="#cta" class="btn-nav">Let's Talk</a>
+            <a href="{{ request()->is('about*') ? url('/#cta') : '#cta' }}" class="btn-nav">Let's Talk</a>
             <button class="nav-toggle" id="mobile-toggle" aria-label="Toggle Navigation" aria-expanded="false">
                 <span class="hamburger-bar"></span>
                 <span class="hamburger-bar"></span>
@@ -30,11 +30,11 @@
 <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
     <div class="mobile-drawer-inner">
         <ul class="mobile-nav-links">
-            <li><a href="#services" class="mobile-nav-link">Services</a></li>
-            <li><a href="#works" class="mobile-nav-link">Our Work</a></li>
-            <li><a href="#why" class="mobile-nav-link">About Us</a></li>
+            <li><a href="{{ request()->is('about*') ? url('/#services') : '#services' }}" class="mobile-nav-link">Services</a></li>
+            <li><a href="{{ request()->is('about*') ? url('/#works') : '#works' }}" class="mobile-nav-link">Our Work</a></li>
+            <li><a href="{{ route('portfolio.about') }}" class="mobile-nav-link {{ request()->routeIs('portfolio.about') ? 'active' : '' }}">About Us</a></li>
         </ul>
-        <a href="#cta" class="mobile-btn-nav mobile-nav-link">Let's Talk</a>
+        <a href="{{ request()->is('about*') ? url('/#cta') : '#cta' }}" class="mobile-btn-nav mobile-nav-link">Let's Talk</a>
     </div>
 </div>
 
