@@ -604,7 +604,14 @@ async function handleImageUpload(file, imgWrap, blockEl) {
     formData.append('_token', '{{ csrf_token() }}');
 
     const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
-    imgWrap.innerHTML = `<div class="p-8 text-center text-xs text-[#875af5] font-mono"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Uploading media (${sizeMb} MB)...</div>`;
+    const uploadPhrases = [
+        `pushing bytes to orbit (${sizeMb} MB)...`,
+        `deploying media payload (${sizeMb} MB)...`,
+        `routing to storage (${sizeMb} MB)...`,
+        `uploading media (${sizeMb} MB)...`
+    ];
+    const uploadText = uploadPhrases[Math.floor(Math.random() * uploadPhrases.length)];
+    imgWrap.innerHTML = `<div class="p-8 text-center text-xs text-[#875af5] font-mono"><i class="fa-solid fa-spinner fa-spin mr-2"></i>${uploadText}</div>`;
 
     try {
         const res = await fetch('{{ route("odds.admin.about.upload_body_media") }}', {

@@ -67,6 +67,7 @@
                     </svg>
                 </div>
                 <div class="chat-bubble chat-bubble-typing chat-bubble-assistant">
+                    <span id="typing-status-text" class="chat-typing-status">parsing your request...</span>
                     <span class="chat-typing-dot"></span>
                     <span class="chat-typing-dot"></span>
                     <span class="chat-typing-dot"></span>
@@ -260,8 +261,15 @@
     .chat-bubble-typing {
         display: flex;
         align-items: center;
-        gap: 5px;
-        padding: 12px 16px;
+        gap: 6px;
+        padding: 10px 14px;
+    }
+    .chat-typing-status {
+        font-family: var(--font-mono, 'JetBrains Mono', monospace);
+        font-size: 11.5px;
+        color: #a1a1aa;
+        margin-right: 3px;
+        white-space: nowrap;
     }
     .chat-typing-wrapper {
         margin-top: 4px;
@@ -386,6 +394,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatInput = document.getElementById('chat-input');
     const chatMessages = document.getElementById('chat-messages');
     const typingIndicator = document.getElementById('typing-indicator');
+    const typingStatusText = document.getElementById('typing-status-text');
+
+    const typingPhrases = [
+        'parsing your request...',
+        'spinning up context...',
+        'compiling a response...',
+        'cross-checking the stack...',
+        'almost shipped...'
+    ];
 
     if (!container || !toggleBtn || !closeBtn || !chatWindow || !chatForm || !chatInput || !chatMessages || !typingIndicator) {
         return;
@@ -528,6 +545,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showTyping(show) {
         if (show) {
+            if (typingStatusText) {
+                const randomIndex = Math.floor(Math.random() * typingPhrases.length);
+                typingStatusText.textContent = typingPhrases[randomIndex];
+            }
             typingIndicator.classList.remove('hidden');
             typingIndicator.classList.add('flex');
             chatMessages.scrollTop = chatMessages.scrollHeight;
