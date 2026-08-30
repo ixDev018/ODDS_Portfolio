@@ -1,5 +1,8 @@
 import './bootstrap';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 // ─── Navbar & Mobile Drawer setup ──────────────────────
 const navbar = document.getElementById('navbar');
@@ -937,14 +940,74 @@ if (ctaVideo && ctaCanvas) {
         });
     });
 
+    // ─── ScrollTrigger 4-Frame Playing Card Deal Animation ───
+    let dealScrollTrigger = null;
+
+    function initCardDealScrollTrigger() {
+        if (dealScrollTrigger) {
+            dealScrollTrigger.kill();
+            dealScrollTrigger = null;
+        }
+
+        if (isDeckMode() || cards.length < 3) {
+            cards.forEach(card => {
+                gsap.set(card, { clearProps: 'x,rotation' });
+            });
+            return;
+        }
+
+        const secWhy = document.getElementById('why');
+        if (!secWhy) return;
+
+        const card0 = cards[0];
+        const card1 = cards[1];
+        const card2 = cards[2];
+
+        const dist = card1.offsetLeft - card0.offsetLeft || 405;
+        const card0Rect = card0.getBoundingClientRect();
+        const entryOffset = -(card0Rect.right + 250);
+
+        // Frame 1: All 3 cards start stacked off-screen left
+        gsap.set(card0, { x: entryOffset, rotation: -6 });
+        gsap.set(card1, { x: entryOffset - dist, rotation: -4 });
+        gsap.set(card2, { x: entryOffset - (dist * 2), rotation: -2 });
+
+        const dealTL = gsap.timeline({
+            scrollTrigger: {
+                trigger: secWhy,
+                start: 'top top',
+                end: '+=900',
+                pin: true,
+                scrub: 0.8,
+                anticipatePin: 1,
+                invalidateOnRefresh: true
+            }
+        });
+
+        dealScrollTrigger = dealTL.scrollTrigger;
+
+        // Frame 1 -> Frame 2 (0% to 38% progress): Slide entire stacked deck in from off-screen left to Column 0
+        dealTL
+            .to(card0, { x: 0, rotation: -4, ease: 'power1.inOut', duration: 1 })
+            .to(card1, { x: -dist, rotation: -2, ease: 'power1.inOut', duration: 1 }, '<')
+            .to(card2, { x: -(dist * 2), rotation: 0, ease: 'power1.inOut', duration: 1 }, '<');
+
+        // Short pause while stacked at Column 0 (38% to 45% progress)
+        dealTL.to({}, { duration: 0.25 });
+
+        // Frame 2 -> Frame 3 -> Frame 4 (45% to 100% progress): Deal cards across from Column 0 into Columns 1 & 2
+        dealTL
+            .to(card0, { rotation: 0, ease: 'power2.out', duration: 0.8 })
+            .to(card1, { x: 0, rotation: 0, ease: 'power2.out', duration: 1.1 }, '<')
+            .to(card2, { x: 0, rotation: 0, ease: 'power2.out', duration: 1.4 }, '<+=0.15');
+    }
+
+    initCardDealScrollTrigger();
+
     function updateStack(animate = true) {
         if (!isDeckMode()) {
-            // Reset to pure CSS grid on desktop
+            // Reset deck state on desktop (preserves ScrollTrigger)
             cards.forEach(card => {
-                gsap.killTweensOf(card);
-                gsap.set(card, {
-                    clearProps: 'transform,opacity,zIndex,pointerEvents,visibility',
-                });
                 card.classList.remove('is-active', 'is-next', 'is-back', 'is-hidden');
             });
             return;
@@ -1173,6 +1236,7 @@ if (ctaVideo && ctaCanvas) {
                 isMobile = nowMobile;
             }
             updateStack(false);
+            initCardDealScrollTrigger();
         }, 150);
     });
 

@@ -1492,19 +1492,18 @@ body.modal-open {
 /* ─── Back Face: Inactive Playing Card (Default) ─── */
 .why-card-back {
     transform: rotateY(0deg);
-    background: #3C3C3C;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: transparent;
+    border: none;
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.08);
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    transition: box-shadow 0.3s ease;
 }
 
 .why-card:hover .why-card-back {
     box-shadow: 0 22px 48px rgba(0, 0, 0, 0.24), 0 4px 14px rgba(0, 0, 0, 0.12);
-    border-color: rgba(255, 255, 255, 0.25);
 }
 
 .why-card-back-svg {
