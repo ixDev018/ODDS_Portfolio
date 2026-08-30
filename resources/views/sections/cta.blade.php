@@ -51,13 +51,13 @@
                 </div>
 
                 <!-- Footer social bar inside terminal -->
-                <div class="cta-terminal-footer">
+                <!-- <div class="cta-terminal-footer">
                     <span>facebook: {{ $settings->cta_facebook ?? 'ODDS Comp.' }}</span>
                     <span>instagram: {{ $settings->cta_instagram ?? 'ODDS Comp.' }}</span>
                     <span>mail: {{ $settings->cta_email ?? 'hello@odds.dev' }}</span>
                     <span>youtube: {{ $settings->cta_youtube ?? 'ODDS Comp.' }}</span>
                     <span>contact: {{ $settings->cta_phone ?? '0999999999' }}</span>
-                </div>
+                </div> -->
             </div>
 
         </div>

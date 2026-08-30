@@ -35,5 +35,8 @@
     @include('sections.faq')
     @include('sections.cta')
 
+    {{-- Odds Studio Signature Footer --}}
+    <x-footer :settings="$settings" />
+
     <x-odds-chat-widget />
 </x-layout>
