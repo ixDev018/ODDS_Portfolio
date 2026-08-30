@@ -9,6 +9,7 @@ use App\Models\OddsTestimonial;
 use App\Models\OddsWhyReason;
 use App\Models\OddsInquiry;
 use App\Models\OddsAboutSection;
+use App\Models\OddsFaq;
 use App\Http\Middleware\AdminAuthMiddleware;
 
 /*
@@ -23,6 +24,7 @@ Route::get('/', function () {
     $works = OddsWork::where('is_active', true)->orderBy('sort_order')->get();
     $testimonials = OddsTestimonial::where('is_active', true)->orderBy('sort_order')->get();
     $whyReasons = OddsWhyReason::where('is_active', true)->orderBy('sort_order')->get();
+    $faqs = OddsFaq::where('is_active', true)->orderBy('sort_order')->get();
 
     // Actual projects count summed only if toggled to be counted
     $hasCustomWorks = OddsWork::exists();
@@ -48,6 +50,7 @@ Route::get('/', function () {
         'works',
         'testimonials',
         'whyReasons',
+        'faqs',
         'accomplishedCount',
         'clientSatisfactionAvg',
         'clientSatisfactionDenom'
@@ -167,6 +170,13 @@ Route::middleware([AdminAuthMiddleware::class])->prefix('admin')->group(function
     Route::post('/why/store', [OddsAdminController::class, 'whyReasonsStore'])->name('odds.admin.why.store');
     Route::post('/why/update/{id}', [OddsAdminController::class, 'whyReasonsUpdate'])->name('odds.admin.why.update');
     Route::post('/why/delete/{id}', [OddsAdminController::class, 'whyReasonsDestroy'])->name('odds.admin.why.delete');
+
+    // FAQs CRUD
+    Route::get('/faqs', [OddsAdminController::class, 'faqsIndex'])->name('odds.admin.faqs.index');
+    Route::post('/faqs/store', [OddsAdminController::class, 'faqsStore'])->name('odds.admin.faqs.store');
+    Route::post('/faqs/update/{id}', [OddsAdminController::class, 'faqsUpdate'])->name('odds.admin.faqs.update');
+    Route::post('/faqs/delete/{id}', [OddsAdminController::class, 'faqsDestroy'])->name('odds.admin.faqs.delete');
+    Route::post('/faqs/reorder', [OddsAdminController::class, 'faqsReorder'])->name('odds.admin.faqs.reorder');
 
     // Inquiries / Inbox
     Route::get('/inquiries', [OddsAdminController::class, 'inquiriesIndex'])->name('odds.admin.inquiries.index');

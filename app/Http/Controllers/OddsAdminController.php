@@ -10,6 +10,7 @@ use App\Models\OddsTestimonial;
 use App\Models\OddsWhyReason;
 use App\Models\OddsInquiry;
 use App\Models\OddsAboutSection;
+use App\Models\OddsFaq;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
@@ -119,6 +120,7 @@ class OddsAdminController extends Controller
         $worksCount = OddsWork::count();
         $servicesCount = OddsService::where('is_active', true)->count();
         $testimonialsCount = OddsTestimonial::count();
+        $faqsCount = OddsFaq::count();
         $inquiriesCount = OddsInquiry::count();
         $unreadInquiriesCount = OddsInquiry::where('is_read', false)->count();
         $recentInquiries = OddsInquiry::latest()->take(5)->get();
@@ -129,6 +131,7 @@ class OddsAdminController extends Controller
             'worksCount',
             'servicesCount',
             'testimonialsCount',
+            'faqsCount',
             'inquiriesCount',
             'unreadInquiriesCount',
             'recentInquiries',
@@ -568,6 +571,64 @@ class OddsAdminController extends Controller
         $reason = OddsWhyReason::findOrFail($id);
         $reason->delete();
         return redirect()->route('odds.admin.why.index')->with('success', 'Reason deleted.');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | FAQs Management
+    |--------------------------------------------------------------------------
+    */
+    public function faqsIndex()
+    {
+        $faqs = OddsFaq::orderBy('sort_order')->get();
+        return view('admin.odds.faqs', compact('faqs'));
+    }
+
+    public function faqsStore(Request $request)
+    {
+        $validated = $request->validate([
+            'question' => 'required|string',
+            'answer' => 'required|string',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+        $validated['sort_order'] = OddsFaq::max('sort_order') + 1;
+
+        OddsFaq::create($validated);
+        return redirect()->route('odds.admin.faqs.index')->with('success', 'FAQ added successfully!');
+    }
+
+    public function faqsUpdate(Request $request, $id)
+    {
+        $faq = OddsFaq::findOrFail($id);
+
+        $validated = $request->validate([
+            'question' => 'required|string',
+            'answer' => 'required|string',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+        $faq->update($validated);
+
+        return redirect()->route('odds.admin.faqs.index')->with('success', 'FAQ updated successfully!');
+    }
+
+    public function faqsDestroy($id)
+    {
+        $faq = OddsFaq::findOrFail($id);
+        $faq->delete();
+        return redirect()->route('odds.admin.faqs.index')->with('success', 'FAQ deleted.');
+    }
+
+    public function faqsReorder(Request $request)
+    {
+        $request->validate(['order' => 'required|array']);
+        foreach ($request->order as $position => $id) {
+            OddsFaq::where('id', $id)->update(['sort_order' => $position + 1]);
+        }
+        return response()->json(['ok' => true]);
     }
 
     /*

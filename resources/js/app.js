@@ -72,6 +72,7 @@ gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.9 } })
         works: { bg: 'rgba(227,227,227,0.65)', border: 'rgba(0,0,0,0.06)', light: true },
         testimonials: { bg: 'rgba(243,89,176,0.65)', border: 'rgba(255,255,255,0.08)', light: false },
         why: { bg: 'rgba(239,239,239,0.65)', border: 'rgba(0,0,0,0.06)', light: true },
+        faq: { bg: 'rgba(255,255,255,0.65)', border: 'rgba(0,0,0,0.06)', light: true },
         cta: { bg: 'rgba(0,0,0,0.65)', border: 'rgba(255,255,255,0.08)', light: false },
     };
 
@@ -93,6 +94,7 @@ gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.9 } })
             '.works-section-label', '.works-heading', '#stats-row', '.works-description', '.works-card-grid > .group', '.works-see-more',
             '.testi-label', '.testi-title', '.testi-right-desc', '.testi-card',
             '.why-title', '.why-desc', '.why-deck-wrap', '.why-card',
+            '.faq-label', '.faq-title', '.faq-desc', '.faq-item',
             '.cta-terminal', '.cta-title', '.cta-desc', '.cta-btn', '.cta-visual'
         ];
         const els = sec.querySelectorAll(selectors.join(', '));
@@ -443,6 +445,7 @@ gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.9 } })
         { id: 'works', key: 'works' },
         { id: 'testimonials', key: 'testimonials' },
         { id: 'why', key: 'why' },
+        { id: 'faq', key: 'faq' },
         { id: 'cta', key: 'cta' },
     ];
 
@@ -1096,5 +1099,63 @@ if (ctaVideo && ctaCanvas) {
     // Initialize initial view
     updateStack(false);
 })();
+
+
+// ─── FAQ Accordion Controller ───────────────────────────
+(function initFaqAccordion() {
+    const accordion = document.getElementById('faq-accordion');
+    if (!accordion) return;
+
+    const items = Array.from(accordion.querySelectorAll('.faq-item'));
+
+    function closeItem(item) {
+        item.classList.remove('is-open');
+        const btn = item.querySelector('.faq-question-btn');
+        const collapse = item.querySelector('.faq-answer-collapse');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+        if (collapse) collapse.style.maxHeight = null;
+    }
+
+    function openItem(item) {
+        item.classList.add('is-open');
+        const btn = item.querySelector('.faq-question-btn');
+        const collapse = item.querySelector('.faq-answer-collapse');
+        if (btn) btn.setAttribute('aria-expanded', 'true');
+        if (collapse) {
+            collapse.style.maxHeight = collapse.scrollHeight + 'px';
+        }
+    }
+
+    items.forEach((item) => {
+        const btn = item.querySelector('.faq-question-btn');
+        if (!btn) return;
+
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const isOpen = item.classList.contains('is-open');
+
+            // Close all other items for a clean single-open accordion feel
+            items.forEach((other) => {
+                if (other !== item) closeItem(other);
+            });
+
+            // Toggle current item
+            if (isOpen) {
+                closeItem(item);
+            } else {
+                openItem(item);
+            }
+        });
+    });
+
+    window.addEventListener('resize', () => {
+        const openItemEl = accordion.querySelector('.faq-item.is-open');
+        if (openItemEl) {
+            const collapse = openItemEl.querySelector('.faq-answer-collapse');
+            if (collapse) collapse.style.maxHeight = collapse.scrollHeight + 'px';
+        }
+    });
+})();
+
 
 

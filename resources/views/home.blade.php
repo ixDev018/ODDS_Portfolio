@@ -30,8 +30,9 @@
 
     {{-- Natural Scroll Sections: Standard Smooth Page Experience --}}
     @include('sections.works')
-    @include('sections.testimonials')
+    {{-- @include('sections.testimonials') --}}
     @include('sections.why')
+    @include('sections.faq')
     @include('sections.cta')
 
     <x-odds-chat-widget />

@@ -115,6 +115,17 @@
         </button>
     </div>
 
+    {{-- Notice Banner: Section Hidden From Public Homepage --}}
+    <div class="p-4 rounded-xl border flex items-center space-x-3 bg-amber-500/10 border-amber-500/25 text-amber-300">
+        <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0">
+            <i class="fa-solid fa-eye-slash text-xs"></i>
+        </div>
+        <div class="text-xs leading-relaxed">
+            <span class="font-bold text-amber-200">Public Section Currently Hidden:</span>
+            <span class="text-amber-300/90 ml-1">The Testimonials section is temporarily hidden from the public homepage, but all records and media remain intact and ready to be re-enabled whenever needed.</span>
+        </div>
+    </div>
+
     <div class="odds-card overflow-visible">
         <table class="odds-table">
             <thead>

@@ -494,6 +494,12 @@
                 <span>Why Bet on ODDS</span>
             </a>
 
+            <a href="{{ route('odds.admin.faqs.index') }}" 
+               class="odds-nav-link {{ request()->routeIs('odds.admin.faqs*') ? 'active' : '' }}">
+                <i class="fa-solid fa-circle-question w-4 text-center"></i>
+                <span>FAQs</span>
+            </a>
+
             <div class="pt-3 mt-3 border-t border-[#22222a]" style="border-color: var(--border-color);">
                 <a href="{{ route('odds.admin.inquiries.index') }}" 
                    class="odds-nav-link justify-between {{ request()->routeIs('odds.admin.inquiries*') ? 'active' : '' }}">
