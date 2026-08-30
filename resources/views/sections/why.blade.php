@@ -36,7 +36,13 @@ $accentThemes = ['purple', 'pink', 'cyan'];
                 @endif
             </h2>
             <p class="why-desc fade-up">
-                {{ $settings->why_desc ?? "Choosing a development partner shouldn't feel like a gamble. We replace slow timelines and bloated frameworks with clean, flexible engineering that delivers." }}
+                @php
+                    $rawWhyDesc = $settings->why_desc ?? "Choosing a development partner shouldn't feel like a gamble. We replace slow timelines and bloated frameworks with clean, flexible engineering that delivers.";
+                    $escapedWhyDesc = e($rawWhyDesc);
+                    $highlightSvg = '<span class="draw-highlight-wrap">clean, flexible engineering<svg class="draw-highlight-svg" viewBox="0 0 240 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M 2 10 C 60 2, 130 11, 238 4" stroke="#875af5" stroke-width="2.5" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></span>';
+                    $formattedWhyDesc = str_replace('clean, flexible engineering', $highlightSvg, $escapedWhyDesc);
+                @endphp
+                {!! $formattedWhyDesc !!}
             </p>
         </div>
 

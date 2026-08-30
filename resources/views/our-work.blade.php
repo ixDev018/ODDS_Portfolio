@@ -701,7 +701,7 @@ $startingItem = $workItems->get($startIndex) ?: $workItems->first();
         {{-- Main heading --}}
         <h1 class="works-heading animate-fade-up fade-up">
             <span class="works-heading-lead">Every System We Build.</span><br>
-            <span class="works-heading-deliver">We Deliver.</span>
+            <span class="works-heading-deliver draw-highlight-wrap">We Deliver.<svg class="draw-highlight-svg" viewBox="0 0 160 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M 2 10 C 40 2, 80 11, 158 4" stroke="#f359b0" stroke-width="3" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></span>
         </h1>
 
         {{-- Stats row --}}
