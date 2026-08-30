@@ -278,6 +278,9 @@ class OddsAdminController extends Controller
             'cover_image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,mp4,mov,webm|max:204800',
             'cover_image_url' => 'nullable|string|max:1000',
             'cover_image_base64' => 'nullable|string',
+            'showcase_video' => 'nullable|file|mimes:mp4,mov,webm,ogg,qt|max:204800',
+            'showcase_video_url' => 'nullable|string|max:1000',
+            'showcase_video_base64' => 'nullable|string',
             'demo_url' => 'nullable|url',
             'github_url' => 'nullable|url',
             'is_featured' => 'nullable|boolean',
@@ -306,7 +309,22 @@ class OddsAdminController extends Controller
             $validated['cover_image'] = $request->input('cover_image_url');
         }
 
-        unset($validated['cover_image_base64'], $validated['cover_image_url']);
+        if ($request->filled('showcase_video_base64')) {
+            $url = $this->uploadMedia($request->input('showcase_video_base64'), 'works/videos');
+            if ($url) $validated['showcase_video'] = $url;
+        } elseif ($request->hasFile('showcase_video')) {
+            $url = $this->uploadMedia($request->file('showcase_video'), 'works/videos');
+            if ($url) $validated['showcase_video'] = $url;
+        } elseif ($request->filled('showcase_video_url')) {
+            $validated['showcase_video'] = $request->input('showcase_video_url');
+        }
+
+        unset(
+            $validated['cover_image_base64'],
+            $validated['cover_image_url'],
+            $validated['showcase_video_base64'],
+            $validated['showcase_video_url']
+        );
         OddsWork::create($validated);
 
         return redirect()->route('odds.admin.works.index')->with('success', 'Work project created successfully with Notion story!');
@@ -335,6 +353,10 @@ class OddsAdminController extends Controller
             'cover_image_url' => 'nullable|string|max:1000',
             'cover_image_base64' => 'nullable|string',
             'remove_cover_image' => 'nullable|string',
+            'showcase_video' => 'nullable|file|mimes:mp4,mov,webm,ogg,qt|max:204800',
+            'showcase_video_url' => 'nullable|string|max:1000',
+            'showcase_video_base64' => 'nullable|string',
+            'remove_showcase_video' => 'nullable|string',
             'demo_url' => 'nullable|url',
             'github_url' => 'nullable|url',
             'is_featured' => 'nullable|boolean',
@@ -371,7 +393,32 @@ class OddsAdminController extends Controller
             $validated['cover_image'] = $request->input('cover_image_url');
         }
 
-        unset($validated['cover_image_base64'], $validated['cover_image_url'], $validated['remove_cover_image']);
+        if ($request->input('remove_showcase_video') === '1') {
+            if ($work->showcase_video) $this->deleteMedia($work->showcase_video);
+            $validated['showcase_video'] = null;
+        } elseif ($request->filled('showcase_video_base64')) {
+            if ($work->showcase_video) $this->deleteMedia($work->showcase_video);
+            $url = $this->uploadMedia($request->input('showcase_video_base64'), 'works/videos');
+            if ($url) $validated['showcase_video'] = $url;
+        } elseif ($request->hasFile('showcase_video')) {
+            if ($work->showcase_video) $this->deleteMedia($work->showcase_video);
+            $url = $this->uploadMedia($request->file('showcase_video'), 'works/videos');
+            if ($url) $validated['showcase_video'] = $url;
+        } elseif ($request->filled('showcase_video_url')) {
+            if ($work->showcase_video && $work->showcase_video !== $request->input('showcase_video_url')) {
+                $this->deleteMedia($work->showcase_video);
+            }
+            $validated['showcase_video'] = $request->input('showcase_video_url');
+        }
+
+        unset(
+            $validated['cover_image_base64'],
+            $validated['cover_image_url'],
+            $validated['remove_cover_image'],
+            $validated['showcase_video_base64'],
+            $validated['showcase_video_url'],
+            $validated['remove_showcase_video']
+        );
         $work->update($validated);
 
         return redirect()->route('odds.admin.works.index')->with('success', 'Work project updated successfully!');
@@ -391,6 +438,7 @@ class OddsAdminController extends Controller
     {
         $work = OddsWork::findOrFail($id);
         if ($work->cover_image) $this->deleteMedia($work->cover_image);
+        if ($work->showcase_video) $this->deleteMedia($work->showcase_video);
         $work->delete();
         return redirect()->route('odds.admin.works.index')->with('success', 'Project deleted.');
     }

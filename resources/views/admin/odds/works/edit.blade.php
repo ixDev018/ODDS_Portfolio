@@ -321,6 +321,46 @@
                 </div>
             </div>
 
+            <!-- Showcase Video (Optional) -->
+            <div class="space-y-1.5">
+                <div class="flex items-center justify-between">
+                    <label class="odds-label mb-0">Showcase Video</label>
+                    <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-gray-800 text-gray-400 font-bold tracking-wider">OPTIONAL</span>
+                </div>
+                
+                <div id="video-dropzone" class="relative group aspect-[16/9] w-full rounded-xl border-2 border-dashed border-[#2b2b36] hover:border-[#875af5] bg-[#0d0d12] flex flex-col items-center justify-center p-3 text-center cursor-pointer transition-all overflow-hidden">
+                    <div id="video-placeholder" class="{{ $work->showcase_video ? 'hidden' : '' }} flex flex-col items-center justify-center space-y-2 pointer-events-none">
+                        <div class="w-10 h-10 rounded-full bg-[#181822] flex items-center justify-center text-[#875af5] group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-video text-sm"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-semibold text-gray-200">Upload Showcase Clip</div>
+                            <div class="text-[10px] text-gray-500 font-mono mt-0.5">Click or drag & drop (MP4, WebM, MOV)</div>
+                        </div>
+                    </div>
+
+                    <div id="video-preview-container" class="{{ $work->showcase_video ? '' : 'hidden' }} absolute inset-0 w-full h-full bg-black">
+                        <video id="video-preview-el" src="{{ $work->showcase_video_url ?? $work->showcase_video ?? '' }}" class="w-full h-full object-cover" muted loop playsinline autoplay></video>
+                        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                            <button type="button" id="btn-change-video" class="px-2.5 py-1 bg-[#875af5] hover:bg-[#7245e0] text-white rounded text-[11px] font-medium transition-colors">
+                                <i class="fa-solid fa-pen mr-1 text-[9px]"></i> Change
+                            </button>
+                            <button type="button" id="btn-clear-video" class="px-2.5 py-1 bg-red-900/80 hover:bg-red-800 text-red-200 rounded text-[11px] font-medium transition-colors">
+                                <i class="fa-solid fa-trash mr-1 text-[9px]"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="file" id="showcase_video_input" name="showcase_video" accept="video/mp4,video/webm,video/quicktime,video/*" class="hidden">
+                <input type="hidden" name="showcase_video_base64" id="showcase_video_base64">
+                <input type="hidden" name="remove_showcase_video" id="remove_showcase_video" value="0">
+                
+                <div class="pt-1">
+                    <input type="url" name="showcase_video_url" id="showcase_video_url" value="{{ Str::startsWith($work->showcase_video, 'http') ? $work->showcase_video : '' }}" placeholder="Or paste Video URL (https://...mp4)" class="odds-input text-xs font-mono py-1 px-2.5">
+                </div>
+            </div>
+
             <div>
                 <label class="odds-label">Live Demo URL</label>
                 <input type="url" name="demo_url" value="{{ old('demo_url', $work->demo_url) }}" placeholder="https://..." class="odds-input font-mono text-xs">
@@ -768,6 +808,107 @@ if (coverDropzone && coverInput) {
                 coverPreviewImg.src = '';
                 coverPreviewContainer.classList.add('hidden');
                 coverPlaceholder.classList.remove('hidden');
+            }
+        });
+    }
+}
+
+// ─── Showcase Video Live Preview & Upload Handling ───
+const videoDropzone = document.getElementById('video-dropzone');
+const videoInput = document.getElementById('showcase_video_input');
+const videoPlaceholder = document.getElementById('video-placeholder');
+const videoPreviewContainer = document.getElementById('video-preview-container');
+const videoPreviewEl = document.getElementById('video-preview-el');
+const videoUrlInput = document.getElementById('showcase_video_url');
+const removeVideoInput = document.getElementById('remove_showcase_video');
+const btnChangeVideo = document.getElementById('btn-change-video');
+const btnClearVideo = document.getElementById('btn-clear-video');
+
+if (videoDropzone && videoInput) {
+    videoDropzone.addEventListener('click', (e) => {
+        if (e.target.closest('#btn-clear-video') || e.target.closest('#btn-change-video')) return;
+        videoInput.click();
+    });
+
+    if (btnChangeVideo) {
+        btnChangeVideo.addEventListener('click', (e) => {
+            e.stopPropagation();
+            videoInput.click();
+        });
+    }
+
+    if (btnClearVideo) {
+        btnClearVideo.addEventListener('click', (e) => {
+            e.stopPropagation();
+            videoInput.value = '';
+            if (videoUrlInput) videoUrlInput.value = '';
+            if (removeVideoInput) removeVideoInput.value = '1';
+            const base64Input = document.getElementById('showcase_video_base64');
+            if (base64Input) base64Input.value = '';
+            if (videoPreviewEl) {
+                videoPreviewEl.pause();
+                videoPreviewEl.src = '';
+            }
+            videoPreviewContainer.classList.add('hidden');
+            videoPlaceholder.classList.remove('hidden');
+        });
+    }
+
+    videoInput.addEventListener('change', () => {
+        const file = videoInput.files[0];
+        if (file) {
+            if (removeVideoInput) removeVideoInput.value = '0';
+            const blobUrl = URL.createObjectURL(file);
+            videoPreviewEl.src = blobUrl;
+            videoPreviewEl.play().catch(() => {});
+            videoPreviewContainer.classList.remove('hidden');
+            videoPlaceholder.classList.add('hidden');
+            if (videoUrlInput) videoUrlInput.value = '';
+        }
+    });
+
+    // Drag & Drop
+    videoDropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        videoDropzone.classList.add('border-[#875af5]', 'bg-[#12121a]');
+    });
+
+    videoDropzone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        videoDropzone.classList.remove('border-[#875af5]', 'bg-[#12121a]');
+    });
+
+    videoDropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        videoDropzone.classList.remove('border-[#875af5]', 'bg-[#12121a]');
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            if (removeVideoInput) removeVideoInput.value = '0';
+            videoInput.files = e.dataTransfer.files;
+            const file = e.dataTransfer.files[0];
+            const blobUrl = URL.createObjectURL(file);
+            videoPreviewEl.src = blobUrl;
+            videoPreviewEl.play().catch(() => {});
+            videoPreviewContainer.classList.remove('hidden');
+            videoPlaceholder.classList.add('hidden');
+            if (videoUrlInput) videoUrlInput.value = '';
+        }
+    });
+
+    if (videoUrlInput) {
+        videoUrlInput.addEventListener('input', () => {
+            const val = videoUrlInput.value.trim();
+            if (val) {
+                if (removeVideoInput) removeVideoInput.value = '0';
+                videoPreviewEl.src = val;
+                videoPreviewEl.play().catch(() => {});
+                videoPreviewContainer.classList.remove('hidden');
+                videoPlaceholder.classList.add('hidden');
+                videoInput.value = '';
+            } else if (!videoInput.files.length && (!videoPreviewEl.src || removeVideoInput.value === '1')) {
+                videoPreviewEl.pause();
+                videoPreviewEl.src = '';
+                videoPreviewContainer.classList.add('hidden');
+                videoPlaceholder.classList.remove('hidden');
             }
         });
     }

@@ -44,38 +44,423 @@
         padding-top: calc(10vh + 32px);
         padding-bottom: 96px;
         font-family: var(--font-primary), sans-serif;
+        overflow-x: hidden;
     }
 
     .our-work-universe .works-content-wrap {
         max-width: 1320px;
+        margin: 0 auto;
+        padding: 0 20px;
     }
 
-    /* Keep all grid cards visible on full page regardless of screen size */
-    .our-work-universe .works-card-grid .works-folder-card {
-        display: block !important;
+    /* ─── CINEMATIC SHOWCASE CAROUSEL STYLES ─── */
+    .showcase-carousel-section {
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
+        margin-top: 48px;
+        overflow: hidden;
     }
 
-    @media (max-width: 1280px) {
-        .our-work-universe .works-card-grid {
-            grid-template-columns: repeat(2, 406px);
-            gap: 32px;
-        }
+    .showcase-stage-viewport {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        padding: 20px 0 10px;
     }
 
-    @media (max-width: 880px) {
-        .our-work-universe .works-card-grid {
-            grid-template-columns: 1fr;
-            max-width: 406px;
-            width: 100%;
-            gap: 24px;
-        }
+    .showcase-stage-track {
+        display: flex;
+        align-items: center;
+        transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+        will-change: transform;
     }
 
-    /* Calmer Closing Section */
+    .showcase-stage-slide {
+        flex: 0 0 auto;
+        width: clamp(680px, 72vw, 1020px);
+        height: clamp(380px, 42vw, 550px);
+        margin-right: 36px;
+        position: relative;
+        border-radius: 26px;
+        background: radial-gradient(120% 120% at 50% 10%, #1a1a24 0%, #0c0c11 100%);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.35);
+        overflow: hidden;
+        cursor: pointer;
+        user-select: none;
+        transition: transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1),
+                    opacity 0.55s ease,
+                    filter 0.55s ease,
+                    box-shadow 0.55s ease;
+    }
+
+    .showcase-stage-slide.is-active {
+        transform: scale(1);
+        opacity: 1;
+        filter: none;
+        z-index: 10;
+        cursor: pointer;
+        box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.16);
+    }
+
+    .showcase-stage-slide.is-peeking {
+        transform: scale(0.91);
+        opacity: 0.45;
+        filter: brightness(0.85) grayscale(25%);
+        z-index: 5;
+        cursor: pointer;
+    }
+
+    .showcase-stage-slide.is-peeking:hover {
+        opacity: 0.72;
+        transform: scale(0.93);
+        filter: brightness(0.95) grayscale(10%);
+    }
+
+    .showcase-stage-slide.is-distant {
+        transform: scale(0.82);
+        opacity: 0.12;
+        pointer-events: none;
+    }
+
+    /* Ambient stage lighting & grid watermark */
+    .stage-ambient-glow {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(60% 60% at 50% 50%, rgba(135, 90, 245, 0.12) 0%, transparent 100%);
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .stage-grid-watermark {
+        position: absolute;
+        inset: 0;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 32px 32px;
+        pointer-events: none;
+        opacity: 0.6;
+        z-index: 1;
+    }
+
+    /* Stage Canvas Area */
+    .stage-canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 32px;
+        z-index: 2;
+    }
+
+    /* 1. Video Artifact */
+    .stage-video-box {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: #000;
+    }
+
+    .stage-video-el {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .stage-media-pill {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        background: rgba(14, 14, 18, 0.78);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 9999px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: #f3f3f6;
+        z-index: 5;
+    }
+
+    .stage-pulse-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #875af5;
+        box-shadow: 0 0 8px #875af5;
+        animation: pulseDot 1.8s infinite;
+    }
+
+    @keyframes pulseDot {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.4); opacity: 0.6; }
+    }
+
+    /* 2. Scattered Collage Artifacts */
+    .stage-collage-box {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .stage-collage-item {
+        position: absolute;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 22px 55px rgba(0, 0, 0, 0.48);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: #14141c;
+        transform-origin: center center;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .stage-collage-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    /* Organic scattered positions for 1 to 4 images */
+    .stage-collage-item.pos-1 {
+        width: 58%;
+        max-width: 540px;
+        aspect-ratio: 16/10;
+        top: 10%;
+        left: 6%;
+        z-index: 2;
+        transform: rotate(-2.2deg);
+    }
+
+    .stage-collage-item.pos-2 {
+        width: 52%;
+        max-width: 480px;
+        aspect-ratio: 16/10;
+        bottom: 10%;
+        right: 6%;
+        z-index: 3;
+        transform: rotate(2.4deg);
+    }
+
+    .stage-collage-item.pos-3 {
+        width: 42%;
+        max-width: 380px;
+        aspect-ratio: 16/10;
+        top: 22%;
+        right: 28%;
+        z-index: 4;
+        transform: rotate(-1.2deg);
+    }
+
+    .stage-collage-item.pos-4 {
+        width: 36%;
+        max-width: 320px;
+        aspect-ratio: 16/10;
+        bottom: 18%;
+        left: 26%;
+        z-index: 5;
+        transform: rotate(1.5deg);
+    }
+
+    /* 3. Single Centered Cover Image Artifact */
+    .stage-single-box {
+        position: relative;
+        width: 90%;
+        max-width: 860px;
+        aspect-ratio: 16/9.5;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 26px 65px rgba(0, 0, 0, 0.48);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        transform: rotate(-0.5deg);
+        background: #15151e;
+        transition: transform 0.4s ease;
+    }
+
+    .stage-single-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    /* 4. Placeholder Fallback */
+    .stage-placeholder-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        width: 90%;
+        max-width: 860px;
+        aspect-ratio: 16/9.5;
+        border-radius: 18px;
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Floating Hover Explore Pill on Active Stage */
+    .stage-hover-pill {
+        position: absolute;
+        bottom: 24px;
+        right: 24px;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 14px;
+        background: rgba(255, 255, 255, 0.95);
+        color: #111111;
+        border-radius: 9999px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+        opacity: 0;
+        transform: translateY(8px);
+        transition: all 0.25s ease;
+        z-index: 10;
+        pointer-events: none;
+    }
+
+    .showcase-stage-slide.is-active:hover .stage-hover-pill {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* ─── CONTROLS & CAPTION BAR BELOW STAGE ─── */
+    .showcase-controls-bar {
+        max-width: clamp(680px, 72vw, 1020px);
+        margin: 24px auto 0;
+        padding: 0 6px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 24px;
+    }
+
+    .showcase-meta-col {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+
+    .showcase-title {
+        font-size: clamp(28px, 3.2vw, 42px);
+        font-weight: 800;
+        color: #111111;
+        letter-spacing: -0.03em;
+        line-height: 1.15;
+        margin: 0;
+    }
+
+    .showcase-subtitle {
+        font-size: clamp(14px, 1.2vw, 16px);
+        color: #6b7280;
+        font-style: italic;
+        font-weight: 500;
+        margin-top: 6px;
+        line-height: 1.5;
+    }
+
+    .showcase-story-trigger {
+        margin-top: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 18px;
+        border-radius: 9999px;
+        background: #111111;
+        color: #ffffff;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s ease, transform 0.2s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .showcase-story-trigger:hover {
+        background: #875af5;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(135, 90, 245, 0.25);
+    }
+
+    .showcase-story-trigger:active {
+        transform: scale(0.96);
+    }
+
+    /* Nav Arrows & Counter Group */
+    .showcase-nav-group {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-shrink: 0;
+        margin-top: 4px;
+    }
+
+    .showcase-counter {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 700;
+        color: #111111;
+        letter-spacing: 0.05em;
+        user-select: none;
+    }
+
+    .showcase-arrow-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: #ffffff;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        color: #111111;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+        transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .showcase-arrow-btn:hover {
+        background: #111111;
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .showcase-arrow-btn:active {
+        transform: scale(0.92);
+    }
+
+    /* ─── Calmer Closing Section ─── */
     .our-work-closing {
         text-align: center;
         max-width: 600px;
-        margin: 56px auto 0 auto;
+        margin: 64px auto 0 auto;
         padding: 0 20px;
     }
 
@@ -94,20 +479,101 @@
         line-height: 1.7;
         margin-bottom: 28px;
     }
+
+    /* ─── MOBILE RESPONSIVE LAYOUT (<= 768px) ─── */
+    @media (max-width: 768px) {
+        .showcase-carousel-section {
+            width: 100%;
+            left: 0;
+            right: 0;
+            margin-left: 0;
+            margin-right: 0;
+            margin-top: 32px;
+            padding: 0 16px;
+        }
+
+        .showcase-stage-viewport {
+            padding: 8px 0;
+        }
+
+        .showcase-stage-slide {
+            width: 100% !important;
+            height: 260px !important;
+            margin-right: 0 !important;
+            border-radius: 20px;
+            transform: none !important;
+            opacity: 1 !important;
+            filter: none !important;
+        }
+
+        .stage-canvas {
+            padding: 12px;
+        }
+
+        /* Simplified Single Primary Artifact on Mobile */
+        .stage-collage-box .stage-collage-item:not(:first-child) {
+            display: none !important;
+        }
+
+        .stage-collage-box .stage-collage-item:first-child {
+            position: absolute !important;
+            inset: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            height: 100% !important;
+            transform: none !important;
+            border-radius: 14px !important;
+        }
+
+        .stage-single-box {
+            position: absolute !important;
+            inset: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            height: 100% !important;
+            transform: none !important;
+            border-radius: 14px !important;
+        }
+
+        .stage-hover-pill {
+            display: none !important;
+        }
+
+        .showcase-controls-bar {
+            max-width: 100%;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 18px;
+            padding: 0 4px;
+        }
+
+        .showcase-nav-group {
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .showcase-title {
+            font-size: 26px;
+        }
+
+        .showcase-subtitle {
+            font-size: 13px;
+        }
+    }
 </style>
 @endpush
 
 @php
 $workItems = isset($works) && count($works) > 0 ? $works : collect([
-    (object)['id' => 1, 'title' => 'THEODORE', 'category' => 'Full-Stack Platform', 'year' => '2024', 'description' => 'Scalable enterprise application built for rapid throughput.', 'cover_image' => null, 'cover_image_url' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 2, 'title' => 'ClassGuard', 'category' => 'Security & Vision', 'year' => '2024', 'description' => 'Real-time security monitoring and automated access protocol system.', 'cover_image' => null, 'cover_image_url' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 3, 'title' => 'PRISMA', 'category' => 'Data Analytics', 'year' => '2024', 'description' => 'High-velocity telemetry pipeline and data visualization platform.', 'cover_image' => null, 'cover_image_url' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 4, 'title' => 'Sentry', 'category' => 'DevOps Automation', 'year' => '2024', 'description' => 'Infrastructure heartbeat monitor with zero-downtime deployment pipelines.', 'cover_image' => null, 'cover_image_url' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 5, 'title' => 'SPCC Website', 'category' => 'Web Architecture', 'year' => '2023', 'description' => 'Educational portal with responsive multi-tier course management.', 'cover_image' => null, 'cover_image_url' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 6, 'title' => 'LISAI Website', 'category' => 'Brand & Platform', 'year' => '2023', 'description' => 'Interactive digital showcase with smooth kinetic motion.', 'cover_image' => null, 'cover_image_url' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 7, 'title' => 'ALAMS', 'category' => 'Hardware & IoT', 'year' => '2023', 'description' => 'Integrated micro-controller system with live sensor analytics.', 'cover_image' => null, 'cover_image_url' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 8, 'title' => 'AVONIC', 'category' => 'Hardware Systems', 'year' => '2022', 'description' => 'Embedded control architecture with rapid telemetry feedback.', 'cover_image' => null, 'cover_image_url' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 9, 'title' => 'SPCC Web App', 'category' => 'Cloud Systems', 'year' => '2022', 'description' => 'Enterprise administrative system for institutional workflows.', 'cover_image' => null, 'cover_image_url' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 1, 'title' => 'THEODORE', 'category' => 'Web App & AI', 'year' => '2024', 'description' => 'Scalable enterprise application built for rapid throughput.', 'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 2, 'title' => 'ClassGuard', 'category' => 'Security & Vision', 'year' => '2024', 'description' => 'Real-time security monitoring and automated access protocol system.', 'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 3, 'title' => 'PRISMA', 'category' => 'Data Analytics', 'year' => '2024', 'description' => 'High-velocity telemetry pipeline and data visualization platform.', 'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 4, 'title' => 'Sentry', 'category' => 'DevOps Automation', 'year' => '2024', 'description' => 'Infrastructure heartbeat monitor with zero-downtime deployment pipelines.', 'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 5, 'title' => 'SPCC Website', 'category' => 'Web Architecture', 'year' => '2023', 'description' => 'Educational portal with responsive multi-tier course management.', 'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 6, 'title' => 'LISAI Website', 'category' => 'Brand & Platform', 'year' => '2023', 'description' => 'Interactive digital showcase with smooth kinetic motion.', 'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 7, 'title' => 'ALAMS', 'category' => 'Hardware & IoT', 'year' => '2023', 'description' => 'Integrated micro-controller system with live sensor analytics.', 'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 8, 'title' => 'AVONIC', 'category' => 'Hardware Systems', 'year' => '2022', 'description' => 'Embedded control architecture with rapid telemetry feedback.', 'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 9, 'title' => 'SPCC Web App', 'category' => 'Cloud Systems', 'year' => '2022', 'description' => 'Enterprise administrative system for institutional workflows.', 'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
 ]);
 
 $accomplishedCount = isset($works) && $works->count() > 0 ? $works->count() : count($workItems);
@@ -156,91 +622,128 @@ $accomplishedCount = isset($works) && $works->count() > 0 ? $works->count() : co
             Real-world solutions, custom-engineered for rapid deployment and measurable business impact. Explore the complete catalog of systems we've shipped across software, hardware, cloud, and interactive platforms.
         </p>
 
-        {{-- Full Work Grid (Folder Cards) --}}
-        <div class="works-card-grid">
-            @foreach($workItems as $index => $item)
-            @php 
-                $rowNum = floor($index / 3) + 1;
-                $delayClass = "delay-row-{$rowNum}";
-                $itemTitle = data_get($item, 'title', 'Project');
-                $itemCategory = data_get($item, 'category', 'Software Architecture');
-                $itemYear = data_get($item, 'year', '2024');
-                $itemClient = data_get($item, 'client', '');
-                $itemRole = data_get($item, 'role', '');
-                $itemDesc = data_get($item, 'description', '');
-                $coverSrc = data_get($item, 'cover_image_url') ?: data_get($item, 'cover_image');
-                $itemDemo = data_get($item, 'demo_url', '');
-                $itemGithub = data_get($item, 'github_url', '');
-                $itemId = data_get($item, 'id', $index);
-            @endphp
-            <div class="project-card-trigger works-folder-card group relative drop-shadow-2xl
-                        transition-transform duration-150 ease-out active:scale-[0.97] active:drop-shadow-lg
-                        animate-fade-up {{ $delayClass }}"
-                 data-project-index="{{ $index }}"
-                 data-project-id="{{ $itemId }}"
-                 data-project-title="{{ $itemTitle }}"
-                 data-project-category="{{ $itemCategory }}"
-                 data-project-year="{{ $itemYear }}"
-                 data-project-client="{{ $itemClient }}"
-                 data-project-role="{{ $itemRole }}"
-                 data-project-desc="{{ $itemDesc }}"
-                 data-project-cover="{{ $coverSrc ?? '' }}"
-                 data-project-demo="{{ $itemDemo }}"
-                 data-project-github="{{ $itemGithub }}"
-                 data-project-path="ODDS_Project/{{ \Illuminate\Support\Str::studly($itemTitle) }}/Project_Story"
-                 role="button"
-                 tabindex="0"
-                 aria-label="View {{ $itemTitle }} project details">
+    </div>
 
-                {{-- Folder Top Pill Tab --}}
-                <div class="sync-ease absolute top-[1px] right-0 h-[31px] z-20 origin-right
-                            w-[200px] group-hover:w-[225px]
-                            bg-[#2b2b2b] text-white rounded-full font-semibold text-[11px] tracking-widest border border-[#1a1a1a]
-                            flex items-center justify-center shadow-md transition-all
-                            group-hover:bg-black group-hover:border-white/30 group-hover:shadow-lg">
-                    <span class="sync-ease whitespace-nowrap transition-transform">{{ $itemTitle }}</span>
-                </div>
+    {{-- Cinematic Showcase Carousel Section --}}
+    <section class="showcase-carousel-section" id="showcase-carousel-section" aria-label="Our Work Cinematic Showcase">
+        <div class="showcase-stage-viewport" id="showcase-viewport">
+            <div class="showcase-stage-track" id="showcase-track">
+                @foreach($workItems as $index => $item)
+                @php
+                    $itemTitle = data_get($item, 'title', 'Project');
+                    $itemCategory = data_get($item, 'category', 'Software Architecture');
+                    $itemYear = data_get($item, 'year', '2024');
+                    $itemClient = data_get($item, 'client', '');
+                    $itemRole = data_get($item, 'role', '');
+                    $itemDesc = data_get($item, 'description', '');
+                    $coverSrc = data_get($item, 'cover_image_url') ?: data_get($item, 'cover_image');
+                    $videoSrc = data_get($item, 'showcase_video_url') ?: data_get($item, 'showcase_video');
+                    $galleryImages = data_get($item, 'gallery_images');
+                    if (is_string($galleryImages)) {
+                        $decoded = json_decode($galleryImages, true);
+                        $galleryImages = is_array($decoded) ? $decoded : null;
+                    }
+                    $itemId = data_get($item, 'id', $index + 1);
+                @endphp
 
-                <div class="absolute inset-0">
-                    <svg class="w-full h-full block overflow-visible" viewBox="-1 -1 408 248" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <clipPath id="folder-clip-{{ $itemId }}">
-                                <path class="morph-path" d="M182.5 0C192.717 0 201 8.28273 201 18.5C201 28.7173 209.283 37 219.5 37H396C401.523 37 406 41.4772 406 47V236C406 241.523 401.523 246 396 246H10C4.47715 246 0 241.523 0 236V10C0 4.47716 4.47715 0 10 0H182.5Z" />
-                            </clipPath>
-                        </defs>
+                <div class="showcase-stage-slide {{ $index === 0 ? 'is-active' : ($index === 1 ? 'is-peeking is-next' : 'is-distant') }}"
+                     data-slide-index="{{ $index }}"
+                     data-project-id="{{ $itemId }}"
+                     role="button"
+                     tabindex="0"
+                     aria-label="View {{ $itemTitle }} project details">
 
-                        <!-- Base Gray Folder Body Background -->
-                        <path class="morph-path group-hover:fill-[#d8d8d8]" fill="#CCCCCC" />
+                    {{-- Atmospheric Canvas Backdrops --}}
+                    <div class="stage-ambient-glow" aria-hidden="true"></div>
+                    <div class="stage-grid-watermark" aria-hidden="true"></div>
 
-                        @if(!empty($coverSrc))
-                        <!-- Clipped 16:9 Image Body from Admin -->
-                        <g clip-path="url(#folder-clip-{{ $itemId }})">
-                            <image href="{{ $coverSrc }}" xlink:href="{{ $coverSrc }}" x="0" y="0" width="406" height="246" preserveAspectRatio="xMidYMid slice" class="transition-transform duration-300 ease-out group-hover:scale-105 origin-center" />
-                            <rect x="0" y="0" width="406" height="246" fill="#000000" class="opacity-10 group-hover:opacity-0 transition-opacity duration-300 pointer-events-none" />
-                        </g>
+                    {{-- Stage Visual Artifacts --}}
+                    <div class="stage-canvas">
+                        @if(!empty($videoSrc))
+                            {{-- Priority 1: Showcase Video --}}
+                            <div class="stage-artifact stage-video-box">
+                                <video class="stage-video-el" muted loop playsinline autoplay preload="metadata">
+                                    <source src="{{ $videoSrc }}" type="video/mp4">
+                                </video>
+                                <div class="stage-media-pill">
+                                    <span class="stage-pulse-dot"></span>
+                                    <span>SHOWCASE CLIP</span>
+                                </div>
+                            </div>
+                        @elseif(is_array($galleryImages) && count($galleryImages) > 0)
+                            {{-- Priority 2: Scattered Collage Gallery Images --}}
+                            <div class="stage-artifact stage-collage-box">
+                                @foreach(array_slice($galleryImages, 0, 4) as $gIdx => $gImg)
+                                    <div class="stage-artifact stage-collage-item pos-{{ $gIdx + 1 }}">
+                                        <img src="{{ $gImg }}" alt="{{ $itemTitle }} artifact {{ $gIdx + 1 }}">
+                                    </div>
+                                @endforeach
+                            </div>
+                        @elseif(!empty($coverSrc))
+                            {{-- Priority 3: Single Centered Cover Image Artifact --}}
+                            <div class="stage-artifact stage-single-box">
+                                <img src="{{ $coverSrc }}" alt="{{ $itemTitle }}">
+                            </div>
+                        @else
+                            {{-- Fallback: Sleek Placeholder Monogram --}}
+                            <div class="stage-artifact stage-placeholder-box">
+                                <div class="w-12 h-12 rounded-full bg-[#1c1c28] flex items-center justify-center text-[#875af5]">
+                                    <i class="fa-solid fa-layer-group text-lg"></i>
+                                </div>
+                                <span class="text-xs font-mono text-gray-400 uppercase tracking-widest">{{ $itemTitle }}</span>
+                            </div>
                         @endif
-
-                        <!-- Clean Outline Stroke -->
-                        <path class="morph-path" fill="none" stroke="#262626" stroke-width="1" vector-effect="non-scaling-stroke" />
-                    </svg>
-                </div>
-
-                @if(empty($coverSrc))
-                <div class="absolute inset-0 z-10 flex items-center justify-center p-6 pt-10 pointer-events-none">
-                    <div class="sync-ease flex items-center justify-center group-hover:scale-105">
-                        <svg width="99" height="99" viewBox="0 0 99 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g opacity="0.2" class="transition-opacity duration-300 group-hover:opacity-40">
-                                <path d="M15.6914 92.692C13.0445 92.692 10.7795 91.7503 8.89616 89.8671C7.01287 87.9838 6.06961 85.7171 6.06641 83.067V15.6919C6.06641 13.045 7.00966 10.7799 8.89616 8.89665C10.7827 7.01335 13.0477 6.0701 15.6914 6.06689H83.0665C85.7134 6.06689 87.9801 7.01015 89.8666 8.89665C91.7531 10.7831 92.6947 13.0482 92.6915 15.6919V83.067C92.6915 85.7139 91.7499 87.9805 89.8666 89.8671C87.9833 91.7535 85.7166 92.6952 83.0665 92.692H15.6914ZM15.6914 83.067H83.0665V15.6919H15.6914V83.067ZM20.5039 73.442H78.254L60.2071 49.3794L45.7696 68.6295L34.9414 54.1919L20.5039 73.442Z" fill="black" />
-                            </g>
-                        </svg>
                     </div>
+
+                    {{-- Hover Pill Affordance --}}
+                    <div class="stage-hover-pill">
+                        <span>View Project Story</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </div>
+
                 </div>
-                @endif
+                @endforeach
             </div>
-            @endforeach
         </div>
 
-        {{-- Closing Block --}}
+        {{-- Below-Stage Metadata & Circular Navigation Controls --}}
+        <div class="showcase-controls-bar">
+            <div class="showcase-meta-col">
+                <h2 class="showcase-title" id="showcase-title-display">{{ data_get($workItems->first(), 'title', 'Project') }}</h2>
+                <p class="showcase-subtitle" id="showcase-subtitle-display">
+                    {{ data_get($workItems->first(), 'category', 'Software Architecture') }} • {{ data_get($workItems->first(), 'year', '2024') }}
+                    @if(!empty(data_get($workItems->first(), 'description')))
+                        — {{ data_get($workItems->first(), 'description') }}
+                    @endif
+                </p>
+                <button type="button" class="showcase-story-trigger" id="showcase-story-btn">
+                    <span>View Full Story</span>
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+            </div>
+
+            <div class="showcase-nav-group">
+                <div class="showcase-counter">
+                    <span id="showcase-current-idx">01</span>
+                    <span class="text-neutral-400 font-normal"> / </span>
+                    <span id="showcase-total-idx">{{ str_pad(count($workItems), 2, '0', STR_PAD_LEFT) }}</span>
+                </div>
+
+                <button type="button" class="showcase-arrow-btn showcase-arrow-prev" id="showcase-prev-btn" aria-label="Previous project">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                </button>
+
+                <button type="button" class="showcase-arrow-btn showcase-arrow-next" id="showcase-next-btn" aria-label="Next project">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        {{-- Calmer Closing Block --}}
         <div class="our-work-closing animate-fade-up fade-up">
             <h2 class="our-work-closing-title">Want to see yours here?</h2>
             <p class="our-work-closing-desc">
@@ -250,8 +753,7 @@ $accomplishedCount = isset($works) && $works->count() > 0 ? $works->count() : co
                 Let's Build
             </a>
         </div>
-
-    </div>
+    </section>
 </div>
 
 {{-- High-fidelity JSON Data Payload for Modal Stories --}}
@@ -274,6 +776,7 @@ $accomplishedCount = isset($works) && $works->count() > 0 ? $works->count() : co
         'story_content' => data_get($item, 'story_content', ''),
         'body_content' => $rawBlocks,
         'cover_image' => data_get($item, 'cover_image_url') ?: data_get($item, 'cover_image', ''),
+        'showcase_video' => data_get($item, 'showcase_video_url') ?: data_get($item, 'showcase_video', ''),
         'demo_url' => data_get($item, 'demo_url', ''),
         'github_url' => data_get($item, 'github_url', ''),
         'path_str' => 'ODDS_Project/' . \Illuminate\Support\Str::studly($itemTitle) . '/Project_Story',
@@ -289,5 +792,235 @@ $accomplishedCount = isset($works) && $works->count() > 0 ? $works->count() : co
 
 {{-- Lorenzo AI Chat Widget --}}
 <x-odds-chat-widget />
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const track = document.getElementById('showcase-track');
+    const viewport = document.getElementById('showcase-viewport');
+    if (!track || !viewport) return;
+
+    const slides = Array.from(track.querySelectorAll('.showcase-stage-slide'));
+    const prevBtn = document.getElementById('showcase-prev-btn');
+    const nextBtn = document.getElementById('showcase-next-btn');
+    const titleEl = document.getElementById('showcase-title-display');
+    const subtitleEl = document.getElementById('showcase-subtitle-display');
+    const storyBtn = document.getElementById('showcase-story-btn');
+    const currIdxEl = document.getElementById('showcase-current-idx');
+    const totalIdxEl = document.getElementById('showcase-total-idx');
+
+    const rawDataEl = document.getElementById('odds-projects-data');
+    let projectsData = [];
+    if (rawDataEl) {
+        try {
+            projectsData = JSON.parse(rawDataEl.textContent);
+        } catch(e) {
+            projectsData = [];
+        }
+    }
+
+    const totalSlides = slides.length;
+    if (totalSlides === 0) return;
+
+    let activeIndex = 0;
+    let isAnimating = false;
+
+    function isMobile() {
+        return window.innerWidth <= 768;
+    }
+
+    function updateTrackPosition(animate = true) {
+        if (isMobile()) {
+            track.style.transform = `translateX(-${activeIndex * 100}%)`;
+            return;
+        }
+
+        const activeSlide = slides[activeIndex];
+        if (!activeSlide) return;
+
+        const viewportWidth = viewport.offsetWidth || window.innerWidth;
+        const slideWidth = activeSlide.offsetWidth;
+        const slideGap = 36;
+        const offset = (viewportWidth / 2) - (slideWidth / 2) - (activeIndex * (slideWidth + slideGap));
+        
+        track.style.transform = `translateX(${offset}px)`;
+    }
+
+    function updateSlideStates() {
+        const mobile = isMobile();
+
+        slides.forEach((slide, idx) => {
+            slide.classList.remove('is-active', 'is-peeking', 'is-prev', 'is-next', 'is-distant');
+
+            if (idx === activeIndex) {
+                slide.classList.add('is-active');
+            } else if (!mobile && idx === (activeIndex - 1 + totalSlides) % totalSlides) {
+                slide.classList.add('is-peeking', 'is-prev');
+            } else if (!mobile && idx === (activeIndex + 1) % totalSlides) {
+                slide.classList.add('is-peeking', 'is-next');
+            } else {
+                slide.classList.add('is-distant');
+            }
+
+            // Video management: only play video on active slide
+            const video = slide.querySelector('video');
+            if (video) {
+                if (idx === activeIndex) {
+                    video.play().catch(() => {});
+                } else {
+                    video.pause();
+                    video.currentTime = 0;
+                }
+            }
+        });
+
+        // Update Metadata
+        const currData = projectsData[activeIndex] || {};
+        const title = currData.title || (slides[activeIndex] ? slides[activeIndex].getAttribute('aria-label') : 'Project');
+        const category = currData.category || 'Software Architecture';
+        const year = currData.year || '2024';
+        const desc = currData.description ? ` — ${currData.description}` : '';
+
+        if (titleEl) titleEl.textContent = title;
+        if (subtitleEl) subtitleEl.textContent = `${category} • ${year}${desc}`;
+        if (currIdxEl) currIdxEl.textContent = String(activeIndex + 1).padStart(2, '0');
+        if (totalIdxEl) totalIdxEl.textContent = String(totalSlides).padStart(2, '0');
+
+        // GSAP Artifact Assembly Stagger Animation
+        const activeSlide = slides[activeIndex];
+        if (activeSlide) {
+            const artifacts = activeSlide.querySelectorAll('.stage-artifact');
+            if (window.gsap && artifacts.length > 0) {
+                window.gsap.fromTo(artifacts, 
+                    { scale: 0.84, opacity: 0, y: 14 },
+                    { scale: 1, opacity: 1, y: 0, duration: 0.52, ease: 'power3.out', stagger: 0.06, overwrite: 'auto' }
+                );
+            }
+        }
+    }
+
+    function goToSlide(index) {
+        if (index === activeIndex && !isAnimating) return;
+        activeIndex = (index + totalSlides) % totalSlides;
+        updateTrackPosition(true);
+        updateSlideStates();
+    }
+
+    function openModalForCurrent() {
+        const item = projectsData[activeIndex];
+        if (item && window.openProjectModal) {
+            window.openProjectModal({
+                title: item.title,
+                category: item.category,
+                year: item.year,
+                client: item.client,
+                role: item.role,
+                desc: item.description,
+                blocks: item.body_content,
+                story: item.story_content,
+                cover: item.cover_image,
+                showcaseVideo: item.showcase_video,
+                demoUrl: item.demo_url,
+                githubUrl: item.github_url,
+                pathStr: item.path_str
+            });
+        }
+    }
+
+    // Navigation Arrow Listeners
+    if (prevBtn) {
+        prevBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            goToSlide(activeIndex - 1);
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            goToSlide(activeIndex + 1);
+        });
+    }
+
+    // Click on slide handling
+    slides.forEach((slide, idx) => {
+        slide.addEventListener('click', (e) => {
+            if (slide.classList.contains('is-active')) {
+                openModalForCurrent();
+            } else if (slide.classList.contains('is-peeking')) {
+                e.stopPropagation();
+                goToSlide(idx);
+            }
+        });
+    });
+
+    // Story Trigger Button Click
+    if (storyBtn) {
+        storyBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openModalForCurrent();
+        });
+    }
+
+    // Keyboard Arrow Navigation
+    window.addEventListener('keydown', (e) => {
+        const modal = document.getElementById('project-modal');
+        if (modal && modal.classList.contains('is-active')) return;
+
+        if (e.key === 'ArrowLeft') {
+            goToSlide(activeIndex - 1);
+        } else if (e.key === 'ArrowRight') {
+            goToSlide(activeIndex + 1);
+        }
+    });
+
+    // Touch Swipe Gesture for Mobile
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchDeltaX = 0;
+    let touchDeltaY = 0;
+
+    viewport.addEventListener('touchstart', (e) => {
+        if (!e.touches || e.touches.length === 0) return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchDeltaX = 0;
+        touchDeltaY = 0;
+    }, { passive: true });
+
+    viewport.addEventListener('touchmove', (e) => {
+        if (!e.touches || e.touches.length === 0) return;
+        touchDeltaX = e.touches[0].clientX - touchStartX;
+        touchDeltaY = e.touches[0].clientY - touchStartY;
+    }, { passive: true });
+
+    viewport.addEventListener('touchend', () => {
+        if (Math.abs(touchDeltaX) > 40 && Math.abs(touchDeltaX) > Math.abs(touchDeltaY)) {
+            if (touchDeltaX < 0) {
+                goToSlide(activeIndex + 1);
+            } else {
+                goToSlide(activeIndex - 1);
+            }
+        }
+    });
+
+    // Window Resize Handler
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            updateTrackPosition(false);
+            updateSlideStates();
+        }, 80);
+    });
+
+    // Initial Layout Setup
+    setTimeout(() => {
+        updateTrackPosition(false);
+        updateSlideStates();
+    }, 50);
+});
+</script>
+@endpush
 
 </x-layout>

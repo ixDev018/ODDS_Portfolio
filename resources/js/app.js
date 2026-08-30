@@ -1,6 +1,8 @@
 import './bootstrap';
 import { gsap } from 'gsap';
 
+window.gsap = gsap;
+
 // ─── Navbar & Mobile Drawer setup ──────────────────────
 const navbar = document.getElementById('navbar');
 if (navbar) navbar.classList.add('scrolled');
