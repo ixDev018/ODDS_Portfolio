@@ -160,6 +160,77 @@
         z-index: 2;
     }
 
+    /* Stage Split Layout with Text Excerpt (Fix 1) */
+    .stage-inner-split {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 28px;
+        width: 100%;
+        height: 100%;
+        position: relative;
+        z-index: 3;
+    }
+
+    .stage-media-col {
+        flex: 1 1 60%;
+        min-width: 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .stage-excerpt-col {
+        flex: 0 0 38%;
+        max-width: 360px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        z-index: 4;
+    }
+
+    .stage-excerpt-box {
+        background: rgba(255, 255, 255, 0.035);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        border-radius: 20px;
+        padding: 24px 26px;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.35);
+        transition: transform 0.4s ease, border-color 0.4s ease;
+    }
+
+    .showcase-stage-slide.is-active:hover .stage-excerpt-box {
+        border-color: rgba(135, 90, 245, 0.3);
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .stage-excerpt-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #875af5;
+        margin-bottom: 12px;
+    }
+
+    .stage-excerpt-text {
+        font-family: var(--font-primary), sans-serif;
+        font-size: clamp(13px, 1.1vw, 15px);
+        line-height: 1.68;
+        color: rgba(243, 244, 246, 0.85);
+        margin: 0;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+    }
+
     /* 1. Video Artifact */
     .stage-video-box {
         position: relative;
@@ -510,6 +581,23 @@
             padding: 12px;
         }
 
+        /* Mobile Layout for Stage Split */
+        .stage-inner-split {
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .stage-media-col {
+            width: 100% !important;
+            height: 100% !important;
+            position: absolute !important;
+            inset: 0 !important;
+        }
+
+        .stage-excerpt-col {
+            display: none !important;
+        }
+
         /* Simplified Single Primary Artifact on Mobile */
         .stage-collage-box .stage-collage-item:not(:first-child) {
             display: none !important;
@@ -577,6 +665,31 @@ $workItems = isset($works) && count($works) > 0 ? $works : collect([
 ]);
 
 $accomplishedCount = isset($works) && $works->count() > 0 ? $works->count() : count($workItems);
+
+// Fix 2: Determine starting active slide index
+$totalSlides = count($workItems);
+$middleIndex = $totalSlides > 0 ? (int) floor($totalSlides / 2) : 0;
+
+$featuredIndex = null;
+$featuredCount = 0;
+foreach ($workItems as $idx => $item) {
+    if (data_get($item, 'is_featured')) {
+        $featuredCount++;
+        if ($featuredIndex === null) {
+            $featuredIndex = $idx;
+        }
+    }
+}
+
+if ($featuredCount > 0 && $featuredCount < $totalSlides) {
+    $startIndex = $featuredIndex;
+} elseif ($featuredCount === 1) {
+    $startIndex = $featuredIndex;
+} else {
+    $startIndex = $middleIndex;
+}
+
+$startingItem = $workItems->get($startIndex) ?: $workItems->first();
 @endphp
 
 <div class="our-work-universe">
@@ -627,7 +740,7 @@ $accomplishedCount = isset($works) && $works->count() > 0 ? $works->count() : co
     {{-- Cinematic Showcase Carousel Section --}}
     <section class="showcase-carousel-section" id="showcase-carousel-section" aria-label="Our Work Cinematic Showcase">
         <div class="showcase-stage-viewport" id="showcase-viewport">
-            <div class="showcase-stage-track" id="showcase-track">
+            <div class="showcase-stage-track" id="showcase-track" data-start-index="{{ $startIndex }}">
                 @foreach($workItems as $index => $item)
                 @php
                     $itemTitle = data_get($item, 'title', 'Project');
@@ -644,9 +757,44 @@ $accomplishedCount = isset($works) && $works->count() > 0 ? $works->count() : co
                         $galleryImages = is_array($decoded) ? $decoded : null;
                     }
                     $itemId = data_get($item, 'id', $index + 1);
+
+                    // Fix 1: Extract meaningful paragraph excerpt from body_content or story_content
+                    $rawBlocks = data_get($item, 'body_content', []);
+                    if (is_string($rawBlocks)) {
+                        $decoded = json_decode($rawBlocks, true);
+                        $rawBlocks = is_array($decoded) ? $decoded : [];
+                    }
+
+                    $itemExcerpt = null;
+                    if (is_array($rawBlocks) && count($rawBlocks) > 0) {
+                        foreach ($rawBlocks as $block) {
+                            if (($block['type'] ?? '') === 'paragraph') {
+                                $rawText = trim(html_entity_decode(strip_tags($block['content'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                                $rawText = trim(str_replace("\xc2\xa0", ' ', $rawText));
+                                if (!empty($rawText)) {
+                                    $itemExcerpt = \Illuminate\Support\Str::words($rawText, 35, '...');
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if (empty($itemExcerpt) && !empty(data_get($item, 'story_content'))) {
+                        $rawStory = trim(html_entity_decode(strip_tags(data_get($item, 'story_content')), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                        $rawStory = trim(str_replace("\xc2\xa0", ' ', $rawStory));
+                        if (!empty($rawStory)) {
+                            $itemExcerpt = \Illuminate\Support\Str::words($rawStory, 35, '...');
+                        }
+                    }
+
+                    // Fix 2: Initial active / peeking class assignment based on $startIndex
+                    $isInitialActive = ($index === $startIndex);
+                    $isInitialNext = ($index === ($startIndex + 1) % $totalSlides);
+                    $isInitialPrev = ($index === ($startIndex - 1 + $totalSlides) % $totalSlides);
+                    $initialClass = $isInitialActive ? 'is-active' : ($isInitialNext ? 'is-peeking is-next' : ($isInitialPrev ? 'is-peeking is-prev' : 'is-distant'));
                 @endphp
 
-                <div class="showcase-stage-slide {{ $index === 0 ? 'is-active' : ($index === 1 ? 'is-peeking is-next' : 'is-distant') }}"
+                <div class="showcase-stage-slide {{ $initialClass }}"
                      data-slide-index="{{ $index }}"
                      data-project-id="{{ $itemId }}"
                      role="button"
@@ -657,41 +805,90 @@ $accomplishedCount = isset($works) && $works->count() > 0 ? $works->count() : co
                     <div class="stage-ambient-glow" aria-hidden="true"></div>
                     <div class="stage-grid-watermark" aria-hidden="true"></div>
 
-                    {{-- Stage Visual Artifacts --}}
+                    {{-- Stage Visual & Text Canvas Area --}}
                     <div class="stage-canvas">
-                        @if(!empty($videoSrc))
-                            {{-- Priority 1: Showcase Video --}}
-                            <div class="stage-artifact stage-video-box">
-                                <video class="stage-video-el" muted loop playsinline autoplay preload="metadata">
-                                    <source src="{{ $videoSrc }}" type="video/mp4">
-                                </video>
-                                <div class="stage-media-pill">
-                                    <span class="stage-pulse-dot"></span>
-                                    <span>SHOWCASE CLIP</span>
+                        @if(!empty($itemExcerpt))
+                            {{-- Side-by-side Split: Visual Artifact + Text Excerpt (Fix 1) --}}
+                            <div class="stage-inner-split">
+                                <div class="stage-media-col">
+                                    @if(!empty($videoSrc))
+                                        {{-- Priority 1: Showcase Video --}}
+                                        <div class="stage-artifact stage-video-box">
+                                            <video class="stage-video-el" muted loop playsinline autoplay preload="metadata">
+                                                <source src="{{ $videoSrc }}" type="video/mp4">
+                                            </video>
+                                            <div class="stage-media-pill">
+                                                <span class="stage-pulse-dot"></span>
+                                                <span>SHOWCASE CLIP</span>
+                                            </div>
+                                        </div>
+                                    @elseif(is_array($galleryImages) && count($galleryImages) > 0)
+                                        {{-- Priority 2: Scattered Collage Gallery Images --}}
+                                        <div class="stage-artifact stage-collage-box">
+                                            @foreach(array_slice($galleryImages, 0, 4) as $gIdx => $gImg)
+                                                <div class="stage-artifact stage-collage-item pos-{{ $gIdx + 1 }}">
+                                                    <img src="{{ $gImg }}" alt="{{ $itemTitle }} artifact {{ $gIdx + 1 }}">
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @elseif(!empty($coverSrc))
+                                        {{-- Priority 3: Centered Cover Image Artifact --}}
+                                        <div class="stage-artifact stage-single-box">
+                                            <img src="{{ $coverSrc }}" alt="{{ $itemTitle }}">
+                                        </div>
+                                    @else
+                                        {{-- Fallback: Monogram --}}
+                                        <div class="stage-artifact stage-placeholder-box">
+                                            <div class="w-12 h-12 rounded-full bg-[#1c1c28] flex items-center justify-center text-[#875af5]">
+                                                <i class="fa-solid fa-layer-group text-lg"></i>
+                                            </div>
+                                            <span class="text-xs font-mono text-gray-400 uppercase tracking-widest">{{ $itemTitle }}</span>
+                                        </div>
+                                    @endif
                                 </div>
-                            </div>
-                        @elseif(is_array($galleryImages) && count($galleryImages) > 0)
-                            {{-- Priority 2: Scattered Collage Gallery Images --}}
-                            <div class="stage-artifact stage-collage-box">
-                                @foreach(array_slice($galleryImages, 0, 4) as $gIdx => $gImg)
-                                    <div class="stage-artifact stage-collage-item pos-{{ $gIdx + 1 }}">
-                                        <img src="{{ $gImg }}" alt="{{ $itemTitle }} artifact {{ $gIdx + 1 }}">
+
+                                <div class="stage-excerpt-col">
+                                    <div class="stage-artifact stage-excerpt-box">
+                                        <div class="stage-excerpt-tag">
+                                            <i class="fa-solid fa-code-commit text-[10px] text-[#875af5]"></i>
+                                            <span>PROJECT CONTEXT</span>
+                                        </div>
+                                        <p class="stage-excerpt-text">{{ $itemExcerpt }}</p>
                                     </div>
-                                @endforeach
-                            </div>
-                        @elseif(!empty($coverSrc))
-                            {{-- Priority 3: Single Centered Cover Image Artifact --}}
-                            <div class="stage-artifact stage-single-box">
-                                <img src="{{ $coverSrc }}" alt="{{ $itemTitle }}">
+                                </div>
                             </div>
                         @else
-                            {{-- Fallback: Sleek Placeholder Monogram --}}
-                            <div class="stage-artifact stage-placeholder-box">
-                                <div class="w-12 h-12 rounded-full bg-[#1c1c28] flex items-center justify-center text-[#875af5]">
-                                    <i class="fa-solid fa-layer-group text-lg"></i>
+                            {{-- Visual Artifact Only (Fallback when no story/body content exists) --}}
+                            @if(!empty($videoSrc))
+                                <div class="stage-artifact stage-video-box">
+                                    <video class="stage-video-el" muted loop playsinline autoplay preload="metadata">
+                                        <source src="{{ $videoSrc }}" type="video/mp4">
+                                    </video>
+                                    <div class="stage-media-pill">
+                                        <span class="stage-pulse-dot"></span>
+                                        <span>SHOWCASE CLIP</span>
+                                    </div>
                                 </div>
-                                <span class="text-xs font-mono text-gray-400 uppercase tracking-widest">{{ $itemTitle }}</span>
-                            </div>
+                            @elseif(is_array($galleryImages) && count($galleryImages) > 0)
+                                <div class="stage-artifact stage-collage-box">
+                                    @foreach(array_slice($galleryImages, 0, 4) as $gIdx => $gImg)
+                                        <div class="stage-artifact stage-collage-item pos-{{ $gIdx + 1 }}">
+                                            <img src="{{ $gImg }}" alt="{{ $itemTitle }} artifact {{ $gIdx + 1 }}">
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @elseif(!empty($coverSrc))
+                                <div class="stage-artifact stage-single-box">
+                                    <img src="{{ $coverSrc }}" alt="{{ $itemTitle }}">
+                                </div>
+                            @else
+                                <div class="stage-artifact stage-placeholder-box">
+                                    <div class="w-12 h-12 rounded-full bg-[#1c1c28] flex items-center justify-center text-[#875af5]">
+                                        <i class="fa-solid fa-layer-group text-lg"></i>
+                                    </div>
+                                    <span class="text-xs font-mono text-gray-400 uppercase tracking-widest">{{ $itemTitle }}</span>
+                                </div>
+                            @endif
                         @endif
                     </div>
 
@@ -706,14 +903,14 @@ $accomplishedCount = isset($works) && $works->count() > 0 ? $works->count() : co
             </div>
         </div>
 
-        {{-- Below-Stage Metadata & Circular Navigation Controls --}}
+        {{-- Below-Stage Metadata & Circular Navigation Controls (Fix 2: Uses $startingItem on load) --}}
         <div class="showcase-controls-bar">
             <div class="showcase-meta-col">
-                <h2 class="showcase-title" id="showcase-title-display">{{ data_get($workItems->first(), 'title', 'Project') }}</h2>
+                <h2 class="showcase-title" id="showcase-title-display">{{ data_get($startingItem, 'title', 'Project') }}</h2>
                 <p class="showcase-subtitle" id="showcase-subtitle-display">
-                    {{ data_get($workItems->first(), 'category', 'Software Architecture') }} • {{ data_get($workItems->first(), 'year', '2024') }}
-                    @if(!empty(data_get($workItems->first(), 'description')))
-                        — {{ data_get($workItems->first(), 'description') }}
+                    {{ data_get($startingItem, 'category', 'Software Architecture') }} • {{ data_get($startingItem, 'year', '2024') }}
+                    @if(!empty(data_get($startingItem, 'description')))
+                        — {{ data_get($startingItem, 'description') }}
                     @endif
                 </p>
                 <button type="button" class="showcase-story-trigger" id="showcase-story-btn">
@@ -724,9 +921,9 @@ $accomplishedCount = isset($works) && $works->count() > 0 ? $works->count() : co
 
             <div class="showcase-nav-group">
                 <div class="showcase-counter">
-                    <span id="showcase-current-idx">01</span>
+                    <span id="showcase-current-idx">{{ str_pad($startIndex + 1, 2, '0', STR_PAD_LEFT) }}</span>
                     <span class="text-neutral-400 font-normal"> / </span>
-                    <span id="showcase-total-idx">{{ str_pad(count($workItems), 2, '0', STR_PAD_LEFT) }}</span>
+                    <span id="showcase-total-idx">{{ str_pad($totalSlides, 2, '0', STR_PAD_LEFT) }}</span>
                 </div>
 
                 <button type="button" class="showcase-arrow-btn showcase-arrow-prev" id="showcase-prev-btn" aria-label="Previous project">
@@ -822,7 +1019,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalSlides = slides.length;
     if (totalSlides === 0) return;
 
-    let activeIndex = 0;
+    // Fix 2: Initialize activeIndex from server-computed start index
+    const startIndexAttr = parseInt(track.dataset.startIndex ?? '0', 10);
+    let activeIndex = isNaN(startIndexAttr) ? 0 : startIndexAttr;
     let isAnimating = false;
 
     function isMobile() {
@@ -846,7 +1045,7 @@ document.addEventListener('DOMContentLoaded', () => {
         track.style.transform = `translateX(${offset}px)`;
     }
 
-    function updateSlideStates() {
+    function updateSlideStates(triggerStagger = true) {
         const mobile = isMobile();
 
         slides.forEach((slide, idx) => {
@@ -887,14 +1086,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (totalIdxEl) totalIdxEl.textContent = String(totalSlides).padStart(2, '0');
 
         // GSAP Artifact Assembly Stagger Animation
-        const activeSlide = slides[activeIndex];
-        if (activeSlide) {
-            const artifacts = activeSlide.querySelectorAll('.stage-artifact');
-            if (window.gsap && artifacts.length > 0) {
-                window.gsap.fromTo(artifacts, 
-                    { scale: 0.84, opacity: 0, y: 14 },
-                    { scale: 1, opacity: 1, y: 0, duration: 0.52, ease: 'power3.out', stagger: 0.06, overwrite: 'auto' }
-                );
+        if (triggerStagger) {
+            const activeSlide = slides[activeIndex];
+            if (activeSlide) {
+                const artifacts = activeSlide.querySelectorAll('.stage-artifact');
+                if (window.gsap && artifacts.length > 0) {
+                    window.gsap.fromTo(artifacts, 
+                        { scale: 0.84, opacity: 0, y: 14 },
+                        { scale: 1, opacity: 1, y: 0, duration: 0.52, ease: 'power3.out', stagger: 0.06, overwrite: 'auto' }
+                    );
+                }
             }
         }
     }
@@ -903,7 +1104,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (index === activeIndex && !isAnimating) return;
         activeIndex = (index + totalSlides) % totalSlides;
         updateTrackPosition(true);
-        updateSlideStates();
+        updateSlideStates(true);
     }
 
     function openModalForCurrent() {
@@ -1010,15 +1211,15 @@ document.addEventListener('DOMContentLoaded', () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
             updateTrackPosition(false);
-            updateSlideStates();
+            updateSlideStates(false);
         }, 80);
     });
 
-    // Initial Layout Setup
+    // Initial Layout Setup with Server Starting Index Sync
     setTimeout(() => {
         updateTrackPosition(false);
-        updateSlideStates();
-    }, 50);
+        updateSlideStates(true);
+    }, 40);
 });
 </script>
 @endpush
