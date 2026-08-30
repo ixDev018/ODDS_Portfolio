@@ -15,5 +15,14 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (\Illuminate\Http\Exceptions\PostTooLargeException $e, \Illuminate\Http\Request $request) {
+            $maxSize = ini_get('upload_max_filesize') ?: ini_get('post_max_size') ?: '128M';
+            $message = "The uploaded file is too large for the server. Maximum allowed file size is {$maxSize}.";
+
+            if ($request->expectsJson() || $request->ajax() || $request->is('admin/*') || $request->is('api/*')) {
+                return response()->json(['error' => $message, 'message' => $message], 413);
+            }
+
+            return redirect()->back()->withInput()->withErrors(['file' => $message, 'cover_image' => $message]);
+        });
     })->create();

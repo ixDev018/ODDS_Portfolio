@@ -81,7 +81,15 @@ Route::post('/contact', function (\Illuminate\Http\Request $request) {
     return redirect()->back()->with('success', 'Thank you! The ODDS team will get back to you shortly.');
 })->name('portfolio.contact');
 
-// Media Serving
+// Media & Storage File Serving
+Route::get('/storage/{path}', function ($path) {
+    $filePath = storage_path('app/public/' . $path);
+    if (file_exists($filePath)) {
+        return response()->file($filePath);
+    }
+    abort(404);
+})->where('path', '.*')->name('storage.serve');
+
 Route::get('/media/{path}', function ($path) {
     $filePath = storage_path('app/public/' . $path);
     if (file_exists($filePath)) {

@@ -272,7 +272,7 @@ class OddsAdminController extends Controller
             'description' => 'nullable|string',
             'story_content' => 'nullable|string',
             'body_content' => 'nullable|string',
-            'cover_image' => 'nullable|image|max:10240',
+            'cover_image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,mp4,mov,webm|max:204800',
             'cover_image_url' => 'nullable|string|max:1000',
             'cover_image_base64' => 'nullable|string',
             'demo_url' => 'nullable|url',
@@ -328,7 +328,7 @@ class OddsAdminController extends Controller
             'description' => 'nullable|string',
             'story_content' => 'nullable|string',
             'body_content' => 'nullable|string',
-            'cover_image' => 'nullable|image|max:10240',
+            'cover_image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,mp4,mov,webm|max:204800',
             'cover_image_url' => 'nullable|string|max:1000',
             'cover_image_base64' => 'nullable|string',
             'remove_cover_image' => 'nullable|string',
@@ -377,7 +377,7 @@ class OddsAdminController extends Controller
     public function uploadBodyMedia(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:jpeg,png,jpg,gif,svg,webp,mp4,mov,webm|max:102400',
+            'file' => 'required|file|mimes:jpeg,png,jpg,gif,svg,webp,mp4,mov,webm|max:204800',
         ]);
 
         $url = $this->uploadMedia($request->file('file'), 'works/body');
@@ -620,7 +620,7 @@ class OddsAdminController extends Controller
             'author' => 'nullable|string|max:255',
             'read_time' => 'nullable|string|max:100',
             'body_content' => 'nullable|string',
-            'cover_image' => 'nullable|image|max:10240',
+            'cover_image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,mp4,mov,webm|max:204800',
             'cover_image_url' => 'nullable|string|max:1000',
             'cover_image_base64' => 'nullable|string',
             'is_active' => 'nullable|boolean',
@@ -668,7 +668,7 @@ class OddsAdminController extends Controller
             'author' => 'nullable|string|max:255',
             'read_time' => 'nullable|string|max:100',
             'body_content' => 'nullable|string',
-            'cover_image' => 'nullable|image|max:10240',
+            'cover_image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,mp4,mov,webm|max:204800',
             'cover_image_url' => 'nullable|string|max:1000',
             'cover_image_base64' => 'nullable|string',
             'remove_cover_image' => 'nullable|string',
@@ -725,7 +725,7 @@ class OddsAdminController extends Controller
     public function uploadAboutBodyMedia(Request $request)
     {
         $request->validate([
-            'file' => 'required|image|max:10240'
+            'file' => 'required|file|mimes:jpeg,png,jpg,gif,svg,webp,mp4,mov,webm|max:204800'
         ]);
 
         $url = $this->uploadMedia($request->file('file'), 'about/body');

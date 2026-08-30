@@ -625,12 +625,17 @@ async function handleImageUpload(file, imgWrap, blockEl) {
     formData.append('file', file);
     formData.append('_token', '{{ csrf_token() }}');
 
-    imgWrap.innerHTML = '<div class="p-8 text-center text-xs text-[#875af5] font-mono"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Uploading media...</div>';
+    const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+    imgWrap.innerHTML = `<div class="p-8 text-center text-xs text-[#875af5] font-mono"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Uploading media (${sizeMb} MB)...</div>`;
 
     try {
         const res = await fetch('{{ route("odds.admin.works.upload_body_media") }}', {
             method: 'POST',
-            body: formData
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
         });
         const data = await res.json();
         if (data.url) {
@@ -644,9 +649,12 @@ async function handleImageUpload(file, imgWrap, blockEl) {
                 <input type="text" class="pe-img-caption bg-transparent border-none outline-none text-center text-xs text-gray-400 mt-1 placeholder-gray-600" placeholder="Optional caption...">
             `;
             imgWrap.dataset.src = data.url;
+        } else {
+            const errMsg = data.error || data.message || 'Upload failed. Please try again.';
+            imgWrap.innerHTML = `<div class="p-4 text-center text-xs text-red-400 font-mono">${errMsg}</div>`;
         }
     } catch(err) {
-        imgWrap.innerHTML = '<div class="p-4 text-center text-xs text-red-400">Upload failed. Please try again.</div>';
+        imgWrap.innerHTML = '<div class="p-4 text-center text-xs text-red-400 font-mono">Upload failed. File may exceed server limits (128MB max).</div>';
     }
 }
 

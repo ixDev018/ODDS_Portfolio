@@ -79,7 +79,7 @@ $workItems = isset($works) && count($works) > 0 ? $works : collect([
            data-project-category="{{ $item->category ?? 'Software Architecture' }}"
            data-project-year="{{ $item->year ?? '2024' }}"
            data-project-desc="{{ $item->description ?? '' }}"
-           data-project-cover="{{ $item->cover_image ?? '' }}"
+           data-project-cover="{{ $item->cover_image_url ?? $item->cover_image ?? '' }}"
            data-project-demo="{{ $item->demo_url ?? '' }}"
            data-project-github="{{ $item->github_url ?? '' }}"
            data-project-path="ODDS_Project/{{ Str::studly($item->title) }}/Project_Story">
@@ -101,10 +101,11 @@ $workItems = isset($works) && count($works) > 0 ? $works : collect([
             <!-- Base Gray Folder Body Background -->
             <path class="morph-path group-hover:fill-[#d8d8d8]" fill="#CCCCCC" />
 
-            @if(!empty($item->cover_image))
+            @php $coverSrc = $item->cover_image_url ?? $item->cover_image; @endphp
+            @if(!empty($coverSrc))
             <!-- Clipped 16:9 Image Body from Admin -->
             <g clip-path="url(#folder-clip-{{ $item->id ?? $index }})">
-              <image href="{{ $item->cover_image }}" xlink:href="{{ $item->cover_image }}" x="0" y="0" width="406" height="246" preserveAspectRatio="xMidYMid slice" class="transition-transform duration-300 ease-out group-hover:scale-105 origin-center" />
+              <image href="{{ $coverSrc }}" xlink:href="{{ $coverSrc }}" x="0" y="0" width="406" height="246" preserveAspectRatio="xMidYMid slice" class="transition-transform duration-300 ease-out group-hover:scale-105 origin-center" />
               <rect x="0" y="0" width="406" height="246" fill="#000000" class="opacity-10 group-hover:opacity-0 transition-opacity duration-300 pointer-events-none" />
             </g>
             @endif
@@ -114,7 +115,7 @@ $workItems = isset($works) && count($works) > 0 ? $works : collect([
           </svg>
         </div>
 
-        @if(empty($item->cover_image))
+        @if(empty($coverSrc))
         <div class="absolute inset-0 z-10 flex items-center justify-center p-6 pt-10 pointer-events-none">
           <div class="sync-ease flex items-center justify-center group-hover:scale-105">
             <svg width="99" height="99" viewBox="0 0 99 99" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -156,7 +157,7 @@ $workItems = isset($works) && count($works) > 0 ? $works : collect([
         'description' => $item->description ?? '',
         'story_content' => $item->story_content ?? '',
         'body_content' => $rawBlocks,
-        'cover_image' => $item->cover_image ?? '',
+        'cover_image' => $item->cover_image_url ?? $item->cover_image ?? '',
         'demo_url' => $item->demo_url ?? '',
         'github_url' => $item->github_url ?? '',
         'path_str' => 'ODDS_Project/' . \Illuminate\Support\Str::studly($item->title ?? 'Project') . '/Project_Story',
