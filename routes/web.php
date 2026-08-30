@@ -64,6 +64,15 @@ Route::get('/about', function () {
     return view('about', compact('settings', 'sections'));
 })->name('portfolio.about');
 
+// Public Standalone Our Work Page
+Route::get('/our-work', function () {
+    $settings = OddsSetting::current();
+    $works = OddsWork::where('is_active', true)->orderBy('sort_order')->get();
+
+    return view('our-work', compact('settings', 'works'));
+})->name('portfolio.our-work');
+
+
 // Public Contact / Lead Form Submission
 Route::post('/contact', function (\Illuminate\Http\Request $request) {
     $validated = $request->validate([
