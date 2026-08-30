@@ -12,11 +12,11 @@
         </a>
         <div class="nav-right">
             <ul class="nav-links">
-                <li><a href="{{ request()->is('about*') ? url('/#services') : '#services' }}">Services</a></li>
-                <li><a href="{{ request()->is('about*') ? url('/#works') : '#works' }}">Our Work</a></li>
+                <li><a href="{{ request()->is('/') ? '#services' : url('/#services') }}">Services</a></li>
+                <li><a href="{{ request()->is('/') ? '#works' : url('/#works') }}">Our Work</a></li>
                 <li><a href="{{ route('portfolio.about') }}" class="{{ request()->routeIs('portfolio.about') ? 'active' : '' }}">About Us</a></li>
             </ul>
-            <a href="{{ request()->is('about*') ? url('/#cta') : '#cta' }}" class="btn-nav">Let's Talk</a>
+            <a href="{{ request()->is('/') ? '#cta' : url('/#cta') }}" class="btn-nav">Let's Talk</a>
             <button class="nav-toggle" id="mobile-toggle" aria-label="Toggle Navigation" aria-expanded="false">
                 <span class="hamburger-bar"></span>
                 <span class="hamburger-bar"></span>
@@ -30,11 +30,11 @@
 <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
     <div class="mobile-drawer-inner">
         <ul class="mobile-nav-links">
-            <li><a href="{{ request()->is('about*') ? url('/#services') : '#services' }}" class="mobile-nav-link">Services</a></li>
-            <li><a href="{{ request()->is('about*') ? url('/#works') : '#works' }}" class="mobile-nav-link">Our Work</a></li>
+            <li><a href="{{ request()->is('/') ? '#services' : url('/#services') }}" class="mobile-nav-link">Services</a></li>
+            <li><a href="{{ request()->is('/') ? '#works' : url('/#works') }}" class="mobile-nav-link">Our Work</a></li>
             <li><a href="{{ route('portfolio.about') }}" class="mobile-nav-link {{ request()->routeIs('portfolio.about') ? 'active' : '' }}">About Us</a></li>
         </ul>
-        <a href="{{ request()->is('about*') ? url('/#cta') : '#cta' }}" class="mobile-btn-nav mobile-nav-link">Let's Talk</a>
+        <a href="{{ request()->is('/') ? '#cta' : url('/#cta') }}" class="mobile-btn-nav mobile-nav-link">Let's Talk</a>
     </div>
 </div>
 
