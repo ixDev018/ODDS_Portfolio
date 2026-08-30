@@ -32,6 +32,7 @@
     @include('sections.works')
     {{-- @include('sections.testimonials') --}}
     @include('sections.why')
+    @include('sections.process')
     @include('sections.faq')
     @include('sections.cta')
 
