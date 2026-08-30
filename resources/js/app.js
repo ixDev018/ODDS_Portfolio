@@ -540,7 +540,7 @@ if (ctaVideo && ctaCanvas) {
     if (projectsDataScript) {
         try {
             projectsData = JSON.parse(projectsDataScript.textContent);
-        } catch(e) {
+        } catch (e) {
             console.error('Failed to parse odds-projects-data:', e);
         }
     }
@@ -561,7 +561,7 @@ if (ctaVideo && ctaCanvas) {
                     parsed = txt.value;
                 }
                 blocks = JSON.parse(parsed);
-            } catch(e) {
+            } catch (e) {
                 blocks = [];
             }
         }
@@ -1159,6 +1159,101 @@ if (ctaVideo && ctaCanvas) {
         }
     });
 })();
+
+
+// ─── Process Section Line Path Scroll Trail ─────────────
+(function initProcessLineTrail() {
+    const path = document.getElementById('process-line-path');
+    const svgWrap = document.querySelector('.process-linepath-wrap');
+    if (!path || !svgWrap) return;
+
+    let pathLength = 0;
+    const SAMPLES_COUNT = 400;
+    let yToLengthTable = [];
+
+    function buildSampleTable() {
+        try {
+            pathLength = path.getTotalLength() || 2800;
+        } catch (e) {
+            pathLength = 2800;
+        }
+
+        path.style.strokeDasharray = `${pathLength} ${pathLength}`;
+        yToLengthTable = [];
+
+        let maxY = -Infinity;
+        for (let i = 0; i <= SAMPLES_COUNT; i++) {
+            const len = (i / SAMPLES_COUNT) * pathLength;
+            const pt = path.getPointAtLength(len);
+            if (pt.y > maxY) maxY = pt.y;
+            yToLengthTable.push({ len, y: pt.y, maxSoFar: maxY });
+        }
+    }
+
+    buildSampleTable();
+
+    let targetLengthToDraw = 0;
+    let currentLengthToDraw = 0;
+
+    function getLengthForY(targetSvgY) {
+        if (!yToLengthTable.length) return 0;
+        if (targetSvgY <= yToLengthTable[0].y) return 0;
+        if (targetSvgY >= 925) return pathLength;
+
+        // Find the farthest length on path where the stroke has reached targetSvgY
+        let bestLen = 0;
+        for (let i = 0; i < yToLengthTable.length; i++) {
+            if (yToLengthTable[i].y <= targetSvgY) {
+                bestLen = yToLengthTable[i].len;
+            }
+        }
+        return Math.max(0, Math.min(pathLength, bestLen));
+    }
+
+    function calcTargetProgress() {
+        const wrapRect = svgWrap.getBoundingClientRect();
+        const winHeight = window.innerHeight;
+
+        // Focal line: right in the user's active view area (~52% from top of viewport)
+        const eyeLineY = winHeight * 0.52;
+
+        // Position of the user's sight line relative to the SVG wrap
+        const currentPxInSvg = eyeLineY - wrapRect.top;
+        const svgRenderedHeight = wrapRect.height || 1;
+
+        // SVG native viewBox height is 925
+        const targetSvgY = (currentPxInSvg / svgRenderedHeight) * 925;
+
+        targetLengthToDraw = getLengthForY(targetSvgY);
+    }
+
+    function loop() {
+        // Butter-smooth lerp for responsive trailing
+        currentLengthToDraw += (targetLengthToDraw - currentLengthToDraw) * 0.15;
+        if (Math.abs(targetLengthToDraw - currentLengthToDraw) < 0.5) {
+            currentLengthToDraw = targetLengthToDraw;
+        }
+
+        const offset = pathLength - currentLengthToDraw;
+        path.style.strokeDashoffset = offset;
+
+        requestAnimationFrame(loop);
+    }
+
+    window.addEventListener('scroll', calcTargetProgress, { passive: true });
+    window.addEventListener('resize', () => {
+        buildSampleTable();
+        calcTargetProgress();
+    });
+
+    // Run initial calculation and start animation loop
+    calcTargetProgress();
+    currentLengthToDraw = targetLengthToDraw;
+    path.style.strokeDashoffset = pathLength - currentLengthToDraw;
+    requestAnimationFrame(loop);
+})();
+
+
 
 
 
