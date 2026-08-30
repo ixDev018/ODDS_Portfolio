@@ -1436,53 +1436,182 @@ body.modal-open {
     grid-template-columns: repeat(3, 385px);
     gap: 20px;
     justify-content: center;
+    perspective: 1400px;
 }
 
 .why-card {
-    background: #ffffff;
-    border-radius: 18px;
     width: 385px;
     min-width: 385px;
-    height: 480px;
-    padding: 38px 32px;
-    box-sizing: border-box;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-left: 3.5px solid #7B51F3;
+    height: 490px;
     position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+    perspective: 1200px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    background: transparent;
+    border: none;
+    padding: 0;
+    box-sizing: border-box;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+    outline: none;
 }
 
 .why-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 45px rgba(123, 81, 243, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04);
+    transform: translateY(-8px);
 }
 
-.why-card.theme-purple {
+.why-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    border-radius: 26px;
+    will-change: transform;
+    transition: box-shadow 0.3s ease;
+}
+
+.why-card:focus-visible .why-card-inner {
+    box-shadow: 0 0 0 3px rgba(123, 81, 243, 0.5);
+}
+
+.why-card-face {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 26px;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* ─── Back Face: Inactive Playing Card (Default) ─── */
+.why-card-back {
+    transform: rotateY(0deg);
+    background: #3C3C3C;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.why-card:hover .why-card-back {
+    box-shadow: 0 22px 48px rgba(0, 0, 0, 0.24), 0 4px 14px rgba(0, 0, 0, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.why-card-back-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    display: block;
+    border-radius: 26px;
+    pointer-events: none;
+}
+
+.why-card-hint {
+    position: absolute;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 5;
+}
+
+.why-card:hover .why-card-hint {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.why-hint-pill {
+    background: rgba(18, 18, 20, 0.88);
+    color: #ffffff;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 7px 16px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    white-space: nowrap;
+}
+
+/* ─── Front Face: Active Card Content (Revealed) ─── */
+.why-card-front {
+    transform: rotateY(180deg);
+    background: #ffffff;
+    border-radius: 26px;
+    padding: 38px 32px;
+    box-sizing: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #7B51F3;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.02);
+    transition: box-shadow 0.3s ease;
+}
+
+.why-card:hover .why-card-front {
+    box-shadow: 0 22px 50px rgba(0, 0, 0, 0.12), 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+.why-card-front-hint {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 4;
+    opacity: 0.45;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.why-card:hover .why-card-front-hint,
+.why-card-front:hover .why-card-front-hint {
+    opacity: 0.9;
+}
+
+.why-front-hint-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #444;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.why-card:hover .why-front-hint-btn {
+    transform: rotate(-30deg);
+    background: rgba(0, 0, 0, 0.07);
+}
+
+.why-card-front.theme-purple {
     border-left-color: #7B51F3;
 }
 
-.why-card.theme-purple:hover {
-    box-shadow: 0 20px 45px rgba(123, 81, 243, 0.14);
-}
-
-.why-card.theme-pink {
+.why-card-front.theme-pink {
     border-left-color: #F359B0;
 }
 
-.why-card.theme-pink:hover {
-    box-shadow: 0 20px 45px rgba(243, 89, 176, 0.14);
-}
-
-.why-card.theme-cyan {
+.why-card-front.theme-cyan {
     border-left-color: #00B4D8;
-}
-
-.why-card.theme-cyan:hover {
-    box-shadow: 0 20px 45px rgba(0, 180, 216, 0.14);
 }
 
 .why-card-glow {
@@ -1498,15 +1627,15 @@ body.modal-open {
     transition: opacity 0.3s ease;
 }
 
-.why-card.theme-purple .why-card-glow {
+.why-card-front.theme-purple .why-card-glow {
     background: #7B51F3;
 }
 
-.why-card.theme-pink .why-card-glow {
+.why-card-front.theme-pink .why-card-glow {
     background: #F359B0;
 }
 
-.why-card.theme-cyan .why-card-glow {
+.why-card-front.theme-cyan .why-card-glow {
     background: #00B4D8;
 }
 
@@ -1565,15 +1694,15 @@ body.modal-open {
     opacity: 1;
 }
 
-.why-card.theme-purple .why-card-num {
+.why-card-front.theme-purple .why-card-num {
     color: #7B51F3;
 }
 
-.why-card.theme-pink .why-card-num {
+.why-card-front.theme-pink .why-card-num {
     color: #F359B0;
 }
 
-.why-card.theme-cyan .why-card-num {
+.why-card-front.theme-cyan .why-card-num {
     color: #0096C7;
 }
 
@@ -3011,9 +3140,13 @@ body.modal-open {
     .why-card {
         width: 100%;
         min-width: 0;
-        height: auto;
-        min-height: 380px;
-        padding: 24px 20px;
+        height: 460px;
+        min-height: 400px;
+        padding: 0;
+    }
+
+    .why-card-front {
+        padding: 26px 20px;
     }
 
     .why-card-title {
@@ -3208,15 +3341,26 @@ body.modal-open {
         width: 100% !important;
         min-width: 0 !important;
         max-width: 100% !important;
-        height: 340px !important;
+        height: 350px !important;
         min-height: 0 !important;
-        padding: 30px 24px !important;
+        padding: 0 !important;
+        border: none !important;
+        background: transparent !important;
         border-radius: 20px;
         box-sizing: border-box;
         transform-origin: center bottom;
         will-change: transform, opacity, box-shadow;
         touch-action: pan-y;
         cursor: grab;
+    }
+
+    .why-card-inner,
+    .why-card-face {
+        border-radius: 20px !important;
+    }
+
+    .why-card-front {
+        padding: 24px 20px !important;
     }
 
     .why-card:active {

@@ -807,7 +807,7 @@ if (ctaVideo && ctaCanvas) {
 })();
 
 
-// ─── Why Bet on ODDS: Interactive 3D Card Deck ─────────────────
+// ─── Why Bet on ODDS: Interactive 3D Playing Card Deck & Flip ───
 (function initWhyDeckController() {
     const deckWrap = document.getElementById('why-deck-wrap');
     const deck = document.getElementById('why-deck');
@@ -825,6 +825,7 @@ if (ctaVideo && ctaCanvas) {
     let activeIndex = 0;
     let isMobile = window.innerWidth <= 768;
     let isSwiping = false;
+    let hasDragged = false;
     let startX = 0;
     let startY = 0;
     let currentX = 0;
@@ -835,6 +836,106 @@ if (ctaVideo && ctaCanvas) {
     function isDeckMode() {
         return window.innerWidth <= 768;
     }
+
+    // ── 3D Playing Card Flip Animation with GSAP ──
+    function flipCard(card, targetState = null) {
+        const inner = card.querySelector('.why-card-inner');
+        if (!inner) return;
+
+        const isCurrentlyFlipped = card.classList.contains('is-flipped');
+        const willBeFlipped = targetState !== null ? targetState : !isCurrentlyFlipped;
+
+        if (targetState !== null && willBeFlipped === isCurrentlyFlipped) return;
+
+        if (willBeFlipped) {
+            card.classList.add('is-flipped');
+            card.setAttribute('aria-expanded', 'true');
+        } else {
+            card.classList.remove('is-flipped');
+            card.setAttribute('aria-expanded', 'false');
+        }
+
+        gsap.killTweensOf(inner);
+
+        // Realistic playing card flip: lifts towards user, spins 180deg, lands softly
+        const tl = gsap.timeline();
+        tl.to(inner, {
+            z: 48,
+            scale: 1.03,
+            duration: 0.22,
+            ease: 'power1.out'
+        })
+        .to(inner, {
+            rotationY: willBeFlipped ? 180 : 0,
+            duration: 0.58,
+            ease: 'power2.inOut'
+        }, '<')
+        .to(inner, {
+            z: 0,
+            scale: 1,
+            duration: 0.26,
+            ease: 'power2.out'
+        }, '-=0.18');
+    }
+
+    // ── Interactive Hover & Click Behaviors ──
+    cards.forEach((card) => {
+        const inner = card.querySelector('.why-card-inner');
+        if (!inner) return;
+
+        // Subtle 3D tilt following mouse on desktop
+        card.addEventListener('mousemove', (e) => {
+            if (isDeckMode()) return;
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = ((y - centerY) / centerY) * -5;
+            const rotateY = ((x - centerX) / centerX) * 5;
+
+            gsap.to(card, {
+                rotationX: rotateX,
+                rotationY: rotateY,
+                duration: 0.3,
+                ease: 'power1.out',
+                transformPerspective: 1000
+            });
+        });
+
+        card.addEventListener('mouseleave', () => {
+            if (isDeckMode()) return;
+            gsap.to(card, {
+                rotationX: 0,
+                rotationY: 0,
+                duration: 0.5,
+                ease: 'power2.out'
+            });
+        });
+
+        // Click to flip card
+        card.addEventListener('click', (e) => {
+            if (isDeckMode()) {
+                if (hasDragged) return;
+                if (card.classList.contains('is-active')) {
+                    flipCard(card);
+                } else if (card.classList.contains('is-next')) {
+                    goNext();
+                }
+                return;
+            }
+            flipCard(card);
+        });
+
+        // Keyboard accessibility
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                flipCard(card);
+            }
+        });
+    });
 
     function updateStack(animate = true) {
         if (!isDeckMode()) {
@@ -960,16 +1061,6 @@ if (ctaVideo && ctaCanvas) {
     if (prevBtn) prevBtn.addEventListener('click', goPrev);
     if (nextBtn) nextBtn.addEventListener('click', goNext);
 
-    // Clicking peeking card brings it to front
-    cards.forEach((card) => {
-        card.addEventListener('click', () => {
-            if (!isDeckMode()) return;
-            if (card.classList.contains('is-next')) {
-                goNext();
-            }
-        });
-    });
-
     // Touch and Gesture Drag Physics
     deck.addEventListener('touchstart', (e) => {
         if (!isDeckMode() || e.touches.length > 1) return;
@@ -981,6 +1072,7 @@ if (ctaVideo && ctaCanvas) {
         deltaX = 0;
         deltaY = 0;
         isSwiping = false;
+        hasDragged = false;
     }, { passive: true });
 
     deck.addEventListener('touchmove', (e) => {
@@ -996,6 +1088,7 @@ if (ctaVideo && ctaCanvas) {
 
         if (!isSwiping && absX > 8 && absX > absY) {
             isSwiping = true;
+            hasDragged = true;
             window.whyIsDragging = true;
         }
 
@@ -1065,6 +1158,7 @@ if (ctaVideo && ctaCanvas) {
             }
         }
         isSwiping = false;
+        setTimeout(() => { hasDragged = false; }, 60);
         deltaX = 0;
         deltaY = 0;
     }, { passive: true });
