@@ -142,10 +142,13 @@ Route::middleware([AdminAuthMiddleware::class])->prefix('admin')->group(function
 
     // Services CRUD
     Route::get('/services', [OddsAdminController::class, 'servicesIndex'])->name('odds.admin.services.index');
+    Route::get('/services/create', [OddsAdminController::class, 'servicesCreate'])->name('odds.admin.services.create');
     Route::post('/services/store', [OddsAdminController::class, 'servicesStore'])->name('odds.admin.services.store');
+    Route::get('/services/edit/{id}', [OddsAdminController::class, 'servicesEdit'])->name('odds.admin.services.edit');
     Route::post('/services/update/{id}', [OddsAdminController::class, 'servicesUpdate'])->name('odds.admin.services.update');
     Route::post('/services/delete/{id}', [OddsAdminController::class, 'servicesDestroy'])->name('odds.admin.services.delete');
     Route::post('/services/reorder', [OddsAdminController::class, 'servicesReorder'])->name('odds.admin.services.reorder');
+    Route::post('/services/upload-body-media', [OddsAdminController::class, 'uploadServiceBodyMedia'])->name('odds.admin.services.upload_body_media');
 
     // Works / Projects CRUD
     Route::get('/works', [OddsAdminController::class, 'worksIndex'])->name('odds.admin.works.index');

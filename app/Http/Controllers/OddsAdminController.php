@@ -190,29 +190,82 @@ class OddsAdminController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | Services Management
+    | Services Management (Identical to Works/Outputs Module)
     |--------------------------------------------------------------------------
     */
     public function servicesIndex()
     {
         $services = OddsService::orderBy('sort_order')->get();
-        return view('admin.odds.services', compact('services'));
+        return view('admin.odds.services.index', compact('services'));
+    }
+
+    public function servicesCreate()
+    {
+        return view('admin.odds.services.create');
     }
 
     public function servicesStore(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'tagline' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'icon_svg' => 'nullable|string',
+            'body_content' => 'nullable|string',
+            'cover_image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,mp4,mov,webm|max:204800',
+            'cover_image_url' => 'nullable|string|max:1000',
+            'cover_image_base64' => 'nullable|string',
+            'features' => 'nullable|string',
+            'action_btn_text' => 'nullable|string|max:100',
+            'action_btn_url' => 'nullable|string|max:500',
             'is_active' => 'nullable|boolean',
         ]);
 
+        $cleanName = trim(str_replace(["\r\n", "\r", "\n"], ' ', $validated['name']));
+        $validated['slug'] = Str::slug($cleanName . '-' . Str::random(4));
         $validated['is_active'] = $request->has('is_active');
         $validated['sort_order'] = OddsService::max('sort_order') + 1;
 
+        if (!empty($validated['body_content'])) {
+            $decoded = json_decode($validated['body_content'], true);
+            $validated['body_content'] = is_array($decoded) ? $decoded : null;
+        }
+
+        if (!empty($validated['features'])) {
+            if (is_string($validated['features'])) {
+                $decodedFeatures = json_decode($validated['features'], true);
+                if (is_array($decodedFeatures)) {
+                    $validated['features'] = $decodedFeatures;
+                } else {
+                    $validated['features'] = array_values(array_filter(array_map('trim', explode(',', $validated['features']))));
+                }
+            }
+        }
+
+        if ($request->filled('cover_image_base64')) {
+            $url = $this->uploadMedia($request->input('cover_image_base64'), 'services');
+            if ($url) $validated['cover_image'] = $url;
+        } elseif ($request->hasFile('cover_image')) {
+            $url = $this->uploadMedia($request->file('cover_image'), 'services');
+            if ($url) $validated['cover_image'] = $url;
+        } elseif ($request->filled('cover_image_url')) {
+            $validated['cover_image'] = $request->input('cover_image_url');
+        }
+
+        unset(
+            $validated['cover_image_base64'],
+            $validated['cover_image_url']
+        );
+
         OddsService::create($validated);
-        return redirect()->route('odds.admin.services.index')->with('success', 'Service added successfully!');
+
+        return redirect()->route('odds.admin.services.index')->with('success', 'Service created successfully with Notion story!');
+    }
+
+    public function servicesEdit($id)
+    {
+        $service = OddsService::findOrFail($id);
+        return view('admin.odds.services.edit', compact('service'));
     }
 
     public function servicesUpdate(Request $request, $id)
@@ -221,20 +274,82 @@ class OddsAdminController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'tagline' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'icon_svg' => 'nullable|string',
+            'body_content' => 'nullable|string',
+            'cover_image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,mp4,mov,webm|max:204800',
+            'cover_image_url' => 'nullable|string|max:1000',
+            'cover_image_base64' => 'nullable|string',
+            'remove_cover_image' => 'nullable|string',
+            'features' => 'nullable|string',
+            'action_btn_text' => 'nullable|string|max:100',
+            'action_btn_url' => 'nullable|string|max:500',
             'is_active' => 'nullable|boolean',
         ]);
 
         $validated['is_active'] = $request->has('is_active');
+
+        if (!empty($validated['body_content'])) {
+            $decoded = json_decode($validated['body_content'], true);
+            $validated['body_content'] = is_array($decoded) ? $decoded : null;
+        } else {
+            $validated['body_content'] = null;
+        }
+
+        if (!empty($validated['features'])) {
+            if (is_string($validated['features'])) {
+                $decodedFeatures = json_decode($validated['features'], true);
+                if (is_array($decodedFeatures)) {
+                    $validated['features'] = $decodedFeatures;
+                } else {
+                    $validated['features'] = array_values(array_filter(array_map('trim', explode(',', $validated['features']))));
+                }
+            }
+        } else {
+            $validated['features'] = null;
+        }
+
+        if ($request->filled('remove_cover_image') && $request->input('remove_cover_image') === '1') {
+            if ($service->cover_image) $this->deleteMedia($service->cover_image);
+            $validated['cover_image'] = null;
+        } elseif ($request->filled('cover_image_base64')) {
+            if ($service->cover_image) $this->deleteMedia($service->cover_image);
+            $url = $this->uploadMedia($request->input('cover_image_base64'), 'services');
+            if ($url) $validated['cover_image'] = $url;
+        } elseif ($request->hasFile('cover_image')) {
+            if ($service->cover_image) $this->deleteMedia($service->cover_image);
+            $url = $this->uploadMedia($request->file('cover_image'), 'services');
+            if ($url) $validated['cover_image'] = $url;
+        } elseif ($request->filled('cover_image_url')) {
+            $validated['cover_image'] = $request->input('cover_image_url');
+        }
+
+        unset(
+            $validated['cover_image_base64'],
+            $validated['cover_image_url'],
+            $validated['remove_cover_image']
+        );
+
         $service->update($validated);
 
-        return redirect()->route('odds.admin.services.index')->with('success', 'Service updated!');
+        return redirect()->route('odds.admin.services.index')->with('success', 'Service updated successfully!');
+    }
+
+    public function uploadServiceBodyMedia(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:jpeg,png,jpg,gif,svg,webp,mp4,mov,webm|max:204800',
+        ]);
+
+        $url = $this->uploadMedia($request->file('file'), 'services/body');
+        return response()->json(['url' => $url]);
     }
 
     public function servicesDestroy($id)
     {
         $service = OddsService::findOrFail($id);
+        if ($service->cover_image) $this->deleteMedia($service->cover_image);
         $service->delete();
         return redirect()->route('odds.admin.services.index')->with('success', 'Service deleted.');
     }

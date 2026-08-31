@@ -528,21 +528,12 @@ if (prefersReducedMotion) {
 
 
 // ─── Service card selection ─────────────────────────────
-document.querySelectorAll('.svc-card').forEach(card => {
-    card.addEventListener('click', () => {
-        const trackEl = card.closest('.services-track');
-        if (!trackEl) return;
-        const isSelected = card.classList.contains('selected');
-        document.querySelectorAll('.svc-card').forEach(c => c.classList.remove('selected'));
-        if (isSelected) { trackEl.classList.remove('has-selected'); return; }
-        const nameEl = card.querySelector('.svc-card-name');
-        if (nameEl) {
-            const name = nameEl.textContent.trim();
-            document.querySelectorAll('.svc-card').forEach(c => { const cn = c.querySelector('.svc-card-name'); if (cn?.textContent.trim() === name) c.classList.add('selected'); });
-        } else { card.classList.add('selected'); }
-        trackEl.classList.add('has-selected');
-    });
-});
+// Cards now open a modal instead of pausing the marquee.
+// Clear any lingering selection state so the track always resumes.
+function clearCarouselSelection() {
+    document.querySelectorAll('.svc-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.services-track').forEach(t => t.classList.remove('has-selected'));
+}
 
 // ─── CTA ASCII Video Canvas ─────────────────────────────
 const ctaVideo = document.getElementById('cta-video-source');
@@ -848,6 +839,334 @@ if (ctaVideo && ctaCanvas) {
     window.closeProjectModal = closeProjectModal;
 })();
 
+// ─── Service Detail Modal Controller ────────────────────
+(function serviceModalController() {
+    const modal = document.getElementById('service-modal');
+    if (!modal) return;
+
+    const closeBtn = document.getElementById('service-modal-close-btn');
+    const pathEl = document.getElementById('service-modal-path');
+    const titleEl = document.getElementById('service-modal-title');
+    const taglineEl = document.getElementById('service-modal-tagline');
+    const iconWrapEl = document.getElementById('service-modal-icon-wrap');
+    const featuresWrapEl = document.getElementById('service-modal-features-wrap');
+    const descEl = document.getElementById('service-modal-desc');
+    const primaryMediaEl = document.getElementById('service-modal-primary-media');
+    const blocksContainer = document.getElementById('service-modal-blocks');
+    const linksContainer = document.getElementById('service-modal-links');
+    const ctaActionBtn = document.getElementById('service-modal-cta-action');
+    const ctaLabelEl = document.getElementById('service-modal-cta-label');
+    const modalCard = modal.querySelector('.service-modal-card');
+
+    // Parse pre-rendered JSON payload for services
+    let servicesData = [];
+    const servicesDataScript = document.getElementById('odds-services-data');
+    if (servicesDataScript) {
+        try {
+            servicesData = JSON.parse(servicesDataScript.textContent);
+        } catch (e) {
+            console.error('Failed to parse odds-services-data:', e);
+        }
+    }
+
+    function renderNotionBlocks(blocksData, fallbackDesc) {
+        if (!blocksContainer) return;
+        blocksContainer.innerHTML = '';
+
+        let blocks = [];
+        if (Array.isArray(blocksData)) {
+            blocks = blocksData;
+        } else if (typeof blocksData === 'string' && blocksData.trim() !== '') {
+            try {
+                let parsed = blocksData;
+                if (parsed.includes('&quot;') || parsed.includes('&#039;')) {
+                    const txt = document.createElement('textarea');
+                    txt.innerHTML = parsed;
+                    parsed = txt.value;
+                }
+                blocks = JSON.parse(parsed);
+            } catch (e) {
+                blocks = [];
+            }
+        }
+
+        if (Array.isArray(blocks) && blocks.length > 0) {
+            let currentList = null;
+            let currentListType = null;
+
+            blocks.forEach(b => {
+                const type = b.type || 'paragraph';
+                const content = b.content !== undefined ? b.content : '';
+
+                if (currentList && currentListType !== type) {
+                    currentList = null;
+                    currentListType = null;
+                }
+
+                if (type === 'heading2') {
+                    const h2 = document.createElement('h2');
+                    h2.className = 'frame46-block-h2';
+                    h2.innerHTML = content;
+                    blocksContainer.appendChild(h2);
+                } else if (type === 'heading3') {
+                    const h3 = document.createElement('h3');
+                    h3.className = 'frame46-block-h3';
+                    h3.innerHTML = content;
+                    blocksContainer.appendChild(h3);
+                } else if (type === 'bullet') {
+                    if (!currentList || currentListType !== 'bullet') {
+                        currentList = document.createElement('ul');
+                        currentList.className = 'frame46-block-bullet-list';
+                        blocksContainer.appendChild(currentList);
+                        currentListType = 'bullet';
+                    }
+                    const li = document.createElement('li');
+                    li.className = 'frame46-block-bullet-item';
+                    li.innerHTML = `<span class="frame46-block-bullet-dot">•</span><div class="flex-1">${content}</div>`;
+                    currentList.appendChild(li);
+                } else if (type === 'numbered') {
+                    if (!currentList || currentListType !== 'numbered') {
+                        currentList = document.createElement('ol');
+                        currentList.className = 'frame46-block-num-list';
+                        blocksContainer.appendChild(currentList);
+                        currentListType = 'numbered';
+                    }
+                    const count = currentList.children.length + 1;
+                    const li = document.createElement('li');
+                    li.className = 'frame46-block-num-item';
+                    li.innerHTML = `<span class="frame46-block-num-badge">${count}.</span><div class="flex-1">${content}</div>`;
+                    currentList.appendChild(li);
+                } else if (type === 'quote') {
+                    const blockquote = document.createElement('blockquote');
+                    blockquote.className = 'frame46-block-quote';
+                    blockquote.innerHTML = content;
+                    blocksContainer.appendChild(blockquote);
+                } else if (type === 'callout') {
+                    const callout = document.createElement('div');
+                    callout.className = 'frame46-block-callout';
+                    callout.innerHTML = `
+                        <div class="frame46-block-callout-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                        <div class="flex-1">${content}</div>
+                    `;
+                    blocksContainer.appendChild(callout);
+                } else if (type === 'code') {
+                    const pre = document.createElement('pre');
+                    pre.className = 'frame46-block-code';
+                    pre.textContent = content;
+                    blocksContainer.appendChild(pre);
+                } else if (type === 'divider') {
+                    const hr = document.createElement('hr');
+                    hr.className = 'frame46-block-divider';
+                    blocksContainer.appendChild(hr);
+                } else if (type === 'image' && b.src) {
+                    const card = document.createElement('div');
+                    card.className = 'frame46-block-image-card';
+                    card.innerHTML = `
+                        <div class="frame46-block-image-inner">
+                            <img src="${b.src}" alt="${b.caption || 'Service visual'}" loading="lazy">
+                        </div>
+                        ${b.caption ? `<div class="frame46-block-image-caption">${b.caption}</div>` : ''}
+                    `;
+                    blocksContainer.appendChild(card);
+                } else {
+                    if (content.toString().trim() !== '') {
+                        const p = document.createElement('p');
+                        p.className = 'frame46-block-p';
+                        p.innerHTML = content;
+                        blocksContainer.appendChild(p);
+                    }
+                }
+            });
+        } else if (fallbackDesc && fallbackDesc.trim() !== '') {
+            const p = document.createElement('p');
+            p.className = 'frame46-block-p';
+            p.innerHTML = fallbackDesc;
+            blocksContainer.appendChild(p);
+        } else {
+            blocksContainer.innerHTML = '';
+        }
+    }
+
+    function openServiceModal(meta) {
+        // Immediately clear carousel selection so the marquee keeps flowing
+        clearCarouselSelection();
+
+        if (titleEl) titleEl.textContent = (meta.name || 'SERVICE').replace(/\n/g, ' ');
+        if (pathEl) pathEl.textContent = meta.pathStr || `ODDS_Studio/Services/${meta.name}/Overview`;
+        if (taglineEl) taglineEl.textContent = meta.tagline || 'Engineering Capability';
+        if (descEl) descEl.textContent = meta.desc || 'High-performance engineering and custom software architecture.';
+
+        if (iconWrapEl) {
+            if (meta.iconSvg && meta.iconSvg.trim() !== '') {
+                iconWrapEl.innerHTML = meta.iconSvg;
+                const svgEl = iconWrapEl.querySelector('svg');
+                if (svgEl) {
+                    svgEl.style.width = '28px';
+                    svgEl.style.height = '28px';
+                    svgEl.style.stroke = '#875af5';
+                }
+            } else {
+                iconWrapEl.innerHTML = '<i class="fa-solid fa-cube" style="font-size:20px;color:#875af5;"></i>';
+            }
+        }
+
+        if (featuresWrapEl) {
+            featuresWrapEl.innerHTML = '';
+            if (Array.isArray(meta.features) && meta.features.length > 0) {
+                meta.features.forEach(f => {
+                    if (f && f.trim() !== '') {
+                        const chip = document.createElement('span');
+                        chip.className = 'svc-modal-feature-chip';
+                        chip.innerHTML = `<i class="fa-solid fa-check" style="font-size:8px;"></i>${f.trim()}`;
+                        featuresWrapEl.appendChild(chip);
+                    }
+                });
+                featuresWrapEl.style.display = 'flex';
+            } else {
+                featuresWrapEl.style.display = 'none';
+            }
+        }
+
+        if (primaryMediaEl) {
+            if (meta.cover) {
+                primaryMediaEl.innerHTML = `<img src="${meta.cover}" alt="${meta.name}" style="width:100%;height:100%;object-fit:cover;">`;
+                primaryMediaEl.style.display = 'flex';
+            } else {
+                primaryMediaEl.innerHTML = '';
+                primaryMediaEl.style.display = 'none';
+            }
+        }
+
+        const actionText = meta.actionBtnText || "Let's Build";
+        const actionUrl = meta.actionBtnUrl || '#cta';
+
+        if (ctaActionBtn) {
+            ctaActionBtn.setAttribute('href', actionUrl);
+        }
+        if (ctaLabelEl) {
+            ctaLabelEl.textContent = actionText;
+        }
+
+        if (linksContainer) {
+            linksContainer.innerHTML = `<a href="${actionUrl}" class="frame46-action-btn service-modal-header-cta"><i class="fa-solid fa-arrow-right text-[10px]"></i><span>${actionText}</span></a>`;
+            const headerCta = linksContainer.querySelector('.service-modal-header-cta');
+            if (headerCta) {
+                headerCta.addEventListener('click', (e) => {
+                    if (actionUrl === '#cta') {
+                        e.preventDefault();
+                        closeServiceModal();
+                        const ctaSec = document.getElementById('cta');
+                        if (ctaSec) {
+                            ctaSec.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                });
+            }
+        }
+
+        renderNotionBlocks(meta.blocks, meta.desc);
+
+        modal.scrollTop = 0;
+        modal.classList.remove('hidden');
+        void modal.offsetWidth;
+        modal.classList.add('is-active');
+        modal.setAttribute('aria-hidden', 'false');
+
+        document.body.classList.add('modal-open');
+    }
+
+    function closeServiceModal() {
+        modal.classList.remove('is-active');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+
+        // Always clear selection state so the marquee animation resumes
+        clearCarouselSelection();
+
+        setTimeout(() => {
+            if (!modal.classList.contains('is-active')) {
+                modal.classList.add('hidden');
+            }
+        }, 250);
+    }
+
+    // Attach trigger to every service card in marquee
+    document.querySelectorAll('.service-card-trigger').forEach(trigger => {
+        trigger.addEventListener('click', e => {
+            e.stopPropagation();
+            const index = trigger.getAttribute('data-service-index');
+            let meta = null;
+
+            if (index !== null && servicesData && servicesData[index]) {
+                const item = servicesData[index];
+                meta = {
+                    name: item.name,
+                    tagline: item.tagline,
+                    desc: item.description,
+                    iconSvg: item.icon_svg,
+                    cover: item.cover_image,
+                    features: item.features,
+                    blocks: item.body_content,
+                    actionBtnText: item.action_btn_text,
+                    actionBtnUrl: item.action_btn_url,
+                    pathStr: item.path_str
+                };
+            } else {
+                const iconEl = trigger.querySelector('.svc-icon');
+                meta = {
+                    name: trigger.getAttribute('data-service-name') || trigger.querySelector('.svc-card-name')?.textContent || 'SERVICE',
+                    tagline: trigger.getAttribute('data-service-tagline') || 'Engineering Service',
+                    desc: trigger.getAttribute('data-service-desc') || '',
+                    iconSvg: iconEl ? iconEl.innerHTML : '',
+                    cover: trigger.getAttribute('data-service-cover') || '',
+                    features: [],
+                    blocks: [],
+                    actionBtnText: "Let's Build",
+                    actionBtnUrl: '#cta',
+                    pathStr: trigger.getAttribute('data-service-path') || 'ODDS_Studio/Services/Overview'
+                };
+            }
+
+            openServiceModal(meta);
+        });
+    });
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            closeServiceModal();
+        });
+    }
+
+    if (ctaActionBtn) {
+        ctaActionBtn.addEventListener('click', (e) => {
+            const href = ctaActionBtn.getAttribute('href');
+            if (href === '#cta') {
+                e.preventDefault();
+                closeServiceModal();
+                const ctaSec = document.getElementById('cta');
+                if (ctaSec) {
+                    ctaSec.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+    }
+
+    modal.addEventListener('click', e => {
+        if (modalCard && !modalCard.contains(e.target)) {
+            closeServiceModal();
+        }
+    });
+
+    window.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && modal.classList.contains('is-active')) {
+            closeServiceModal();
+        }
+    });
+
+    window.openServiceModal = openServiceModal;
+    window.closeServiceModal = closeServiceModal;
+})();
 
 // ─── Why Bet on ODDS: Interactive 3D Playing Card Deck & Flip ───
 (function initWhyDeckController() {

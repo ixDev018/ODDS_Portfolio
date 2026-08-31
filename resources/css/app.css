@@ -4392,6 +4392,146 @@ body.modal-open #navbar {
     background: rgba(255, 255, 255, 0.45);
 }
 
+/* ─── Service Modal Specific Styles ─────────────────────────────── */
+
+/* Header CTA link container */
+.svc-modal-header-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* Title row: big title + icon badge side by side */
+.svc-modal-title-row {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+/* Purple icon badge in title area */
+.svc-modal-icon-badge {
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+    border-radius: 18px;
+    background: rgba(135, 90, 245, 0.15);
+    border: 1.5px solid rgba(135, 90, 245, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #875af5;
+    flex-shrink: 0;
+}
+
+.svc-modal-icon-badge svg {
+    width: 28px;
+    height: 28px;
+    stroke: #875af5;
+}
+
+/* Capability label in subtitle */
+.svc-modal-capability-label {
+    color: #875af5 !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+/* Feature / deliverable chip row */
+.svc-modal-features-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.svc-modal-feature-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-family: var(--font-mono, monospace);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    background: rgba(135, 90, 245, 0.12);
+    color: #a78bfa;
+    border: 1px solid rgba(135, 90, 245, 0.3);
+}
+
+/* Bottom CTA banner */
+.svc-modal-cta-banner {
+    margin-top: 40px;
+    padding: 28px 32px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(135, 90, 245, 0.18) 0%, rgba(99, 71, 244, 0.1) 100%);
+    border: 1px solid rgba(135, 90, 245, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.svc-modal-cta-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.svc-modal-cta-heading {
+    font-size: 18px;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.svc-modal-cta-sub {
+    font-size: 13px;
+    color: #9ca3af;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.svc-modal-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border-radius: 9999px;
+    background: #6347f4;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border: none;
+    cursor: pointer;
+    transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+    box-shadow: 0 4px 18px rgba(99, 71, 244, 0.45);
+}
+
+.svc-modal-cta-btn:hover {
+    background: #5134e6;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(99, 71, 244, 0.55);
+}
+
+.svc-modal-cta-btn svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    flex-shrink: 0;
+}
+
 @media (max-width: 768px) {
     .frame46-container {
         padding: 16px 14px 48px;
@@ -4468,5 +4608,40 @@ body.modal-open #navbar {
     .frame46-action-btn {
         padding: 7px 16px;
         font-size: 12px;
+    }
+
+    /* Service modal responsive */
+    .svc-modal-title-row {
+        gap: 12px;
+    }
+
+    .svc-modal-icon-badge {
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        border-radius: 14px;
+    }
+
+    .svc-modal-icon-badge svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .svc-modal-cta-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px 20px;
+        gap: 16px;
+        margin-top: 28px;
+    }
+
+    .svc-modal-cta-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 20px;
+    }
+
+    .svc-modal-cta-heading {
+        font-size: 16px;
     }
 }
