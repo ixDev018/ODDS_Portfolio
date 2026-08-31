@@ -3969,6 +3969,8 @@ body.modal-open #navbar {
     position: fixed;
     top: 0;
     left: 0;
+    right: 0;
+    bottom: 0;
     width: 100vw;
     height: 100vh;
     z-index: 99999;
@@ -3977,6 +3979,9 @@ body.modal-open #navbar {
     -webkit-backdrop-filter: blur(14px);
     overflow-y: auto;
     overflow-x: hidden;
+    overscroll-behavior: contain;
+    touch-action: auto;
+    -webkit-overflow-scrolling: touch;
     display: none;
     opacity: 0;
     will-change: opacity;

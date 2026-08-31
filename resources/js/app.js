@@ -595,6 +595,11 @@ if (ctaVideo && ctaCanvas) {
     const modal = document.getElementById('project-modal');
     if (!modal) return;
 
+    // Teleport modal to document.body so ScrollSmoother transform on #smooth-content does not trap position: fixed
+    if (modal.parentElement !== document.body) {
+        document.body.appendChild(modal);
+    }
+
     const closeBtn = document.getElementById('project-modal-close-btn');
     const pathEl = document.getElementById('project-modal-path');
     const titleEl = document.getElementById('project-modal-title');
@@ -741,6 +746,10 @@ if (ctaVideo && ctaCanvas) {
     }
 
     function openProjectModal(meta) {
+        if (modal.parentElement !== document.body) {
+            document.body.appendChild(modal);
+        }
+
         if (titleEl) titleEl.textContent = meta.title || 'PROJECT';
         if (pathEl) pathEl.textContent = meta.pathStr || `ODDS_Project/${meta.title}/Project_Story`;
         if (categoryEl) categoryEl.textContent = meta.category || 'Architecture';
@@ -766,7 +775,11 @@ if (ctaVideo && ctaCanvas) {
         }
 
         if (primaryMediaEl) {
-            if (meta.cover) {
+            if (meta.showcaseVideo) {
+                primaryMediaEl.innerHTML = `
+                    <video src="${meta.showcaseVideo}" controls playsinline autoplay muted loop class="w-full h-full object-cover"></video>
+                `;
+            } else if (meta.cover) {
                 primaryMediaEl.innerHTML = `<img src="${meta.cover}" alt="${meta.title}" class="w-full h-full object-cover">`;
             } else {
                 primaryMediaEl.innerHTML = `
@@ -809,6 +822,11 @@ if (ctaVideo && ctaCanvas) {
         modal.classList.remove('is-active');
         modal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('modal-open');
+        // Pause any video inside the modal when closed
+        const modalVideo = modal.querySelector('video');
+        if (modalVideo) {
+            modalVideo.pause();
+        }
         // Resume ScrollSmoother if we're in services mode
         if (smoother && !document.body.classList.contains('hero-active')) smoother.paused(false);
 
@@ -838,6 +856,7 @@ if (ctaVideo && ctaCanvas) {
                     blocks: item.body_content,
                     story: item.story_content,
                     cover: item.cover_image,
+                    showcaseVideo: item.showcase_video,
                     demoUrl: item.demo_url,
                     githubUrl: item.github_url,
                     pathStr: item.path_str
@@ -853,6 +872,7 @@ if (ctaVideo && ctaCanvas) {
                     blocks: trigger.getAttribute('data-project-blocks'),
                     story: trigger.getAttribute('data-project-story'),
                     cover: trigger.getAttribute('data-project-cover'),
+                    showcaseVideo: trigger.getAttribute('data-project-video') || trigger.getAttribute('data-project-showcase-video'),
                     demoUrl: trigger.getAttribute('data-project-demo'),
                     githubUrl: trigger.getAttribute('data-project-github'),
                     pathStr: trigger.getAttribute('data-project-path')
@@ -890,6 +910,11 @@ if (ctaVideo && ctaCanvas) {
 (function serviceModalController() {
     const modal = document.getElementById('service-modal');
     if (!modal) return;
+
+    // Teleport modal to document.body so ScrollSmoother transform on #smooth-content does not trap position: fixed
+    if (modal.parentElement !== document.body) {
+        document.body.appendChild(modal);
+    }
 
     const closeBtn = document.getElementById('service-modal-close-btn');
     const pathEl = document.getElementById('service-modal-path');
@@ -1035,6 +1060,10 @@ if (ctaVideo && ctaCanvas) {
     }
 
     function openServiceModal(meta) {
+        if (modal.parentElement !== document.body) {
+            document.body.appendChild(modal);
+        }
+
         // Immediately clear carousel selection so the marquee keeps flowing
         clearCarouselSelection();
 
