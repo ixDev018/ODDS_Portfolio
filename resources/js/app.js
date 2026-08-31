@@ -20,6 +20,10 @@ window.DrawSVGPlugin = DrawSVGPlugin;
 // full-page lock engine takes control first — it unpauses
 // ScrollSmoother once Services mode is active.
 // On all other pages (About, Our Work…), starts active immediately.
+if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+}
+
 const hasHeroSection = !!document.getElementById('hero');
 let smoother = null;
 if (document.getElementById('smooth-wrapper') && document.getElementById('smooth-content')) {
@@ -29,7 +33,7 @@ if (document.getElementById('smooth-wrapper') && document.getElementById('smooth
         smooth: 1.4,          // inertia duration in seconds
         effects: true,         // enable data-speed parallax on elements
         paused: hasHeroSection, // only pause on home (hero→services transition handles unpause)
-        normalizeScroll: true, // prevent mobile Safari bounce & unify scroll events
+        normalizeScroll: false, // avoid intercepting custom hero wheel/touch transitions
     });
 }
 window.smoother = smoother;
@@ -177,6 +181,7 @@ if (prefersReducedMotion) {
     });
     if (overlay) gsap.set(overlay, { visibility: 'hidden', opacity: 0, zIndex: 0, pointerEvents: 'none' });
     applyNavTheme('hero');
+    if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
 
     // ── Transition: Hero -> Services ───────────────────
     function transitionToServices(callback) {
@@ -392,7 +397,7 @@ if (prefersReducedMotion) {
         }
 
         if (currentMode === 'services') {
-            const scrollY = window.scrollY || window.pageYOffset || 0;
+            const scrollY = smoother ? smoother.scrollTop() : (window.scrollY || window.pageYOffset || 0);
             if (scrollY <= 2 && e.deltaY < -15) {
                 e.preventDefault();
                 transitionToHero();
@@ -428,7 +433,7 @@ if (prefersReducedMotion) {
         }
 
         if (currentMode === 'services') {
-            const scrollY = window.scrollY || window.pageYOffset || 0;
+            const scrollY = smoother ? smoother.scrollTop() : (window.scrollY || window.pageYOffset || 0);
             if (scrollY <= 5 && dy < -30) {
                 transitionToHero();
             }
@@ -456,7 +461,7 @@ if (prefersReducedMotion) {
         }
 
         if (currentMode === 'services') {
-            const scrollY = window.scrollY || window.pageYOffset || 0;
+            const scrollY = smoother ? smoother.scrollTop() : (window.scrollY || window.pageYOffset || 0);
             if (scrollY <= 2 && (e.key === 'ArrowUp' || e.key === 'PageUp')) {
                 e.preventDefault();
                 transitionToHero();
@@ -535,7 +540,7 @@ if (prefersReducedMotion) {
             return;
         }
 
-        const scrollY = window.scrollY || window.pageYOffset || 0;
+        const scrollY = smoother ? smoother.scrollTop() : (window.scrollY || window.pageYOffset || 0);
         const vh = window.innerHeight;
         const probe = scrollY + vh * 0.35;
 
@@ -553,6 +558,9 @@ if (prefersReducedMotion) {
     }
 
     window.addEventListener('scroll', updateNavOnScroll, { passive: true });
+    if (typeof ScrollTrigger !== 'undefined') {
+        ScrollTrigger.addEventListener('scroll', updateNavOnScroll);
+    }
 
     window.fp = {
         transitionToServices,
@@ -1989,9 +1997,8 @@ function initHeadingReveals() {
         }
     }
 
-    // 2. All Major Section Headings Across The Site
+    // 2. All Major Section Headings Across The Site (Hero & Services are managed by cyber blade stage)
     const headingSelectors = [
-        '.services-title',
         '.why-title',
         '.works-heading',
         '.testi-title',
@@ -2004,8 +2011,8 @@ function initHeadingReveals() {
 
     const headings = document.querySelectorAll(headingSelectors.join(', '));
     headings.forEach(heading => {
-        // Skip hero headline if selected
-        if (heading.id === 'hero-h1' || heading.classList.contains('hero-title')) return;
+        // Skip hero & services headings if selected (their animation is managed by the stage transition)
+        if (heading.id === 'hero-h1' || heading.classList.contains('hero-title') || heading.classList.contains('services-title') || heading.closest('#hero') || heading.closest('#services')) return;
 
         if (prefersReducedMotion) {
             gsap.set(heading, { opacity: 1, y: 0 });

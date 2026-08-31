@@ -672,11 +672,11 @@ body.modal-open {
     margin-bottom: -30px;
     padding-top: 35px;
     padding-bottom: 55px;
-    /* Full-bleed: escape sec-inner padding to span entire viewport */
+    /* Full-bleed: escape sec-inner padding to span entire viewport without transform conflict */
     width: 100vw;
     position: relative;
-    left: 50%;
-    transform: translateX(-50%);
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
 }
 
 .services-cards::-webkit-scrollbar {
