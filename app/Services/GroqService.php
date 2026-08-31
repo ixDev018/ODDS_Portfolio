@@ -25,35 +25,55 @@ class GroqService
             throw new Exception('Groq API configuration missing.');
         }
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $apiKey,
-        ])->post('https://api.groq.com/openai/v1/chat/completions', [
-            'model' => 'llama-3.1-8b-instant',
-            'messages' => [
-                ['role' => 'system', 'content' => $systemPrompt],
-                ['role' => 'user', 'content' => $userMessage],
-            ],
-            'temperature' => 0.3,
-            'max_tokens' => 500,
-        ]);
+        $configuredModel = config('services.groq.model', 'openai/gpt-oss-120b');
+        $modelsToTry = array_unique(array_filter([
+            $configuredModel,
+            'openai/gpt-oss-120b',
+            'openai/gpt-oss-20b',
+            'qwen/qwen3.8-27b',
+            'groq/compound-mini',
+        ]));
 
-        if ($response->failed()) {
-            $errorMsg = $response->body();
-            Log::error('Groq API Request failed', [
-                'status' => $response->status(),
-                'error' => $errorMsg,
+        $lastException = null;
+
+        foreach ($modelsToTry as $model) {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $apiKey,
+            ])->post('https://api.groq.com/openai/v1/chat/completions', [
+                'model' => $model,
+                'messages' => [
+                    ['role' => 'system', 'content' => $systemPrompt],
+                    ['role' => 'user', 'content' => $userMessage],
+                ],
+                'temperature' => 0.3,
+                'max_tokens' => 500,
             ]);
-            throw new Exception('Failed to connect to the assistant service.');
-        }
 
-        $data = $response->json();
-        $reply = $data['choices'][0]['message']['content'] ?? null;
+            if ($response->failed()) {
+                $errorMsg = $response->body();
+                Log::warning("Groq API Request failed with model {$model}", [
+                    'status' => $response->status(),
+                    'error' => $errorMsg,
+                ]);
 
-        if ($reply === null) {
+                // If 404 / model not found, try the next model in the list
+                if ($response->status() === 404) {
+                    continue;
+                }
+
+                throw new Exception('Failed to connect to the assistant service.');
+            }
+
+            $data = $response->json();
+            $reply = $data['choices'][0]['message']['content'] ?? null;
+
+            if ($reply !== null) {
+                return $reply;
+            }
+
             Log::error('Groq API response did not contain choices.message.content', ['response' => $data]);
-            throw new Exception('Invalid response received from assistant service.');
         }
 
-        return $reply;
+        throw new Exception('Failed to get a response from any available assistant model.');
     }
 }

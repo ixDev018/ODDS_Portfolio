@@ -79,7 +79,7 @@ $workItems = isset($works) && count($works) > 0 ? $works : collect([
            data-project-category="{{ $item->category ?? 'Software Architecture' }}"
            data-project-year="{{ $item->year ?? '2024' }}"
            data-project-desc="{{ $item->description ?? '' }}"
-           data-project-cover="{{ $item->cover_image_url ?? $item->cover_image ?? '' }}"
+           data-project-cover="{{ $item->cover_image_url ?? ($item->cover_image ?? '') }}"
            data-project-demo="{{ $item->demo_url ?? '' }}"
            data-project-github="{{ $item->github_url ?? '' }}"
            data-project-path="ODDS_Project/{{ Str::studly($item->title) }}/Project_Story">
@@ -101,7 +101,7 @@ $workItems = isset($works) && count($works) > 0 ? $works : collect([
             <!-- Base Gray Folder Body Background -->
             <path class="morph-path group-hover:fill-[#d8d8d8]" fill="#CCCCCC" />
 
-            @php $coverSrc = $item->cover_image_url ?? $item->cover_image; @endphp
+            @php $coverSrc = $item->cover_image_url ?? ($item->cover_image ?? null); @endphp
             @if(!empty($coverSrc))
             <!-- Clipped 16:9 Image Body from Admin -->
             <g clip-path="url(#folder-clip-{{ $item->id ?? $index }})">

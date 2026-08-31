@@ -40,7 +40,7 @@
                 <ul class="footer-links-list">
                     <li><a href="{{ url('/') }}" class="footer-link {{ request()->is('/') ? 'footer-link-active' : '' }}">Home</a></li>
                     <li><a href="{{ url('/#services') }}" class="footer-link">Services</a></li>
-                    <li><a href="{{ url('/#works') }}" class="footer-link">Our Work</a></li>
+                    <li><a href="{{ route('portfolio.our-work') }}" class="footer-link {{ request()->routeIs('portfolio.our-work') ? 'footer-link-active' : '' }}">Our Work</a></li>
                     <li><a href="{{ route('portfolio.about') }}" class="footer-link {{ request()->routeIs('portfolio.about') ? 'footer-link-active' : '' }}">Manifesto / About Us</a></li>
                     <li><a href="{{ url('/#cta') }}" class="footer-link">Let's Build</a></li>
                 </ul>

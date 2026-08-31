@@ -13,7 +13,7 @@
         <div class="nav-right">
             <ul class="nav-links">
                 <li><a href="{{ request()->is('/') ? '#services' : url('/#services') }}">Services</a></li>
-                <li><a href="{{ request()->is('/') ? '#works' : url('/#works') }}">Our Work</a></li>
+                <li><a href="{{ route('portfolio.our-work') }}" class="{{ request()->routeIs('portfolio.our-work') ? 'active' : '' }}">Our Work</a></li>
                 <li><a href="{{ route('portfolio.about') }}" class="{{ request()->routeIs('portfolio.about') ? 'active' : '' }}">About Us</a></li>
             </ul>
             <a href="{{ request()->is('/') ? '#cta' : url('/#cta') }}" class="btn-nav">Let's Talk</a>
@@ -31,7 +31,7 @@
     <div class="mobile-drawer-inner">
         <ul class="mobile-nav-links">
             <li><a href="{{ request()->is('/') ? '#services' : url('/#services') }}" class="mobile-nav-link">Services</a></li>
-            <li><a href="{{ request()->is('/') ? '#works' : url('/#works') }}" class="mobile-nav-link">Our Work</a></li>
+            <li><a href="{{ route('portfolio.our-work') }}" class="mobile-nav-link {{ request()->routeIs('portfolio.our-work') ? 'active' : '' }}">Our Work</a></li>
             <li><a href="{{ route('portfolio.about') }}" class="mobile-nav-link {{ request()->routeIs('portfolio.about') ? 'active' : '' }}">About Us</a></li>
         </ul>
         <a href="{{ request()->is('/') ? '#cta' : url('/#cta') }}" class="mobile-btn-nav mobile-nav-link">Let's Talk</a>

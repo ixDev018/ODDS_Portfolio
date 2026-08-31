@@ -19,6 +19,7 @@ class OddsWork extends Model
         'story_content',
         'body_content',
         'cover_image',
+        'showcase_video',
         'gallery_images',
         'tech_stack',
         'demo_url',
@@ -73,6 +74,30 @@ class OddsWork extends Model
         }
 
         $src = $this->cover_image;
+        if (str_starts_with($src, 'http://') || str_starts_with($src, 'https://')) {
+            if (preg_match('#https?://(?:localhost|127\.0\.0\.1|0\.0\.0\.0)(?::\d+)?(/storage/.*)#', $src, $m)) {
+                return $m[1];
+            }
+            return $src;
+        }
+
+        if (str_starts_with($src, '/storage') || str_starts_with($src, 'storage/')) {
+            return '/' . ltrim($src, '/');
+        }
+
+        return asset($src);
+    }
+
+    /**
+     * Get normalized showcase video URL for reliable local & cloud rendering.
+     */
+    public function getShowcaseVideoUrlAttribute(): ?string
+    {
+        if (empty($this->showcase_video)) {
+            return null;
+        }
+
+        $src = $this->showcase_video;
         if (str_starts_with($src, 'http://') || str_starts_with($src, 'https://')) {
             if (preg_match('#https?://(?:localhost|127\.0\.0\.1|0\.0\.0\.0)(?::\d+)?(/storage/.*)#', $src, $m)) {
                 return $m[1];

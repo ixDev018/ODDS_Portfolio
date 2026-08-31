@@ -1,8 +1,17 @@
 import './bootstrap';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { SplitText } from 'gsap/SplitText';
+import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin';
+import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, SplitText, ScrambleTextPlugin, DrawSVGPlugin);
+
+window.gsap = gsap;
+window.ScrollTrigger = ScrollTrigger;
+window.SplitText = SplitText;
+window.ScrambleTextPlugin = ScrambleTextPlugin;
+window.DrawSVGPlugin = DrawSVGPlugin;
 
 // ─── Navbar & Mobile Drawer setup ──────────────────────
 const navbar = document.getElementById('navbar');
@@ -44,11 +53,16 @@ if (mobileToggle && mobileDrawer) {
 
 // ═══════════════════════════════════════════════════════
 //  FULL-PAGE ENGINE — mirrors GSAP branch trans-col logic
-//// ─── Hero entrance ───────────────────────────────────
-gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.9 } })
-    .to('#hero-h1', { opacity: 1, y: 0, delay: 0.2 })
-    .to('#hero-p', { opacity: 1, y: 0 }, '-=0.55')
-    .to('#hero-btn', { opacity: 1, y: 0 }, '-=0.5');
+// ─── Hero entrance ───────────────────────────────────
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (prefersReducedMotion) {
+    gsap.set(['#hero-h1', '#hero-p', '#hero-btn'], { opacity: 1, y: 0 });
+} else {
+    gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.85 } })
+        .to('#hero-p', { opacity: 1, y: 0, delay: 0.28 })
+        .to('#hero-btn', { opacity: 1, y: 0 }, '-=0.45');
+}
 
 // ═══════════════════════════════════════════════════════
 //  HERO <-> SERVICES SIGNATURE SCROLL TRANSITION ENGINE
@@ -418,31 +432,6 @@ gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.9 } })
             }
         });
     });
-
-    // ── Stats Row Observer for Works Section ───────────
-    const statsRow = document.getElementById('stats-row');
-    if (statsRow && secWorks) {
-        let statsFired = false;
-        const statsObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && !statsFired) {
-                    statsFired = true;
-                    secWorks.querySelectorAll('[data-target]').forEach(el => {
-                        const rawTarget = el.dataset.target ?? '0';
-                        const targetVal = parseFloat(rawTarget) || 0;
-                        const isFloat = rawTarget.includes('.');
-                        const suffix = el.dataset.suffix ?? '';
-                        const obj = { val: 0 };
-                        gsap.to(obj, {
-                            val: targetVal, duration: 1.4, ease: 'power2.out', delay: 0.15,
-                            onUpdate() { el.textContent = (isFloat ? obj.val.toFixed(1) : Math.round(obj.val)) + suffix; }
-                        });
-                    });
-                }
-            });
-        }, { threshold: 0.2 });
-        statsObserver.observe(statsRow);
-    }
 
     // ── Navbar Dynamic Theme on Scroll ─────────────────
     const observedSections = [
@@ -1556,6 +1545,155 @@ if (ctaVideo && ctaCanvas) {
 
     requestAnimationFrame(loop);
 })();
+
+
+// ═══════════════════════════════════════════════════════
+//  SITE-WIDE TEXT ANIMATION SYSTEM (OFFICIAL GSAP PLUGINS)
+//  Rule 1: Heading Reveal (SplitText, word-level stagger)
+//  Rule 2: Reserved Scramble Effect (ScrambleTextPlugin)
+//  Rule 3: Single Draw-In Highlight Per Page (DrawSVGPlugin)
+// ═══════════════════════════════════════════════════════
+
+// ─── Rule 1: Site-Wide Heading Reveal ──────────────────
+function initHeadingReveals() {
+    // 1. Hero Headline (Special Case: Plays on load rather than scroll)
+    const heroH1 = document.getElementById('hero-h1');
+    if (heroH1) {
+        if (prefersReducedMotion) {
+            gsap.set(heroH1, { opacity: 1, y: 0 });
+        } else {
+            const heroSplit = new SplitText(heroH1, { type: 'words', wordsClass: 'split-word' });
+            gsap.fromTo(heroSplit.words,
+                { opacity: 0, y: 18 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.52,
+                    ease: 'power3.out',
+                    stagger: 0.05,
+                    delay: 0.1
+                }
+            );
+        }
+    }
+
+    // 2. All Major Section Headings Across The Site
+    const headingSelectors = [
+        '.services-title',
+        '.why-title',
+        '.works-heading',
+        '.testi-title',
+        '.process-title',
+        '.faq-title',
+        '.cta-title',
+        '.about-massive-headline',
+        '.our-work-closing-title'
+    ];
+
+    const headings = document.querySelectorAll(headingSelectors.join(', '));
+    headings.forEach(heading => {
+        // Skip hero headline if selected
+        if (heading.id === 'hero-h1' || heading.classList.contains('hero-title')) return;
+
+        if (prefersReducedMotion) {
+            gsap.set(heading, { opacity: 1, y: 0 });
+            return;
+        }
+
+        const split = new SplitText(heading, { type: 'words', wordsClass: 'split-word' });
+
+        gsap.fromTo(split.words,
+            { opacity: 0, y: 20 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 0.52,
+                ease: 'power3.out',
+                stagger: 0.045,
+                scrollTrigger: {
+                    trigger: heading,
+                    start: 'top 85%',
+                    once: true
+                }
+            }
+        );
+    });
+}
+
+// ─── Rule 2: Reserved Scramble Effect for Metrics ONLY ───
+function initScrambleCounters() {
+    const statsRows = document.querySelectorAll('#stats-row, .works-stats-row');
+    statsRows.forEach(row => {
+        let statsFired = false;
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !statsFired) {
+                    statsFired = true;
+                    const statEls = row.querySelectorAll('[data-target]');
+                    statEls.forEach((el, i) => {
+                        const rawTarget = el.dataset.target ?? '0';
+                        const suffix = el.dataset.suffix ?? '';
+                        const isFloat = rawTarget.includes('.');
+                        const targetFormatted = (isFloat ? parseFloat(rawTarget).toFixed(1) : rawTarget) + suffix;
+
+                        if (prefersReducedMotion) {
+                            el.textContent = targetFormatted;
+                            return;
+                        }
+
+                        gsap.to(el, {
+                            duration: 1.15,
+                            scrambleText: {
+                                text: targetFormatted,
+                                chars: '0123456789!#$*+-~',
+                                speed: 0.45,
+                                revealDelay: 0.12 + (i * 0.08)
+                            },
+                            ease: 'power2.out'
+                        });
+                    });
+                }
+            });
+        }, { threshold: 0.2 });
+        observer.observe(row);
+    });
+}
+
+// ─── Rule 3: Single Draw-In Highlight Per Page ─────────
+function initDrawHighlights() {
+    const paths = document.querySelectorAll('.draw-highlight-svg path');
+    paths.forEach(path => {
+        if (prefersReducedMotion) {
+            gsap.set(path, { drawSVG: '100%' });
+            return;
+        }
+
+        gsap.set(path, { drawSVG: '0%' });
+        gsap.to(path, {
+            drawSVG: '100%',
+            duration: 0.95,
+            ease: 'power2.out',
+            scrollTrigger: {
+                trigger: path.closest('.draw-highlight-wrap') || path,
+                start: 'top 85%',
+                once: true
+            }
+        });
+    });
+}
+
+// ─── Initialize Site-Wide Animations ───────────────────
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        initHeadingReveals();
+        initScrambleCounters();
+        initDrawHighlights();
+    });
+} else {
+    initHeadingReveals();
+    initScrambleCounters();
+    initDrawHighlights();
+}
 
 
 

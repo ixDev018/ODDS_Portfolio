@@ -933,7 +933,7 @@
 
         {{-- Monumental Headline --}}
         <h1 class="about-massive-headline">
-            AGAINST ALL <span class="headline-outline-text">ODDS</span><span class="headline-gradient-text">.</span>
+            AGAINST ALL <span class="headline-outline-text draw-highlight-wrap">ODDS<svg class="draw-highlight-svg" viewBox="0 0 120 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M 2 10 C 30 2, 60 11, 118 4" stroke="#875af5" stroke-width="3" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></span><span class="headline-gradient-text">.</span>
         </h1>
 
         <!-- {{-- Punchy Subtitle --}}
