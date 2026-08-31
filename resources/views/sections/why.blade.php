@@ -27,7 +27,8 @@ $accentThemes = ['purple', 'pink', 'cyan'];
     <div class="why-orb why-orb-3" aria-hidden="true"></div>
 
     <div class="sec-inner">
-        <div class="why-center">
+        <div class="why-main-stage" id="why-main-stage">
+            <div class="why-center">
             <h2 class="why-title fade-up">
                 @if(!empty($settings->why_title))
                     {!! $settings->why_title !!}
@@ -128,6 +129,7 @@ $accentThemes = ['purple', 'pink', 'cyan'];
                 </svg>
                 <span>Swipe left or right to explore</span>
             </div>
+        </div>
         </div>
     </div>
 </section>

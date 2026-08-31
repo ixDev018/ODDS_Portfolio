@@ -940,8 +940,105 @@ if (ctaVideo && ctaCanvas) {
         });
     });
 
-    // ─── ScrollTrigger 4-Frame Playing Card Deal Animation ───
+    // ─── ScrollTrigger 4-Frame Playing Card Deal & Horizontal Transition to Process ───
     let dealScrollTrigger = null;
+    let pathLength = 3600;
+    let horizLen = 1200;
+    let yToLengthTable = [];
+    const SAMPLES_COUNT = 300;
+
+    const PATH_TAIL_D = "L 380 24 C 450 24 472 42 467.332 65.742 C 454.431 127.953 404.689 176.83 342.376 182.085 L 114.38 201.314 C 89.7562 203.391 66.5806 213.818 48.6935 230.868 C -13.312 289.973 14.502 394.256 97.7059 414.631 L 505.918 514.595 C 512.476 516.201 518.697 518.955 524.295 522.729 C 573.667 556.018 545.675 633.188 486.442 627.082 L 127.407 590.071 C 108.352 588.107 89.2368 593.184 73.668 604.345 C 11.7091 648.76 43.1302 746.523 119.364 746.523 H 150.72 C 201.364 746.523 241.681 788.937 239.117 839.515 L 234.832 924.023";
+
+    function calibratePathStartX() {
+        const path = document.getElementById('process-line-path');
+        const wrapEl = document.querySelector('.process-linepath-wrap');
+        const card2 = cards[2] || cards[cards.length - 1];
+        if (!path) return { startX: -1200, horizLen: 1580, pathLength: 4000 };
+
+        const winWidth = window.innerWidth;
+        const isMobile = window.innerWidth <= 768;
+
+        if (isMobile) {
+            path.setAttribute('d', `M 467.332 1.52271 ${PATH_TAIL_D}`);
+            try {
+                pathLength = path.getTotalLength() || 2800;
+            } catch (e) {
+                pathLength = 2800;
+            }
+            horizLen = 0;
+            path.style.strokeDasharray = `${pathLength} ${pathLength}`;
+            return { startX: 467, horizLen: 0, pathLength };
+        }
+
+        const wrapWidth = wrapEl ? wrapEl.offsetWidth : Math.min(1100, winWidth);
+        let startX = -300;
+
+        const gapVw = 0.6; // 60vw transition space between Why and Process
+        const gapPx = winWidth * gapVw;
+
+        if (card2 && wrapEl) {
+            // Calculate Card 2 right edge relative to wrapEl left edge in track space:
+            // Deck is centered in Why (100vw). 3 cards with width 385px and gap 20px span 1195px.
+            // Half-deck width = 597.5px.
+            // Card 2 right edge is at: 50vw + 597.5px in Why space.
+            // wrapEl is centered in Process (which is at (100vw + gapPx) .. (200vw + gapPx)):
+            // wrapEl left edge is at: 100vw + gapPx + (100vw - wrapWidth) / 2 = 150vw + gapPx - (wrapWidth / 2).
+            // Distance from wrapEl left to Card 2 right edge:
+            // deltaPx = (50vw + 597.5) - (150vw + gapPx - wrapWidth / 2) = 597.5 + (wrapWidth / 2) - winWidth - gapPx
+            const deckHalf = 597.5;
+            const deltaPx = deckHalf + (wrapWidth / 2) - winWidth - gapPx + 16; // 16px right of Card 2
+            startX = Math.round((deltaPx / wrapWidth) * 565);
+        } else {
+            const distancePx = winWidth + gapPx + Math.max(0, (winWidth - wrapWidth) / 2);
+            startX = Math.round((-distancePx / wrapWidth) * 565 + 24);
+        }
+
+        path.setAttribute('d', `M ${startX} 24 ${PATH_TAIL_D}`);
+
+        try {
+            pathLength = path.getTotalLength() || 4000;
+        } catch (e) {
+            pathLength = 4000;
+        }
+
+        horizLen = Math.max(10, 380 - startX);
+        path.style.strokeDasharray = `${pathLength} ${pathLength}`;
+
+        return { startX, horizLen, pathLength };
+    }
+
+    function buildSampleTable() {
+        const path = document.getElementById('process-line-path');
+        if (!path) return;
+
+        yToLengthTable = [];
+        let maxY = -Infinity;
+        const verticalLength = Math.max(10, pathLength - horizLen);
+
+        for (let i = 0; i <= SAMPLES_COUNT; i++) {
+            const len = horizLen + (i / SAMPLES_COUNT) * verticalLength;
+            try {
+                const pt = path.getPointAtLength(len);
+                if (pt.y > maxY) maxY = pt.y;
+                yToLengthTable.push({ len, y: pt.y, maxSoFar: maxY });
+            } catch (e) {}
+        }
+    }
+
+    function getVerticalLengthForY(targetSvgY) {
+        const verticalLen = pathLength - horizLen;
+        if (!yToLengthTable.length) return 0;
+        if (targetSvgY <= 24) return 0;
+        if (targetSvgY >= 925) return verticalLen;
+
+        let bestLen = 0;
+        for (let i = 0; i < yToLengthTable.length; i++) {
+            if (yToLengthTable[i].y <= targetSvgY) {
+                bestLen = yToLengthTable[i].len - horizLen;
+            }
+        }
+        return Math.max(0, Math.min(verticalLen, bestLen));
+    }
 
     function initCardDealScrollTrigger() {
         if (dealScrollTrigger) {
@@ -949,15 +1046,23 @@ if (ctaVideo && ctaCanvas) {
             dealScrollTrigger = null;
         }
 
+        const wrapper = document.getElementById('why-process-wrapper') || document.getElementById('why');
+        const track = document.getElementById('why-process-track');
+        const whyMain = document.getElementById('why-main-stage');
+        const path = document.getElementById('process-line-path');
+
         if (isDeckMode() || cards.length < 3) {
             cards.forEach(card => {
                 gsap.set(card, { clearProps: 'x,rotation' });
             });
+            if (track) gsap.set(track, { clearProps: 'x,transform' });
+            if (whyMain) gsap.set(whyMain, { clearProps: 'all' });
+            calibratePathStartX();
+            buildSampleTable();
             return;
         }
 
-        const secWhy = document.getElementById('why');
-        if (!secWhy) return;
+        if (!wrapper) return;
 
         const card0 = cards[0];
         const card1 = cards[1];
@@ -972,37 +1077,84 @@ if (ctaVideo && ctaCanvas) {
         gsap.set(card1, { x: entryOffset - dist, rotation: -4 });
         gsap.set(card2, { x: entryOffset - (dist * 2), rotation: -2 });
 
+        if (track) gsap.set(track, { x: 0 });
+        if (whyMain) gsap.set(whyMain, { x: 0, y: 0, opacity: 1, scale: 1 });
+
+        const res = calibratePathStartX();
+        buildSampleTable();
+
+        if (path) {
+            gsap.set(path, { opacity: 0 });
+            path.style.strokeDashoffset = res.pathLength;
+        }
+
         const dealTL = gsap.timeline({
             scrollTrigger: {
-                trigger: secWhy,
+                trigger: wrapper,
                 start: 'top top',
-                end: '+=900',
+                end: '+=2800',
                 pin: true,
                 scrub: 0.8,
                 anticipatePin: 1,
-                invalidateOnRefresh: true
+                invalidateOnRefresh: true,
+                onRefresh: () => {
+                    calibratePathStartX();
+                    buildSampleTable();
+                }
             }
         });
 
         dealScrollTrigger = dealTL.scrollTrigger;
 
-        // Frame 1 -> Frame 2 (0% to 38% progress): Slide entire stacked deck in from off-screen left to Column 0
+        // ── STAGE 1 (0% to 25% progress): Slide entire stacked deck in from left to Column 0 ──
         dealTL
             .to(card0, { x: 0, rotation: -4, ease: 'power1.inOut', duration: 1 })
             .to(card1, { x: -dist, rotation: -2, ease: 'power1.inOut', duration: 1 }, '<')
             .to(card2, { x: -(dist * 2), rotation: 0, ease: 'power1.inOut', duration: 1 }, '<');
 
-        // Short pause while stacked at Column 0 (38% to 45% progress)
-        dealTL.to({}, { duration: 0.25 });
+        // Short pause while stacked at Column 0
+        dealTL.to({}, { duration: 0.2 });
 
-        // Frame 2 -> Frame 3 -> Frame 4 (45% to 100% progress): Deal cards across from Column 0 into Columns 1 & 2
+        // ── STAGE 2 (25% to 45% progress): Deal cards across into Columns 1 & 2 ──
         dealTL
             .to(card0, { rotation: 0, ease: 'power2.out', duration: 0.8 })
             .to(card1, { x: 0, rotation: 0, ease: 'power2.out', duration: 1.1 }, '<')
-            .to(card2, { x: 0, rotation: 0, ease: 'power2.out', duration: 1.4 }, '<+=0.15');
+            .to(card2, { x: 0, rotation: 0, ease: 'power2.out', duration: 1.4 }, '<+=0.12');
+
+        // ── STAGE 3 (45% to 55% progress): Rest Window for cards exploration ──
+        dealTL.to({}, { duration: 0.5 });
+
+        // ── STAGE 4 (55% to 95% progress): Why section slides smoothly to the left, through the 60vw space into Process ──
+        if (track) {
+            dealTL.to(track, {
+                x: '-160vw',
+                ease: 'power1.inOut',
+                duration: 2.2
+            });
+        }
+
+        if (path) {
+            // Path illuminates right next to Card 2 at the start of the slide and draws across into Process
+            dealTL.to(path, {
+                opacity: 1,
+                duration: 0.08,
+                ease: 'none'
+            }, '<')
+            .to(path, {
+                strokeDashoffset: () => pathLength - horizLen,
+                ease: 'power1.inOut',
+                duration: 2.2
+            }, '<');
+        }
+
+        // Short buffer before unpinning cleanly into Process section
+        dealTL.to({}, { duration: 0.2 });
     }
 
     initCardDealScrollTrigger();
+
+    window.__getDealScrollTrigger = () => dealScrollTrigger;
+    window.__getPathMetrics = () => ({ pathLength, horizLen, getVerticalLengthForY });
 
     function updateStack(animate = true) {
         if (!isDeckMode()) {
@@ -1325,89 +1477,83 @@ if (ctaVideo && ctaCanvas) {
     const svgWrap = document.querySelector('.process-linepath-wrap');
     if (!path || !svgWrap) return;
 
-    let pathLength = 0;
-    const SAMPLES_COUNT = 400;
-    let yToLengthTable = [];
-
-    function buildSampleTable() {
-        try {
-            pathLength = path.getTotalLength() || 2800;
-        } catch (e) {
-            pathLength = 2800;
-        }
-
-        path.style.strokeDasharray = `${pathLength} ${pathLength}`;
-        yToLengthTable = [];
-
-        let maxY = -Infinity;
-        for (let i = 0; i <= SAMPLES_COUNT; i++) {
-            const len = (i / SAMPLES_COUNT) * pathLength;
-            const pt = path.getPointAtLength(len);
-            if (pt.y > maxY) maxY = pt.y;
-            yToLengthTable.push({ len, y: pt.y, maxSoFar: maxY });
-        }
-    }
-
-    buildSampleTable();
-
     let targetLengthToDraw = 0;
     let currentLengthToDraw = 0;
 
-    function getLengthForY(targetSvgY) {
-        if (!yToLengthTable.length) return 0;
-        if (targetSvgY <= yToLengthTable[0].y) return 0;
-        if (targetSvgY >= 925) return pathLength;
-
-        // Find the farthest length on path where the stroke has reached targetSvgY
-        let bestLen = 0;
-        for (let i = 0; i < yToLengthTable.length; i++) {
-            if (yToLengthTable[i].y <= targetSvgY) {
-                bestLen = yToLengthTable[i].len;
-            }
-        }
-        return Math.max(0, Math.min(pathLength, bestLen));
-    }
-
     function calcTargetProgress() {
-        const wrapRect = svgWrap.getBoundingClientRect();
+        const feed = document.querySelector('.process-editorial-feed') || svgWrap;
+        const processSec = document.getElementById('process') || svgWrap;
+        const feedRect = feed.getBoundingClientRect();
+        const processRect = processSec.getBoundingClientRect();
         const winHeight = window.innerHeight;
 
-        // Focal line: right in the user's active view area (~52% from top of viewport)
-        const eyeLineY = winHeight * 0.52;
+        // The user's active focal viewing eye line in the viewport
+        const eyeLineY = winHeight * 0.5;
 
-        // Position of the user's sight line relative to the SVG wrap
-        const currentPxInSvg = eyeLineY - wrapRect.top;
-        const svgRenderedHeight = wrapRect.height || 1;
+        // The process section starts at processRect.top and finishes when Phase 03 is in view
+        const processStart = processRect.top + (winHeight * 0.2);
+        const feedEnd = feedRect.bottom - (winHeight * 0.35);
+        const totalDist = Math.max(1, feedEnd - processStart);
 
-        // SVG native viewBox height is 925
-        const targetSvgY = (currentPxInSvg / svgRenderedHeight) * 925;
+        // Progress from 0.0 (entering Process) to 1.0 (Phase 3)
+        const scrollProgress = Math.max(0, Math.min(1, (eyeLineY - processStart) / totalDist));
+        const targetSvgY = 24 + scrollProgress * (925 - 24);
 
-        targetLengthToDraw = getLengthForY(targetSvgY);
+        const dealST = window.__getDealScrollTrigger ? window.__getDealScrollTrigger() : null;
+        const metrics = window.__getPathMetrics ? window.__getPathMetrics() : { pathLength: 3600, horizLen: 1200, getVerticalLengthForY: () => 0 };
+        const { pathLength, horizLen, getVerticalLengthForY } = metrics;
+
+        if (dealST && dealST.isActive) {
+            // GSAP dealTL is actively scrubbing during Why pin
+            const curOffset = parseFloat(path.style.strokeDashoffset);
+            if (!isNaN(curOffset)) {
+                currentLengthToDraw = pathLength - curOffset;
+            }
+            return;
+        }
+
+        if (dealST && dealST.progress >= 1) {
+            // Pinned transition completed -> user scrolling down through Process
+            path.style.opacity = '1';
+            const extra = getVerticalLengthForY(targetSvgY);
+            targetLengthToDraw = horizLen + extra;
+        } else if (dealST && dealST.progress <= 0) {
+            // Above Why section
+            path.style.opacity = '0';
+            targetLengthToDraw = 0;
+        } else if (!dealST) {
+            // Mobile or deck mode fallback
+            path.style.opacity = '1';
+            targetLengthToDraw = horizLen + getVerticalLengthForY(targetSvgY);
+        }
     }
 
     function loop() {
-        // Butter-smooth lerp for responsive trailing
-        currentLengthToDraw += (targetLengthToDraw - currentLengthToDraw) * 0.15;
-        if (Math.abs(targetLengthToDraw - currentLengthToDraw) < 0.5) {
-            currentLengthToDraw = targetLengthToDraw;
-        }
+        calcTargetProgress();
 
-        const offset = pathLength - currentLengthToDraw;
-        path.style.strokeDashoffset = offset;
+        const dealST = window.__getDealScrollTrigger ? window.__getDealScrollTrigger() : null;
+        const metrics = window.__getPathMetrics ? window.__getPathMetrics() : { pathLength: 3600 };
+        const pathLen = metrics.pathLength || 3600;
+
+        if (!dealST || !dealST.isActive) {
+            currentLengthToDraw += (targetLengthToDraw - currentLengthToDraw) * 0.15;
+            if (Math.abs(targetLengthToDraw - currentLengthToDraw) < 0.5) {
+                currentLengthToDraw = targetLengthToDraw;
+            }
+            const offset = Math.max(0, Math.min(pathLen, pathLen - currentLengthToDraw));
+            path.style.strokeDashoffset = offset;
+        }
 
         requestAnimationFrame(loop);
     }
 
     window.addEventListener('scroll', calcTargetProgress, { passive: true });
-    window.addEventListener('resize', () => {
-        buildSampleTable();
-        calcTargetProgress();
-    });
+    window.addEventListener('resize', calcTargetProgress);
 
-    // Run initial calculation and start animation loop
-    calcTargetProgress();
-    currentLengthToDraw = targetLengthToDraw;
-    path.style.strokeDashoffset = pathLength - currentLengthToDraw;
+    if (typeof ScrollTrigger !== 'undefined') {
+        ScrollTrigger.addEventListener('refresh', calcTargetProgress);
+    }
+
     requestAnimationFrame(loop);
 })();
 
