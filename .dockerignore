@@ -6,6 +6,8 @@ node_modules
 tests
 *.log
 *.sqlite
+public/hot
+public/storage
 docs
 figma_*.png
 figma_*.json

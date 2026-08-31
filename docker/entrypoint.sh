@@ -13,6 +13,9 @@ mkdir -p /var/www/html/storage/framework/views
 mkdir -p /var/www/html/storage/app/public
 mkdir -p /var/www/html/storage/logs
 
+# Remove dev server hot file if present
+rm -f /var/www/html/public/hot
+
 # Initialize SQLite database if it does not exist
 if [ ! -f /var/www/html/database/database.sqlite ]; then
     echo "Creating SQLite database..."
@@ -37,8 +40,8 @@ echo "Running database migrations..."
 php artisan migrate --force --graceful
 php artisan db:seed --force
 
-# Cache Laravel configuration, routes, and views for production performance
-echo "Caching configuration and routes..."
+# Clear view cache first, then optimize
+php artisan view:clear || true
 php artisan config:cache || true
 php artisan route:cache || true
 php artisan view:cache || true

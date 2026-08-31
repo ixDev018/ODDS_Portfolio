@@ -8,7 +8,7 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
-RUN npm run build
+RUN rm -f public/hot && npm run build
 
 # ----------------------------------------------------
 # Stage 2: Production PHP 8.2 + Nginx + Supervisord
@@ -50,6 +50,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Copy application files
 COPY . .
+RUN rm -f public/hot
 
 # Copy compiled frontend assets from Stage 1
 COPY --from=frontend-builder /app/public/build ./public/build
