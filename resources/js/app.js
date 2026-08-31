@@ -85,7 +85,7 @@ if (prefersReducedMotion) {
 
     const NAV = {
         hero: { bg: 'rgba(14,14,14,0.65)', border: 'rgba(255,255,255,0.08)', light: false },
-        services: { bg: 'rgba(143,60,111,0.65)', border: 'rgba(255,255,255,0.08)', light: false },
+        services: { bg: 'rgba(248,250,252,0.85)', border: 'rgba(0,0,0,0.06)', light: true },
         works: { bg: 'rgba(227,227,227,0.65)', border: 'rgba(0,0,0,0.06)', light: true },
         testimonials: { bg: 'rgba(243,89,176,0.65)', border: 'rgba(255,255,255,0.08)', light: false },
         why: { bg: 'rgba(239,239,239,0.65)', border: 'rgba(0,0,0,0.06)', light: true },
@@ -96,6 +96,12 @@ if (prefersReducedMotion) {
 
     let currentMode = 'hero'; // 'hero' | 'services'
     let isTransitioning = false;
+
+    function forceScrollToTop() {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+    }
 
     function applyNavTheme(key) {
         if (!navbar) return;
@@ -124,10 +130,11 @@ if (prefersReducedMotion) {
 
     // Initialize: Hero is active at top
     document.body.classList.add('hero-active');
+    forceScrollToTop();
     gsap.set(secHero, {
-        position: 'absolute',
-        top: 0,
-        left: 0,
+        position: 'relative',
+        top: 'auto',
+        left: 'auto',
         width: '100%',
         zIndex: 10,
         visibility: 'visible',
@@ -135,7 +142,11 @@ if (prefersReducedMotion) {
         pointerEvents: 'auto'
     });
     gsap.set(secServices, {
-        position: 'relative',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
         zIndex: 0,
         visibility: 'hidden',
         opacity: 0,
@@ -152,6 +163,7 @@ if (prefersReducedMotion) {
         }
 
         isTransitioning = true;
+        forceScrollToTop();
         const fromSec = secHero;
         const toSec = secServices;
         const fromEls = getSectionElements(fromSec);
@@ -159,12 +171,12 @@ if (prefersReducedMotion) {
 
         blades.forEach(blade => {
             const surf = blade.querySelector('.cyber-blade-surface');
-            if (surf) surf.style.background = 'rgba(14, 14, 14, 0.85)';
+            if (surf) surf.style.background = 'rgba(14, 14, 14, 0.9)';
         });
         if (overlay) gsap.set(overlay, { visibility: 'visible', opacity: 1, zIndex: 99 });
 
-        gsap.set(fromSec, { visibility: 'visible', opacity: 1, scale: 1, zIndex: 10, pointerEvents: 'none' });
-        gsap.set(toSec, { visibility: 'visible', opacity: 0, scale: 1.03, y: 0, zIndex: 20, pointerEvents: 'none' });
+        gsap.set(fromSec, { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', visibility: 'visible', opacity: 1, scale: 1, zIndex: 10, pointerEvents: 'none' });
+        gsap.set(toSec, { position: 'absolute', top: 0, left: 0, width: '100%', minHeight: '100vh', visibility: 'visible', opacity: 0, scale: 1.03, y: 0, zIndex: 20, pointerEvents: 'none' });
         gsap.set(toEls, { opacity: 0, y: 35, skewX: -5 });
         gsap.set(blades, { x: '0%', opacity: 1, skewX: 0 });
         if (rgbCyan) gsap.set(rgbCyan, { opacity: 0, x: -18 });
@@ -175,8 +187,9 @@ if (prefersReducedMotion) {
             onComplete() {
                 currentMode = 'services';
                 document.body.classList.remove('hero-active');
+                forceScrollToTop();
 
-                gsap.set(fromSec, { visibility: 'hidden', opacity: 0, zIndex: 0, scale: 1, pointerEvents: 'none' });
+                gsap.set(fromSec, { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', visibility: 'hidden', opacity: 0, zIndex: 0, scale: 1, pointerEvents: 'none' });
                 gsap.set(fromEls, { clearProps: 'transform,opacity,scale,skewX,x,y' });
 
                 if (overlay) gsap.set(overlay, { visibility: 'hidden', opacity: 0, zIndex: 0 });
@@ -185,7 +198,7 @@ if (prefersReducedMotion) {
                 if (rgbPink) gsap.set(rgbPink, { opacity: 0 });
                 if (scanlines) gsap.set(scanlines, { opacity: 0 });
 
-                gsap.set(toSec, { zIndex: 5, opacity: 1, scale: 1, pointerEvents: 'auto' });
+                gsap.set(toSec, { position: 'relative', top: 'auto', left: 'auto', width: '100%', height: 'auto', zIndex: 5, opacity: 1, scale: 1, pointerEvents: 'auto' });
                 gsap.set(toEls, { clearProps: 'transform,opacity,scale,skewX,x,y' });
 
                 applyNavTheme('services');
@@ -232,15 +245,19 @@ if (prefersReducedMotion) {
     }
 
     // ── Transition: Services -> Hero ───────────────────
-    function transitionToHero() {
-        if (isTransitioning || currentMode === 'hero') return;
-        const scrollY = window.scrollY || window.pageYOffset || 0;
-        if (scrollY > 10) {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+    function transitionToHero(callback) {
+        if (isTransitioning || currentMode === 'hero') {
+            if (callback) callback();
             return;
         }
 
+        const scrollY = window.scrollY || window.pageYOffset || 0;
+        if (scrollY > 5) {
+            forceScrollToTop();
+        }
+
         isTransitioning = true;
+        forceScrollToTop();
         const fromSec = secServices;
         const toSec = secHero;
         const fromEls = getSectionElements(fromSec);
@@ -248,12 +265,12 @@ if (prefersReducedMotion) {
 
         blades.forEach(blade => {
             const surf = blade.querySelector('.cyber-blade-surface');
-            if (surf) surf.style.background = 'rgba(143, 60, 111, 0.88)';
+            if (surf) surf.style.background = '#0e0e0e';
         });
         if (overlay) gsap.set(overlay, { visibility: 'visible', opacity: 1, zIndex: 99 });
 
-        gsap.set(fromSec, { visibility: 'visible', opacity: 1, scale: 1, zIndex: 10, pointerEvents: 'none' });
-        gsap.set(toSec, { visibility: 'visible', opacity: 0, scale: 1.03, y: 0, zIndex: 20, pointerEvents: 'none' });
+        gsap.set(fromSec, { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', visibility: 'visible', opacity: 1, scale: 1, zIndex: 10, pointerEvents: 'none' });
+        gsap.set(toSec, { position: 'absolute', top: 0, left: 0, width: '100%', minHeight: '100vh', visibility: 'visible', opacity: 0, scale: 1.03, y: 0, zIndex: 20, pointerEvents: 'none' });
         gsap.set(toEls, { opacity: 0, y: -35, skewX: 5 });
         gsap.set(blades, { x: '0%', opacity: 1, skewX: 0 });
         if (rgbCyan) gsap.set(rgbCyan, { opacity: 0, x: 18 });
@@ -263,9 +280,10 @@ if (prefersReducedMotion) {
         const tl = gsap.timeline({
             onComplete() {
                 currentMode = 'hero';
+                forceScrollToTop();
                 document.body.classList.add('hero-active');
 
-                gsap.set(fromSec, { visibility: 'hidden', opacity: 0, zIndex: 0, scale: 1, pointerEvents: 'none' });
+                gsap.set(fromSec, { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', visibility: 'hidden', opacity: 0, zIndex: 0, scale: 1, pointerEvents: 'none' });
                 gsap.set(fromEls, { clearProps: 'transform,opacity,scale,skewX,x,y' });
 
                 if (overlay) gsap.set(overlay, { visibility: 'hidden', opacity: 0, zIndex: 0 });
@@ -274,11 +292,14 @@ if (prefersReducedMotion) {
                 if (rgbPink) gsap.set(rgbPink, { opacity: 0 });
                 if (scanlines) gsap.set(scanlines, { opacity: 0 });
 
-                gsap.set(toSec, { zIndex: 10, opacity: 1, scale: 1, pointerEvents: 'auto' });
+                gsap.set(toSec, { position: 'relative', top: 'auto', left: 'auto', width: '100%', height: 'auto', zIndex: 10, opacity: 1, scale: 1, pointerEvents: 'auto' });
                 gsap.set(toEls, { clearProps: 'transform,opacity,scale,skewX,x,y' });
 
                 applyNavTheme('hero');
-                setTimeout(() => { isTransitioning = false; }, 80);
+                setTimeout(() => {
+                    isTransitioning = false;
+                    if (callback) callback();
+                }, 80);
             }
         });
 
@@ -319,13 +340,17 @@ if (prefersReducedMotion) {
 
     // ── Mouse Wheel Input ──────────────────────────────
     window.addEventListener('wheel', e => {
-        if (document.body.classList.contains('modal-open') || isTransitioning) return;
+        if (document.body.classList.contains('modal-open')) return;
+        if (isTransitioning) {
+            e.preventDefault();
+            return;
+        }
 
         if (currentMode === 'hero') {
-            if (e.deltaY > 12) {
+            if (e.deltaY > 10) {
                 e.preventDefault();
                 transitionToServices();
-            } else if (e.deltaY < 0) {
+            } else {
                 e.preventDefault();
             }
             return;
@@ -333,7 +358,7 @@ if (prefersReducedMotion) {
 
         if (currentMode === 'services') {
             const scrollY = window.scrollY || window.pageYOffset || 0;
-            if (scrollY <= 5 && e.deltaY < -20) {
+            if (scrollY <= 2 && e.deltaY < -15) {
                 e.preventDefault();
                 transitionToHero();
                 return;
@@ -347,6 +372,12 @@ if (prefersReducedMotion) {
     window.addEventListener('touchstart', e => {
         touchY0 = e.touches[0].clientY;
     }, { passive: true });
+
+    window.addEventListener('touchmove', e => {
+        if (isTransitioning) {
+            e.preventDefault();
+        }
+    }, { passive: false });
 
     window.addEventListener('touchend', e => {
         if (document.body.classList.contains('modal-open') || isTransitioning) return;
@@ -363,7 +394,7 @@ if (prefersReducedMotion) {
 
         if (currentMode === 'services') {
             const scrollY = window.scrollY || window.pageYOffset || 0;
-            if (scrollY <= 5 && dy < -35) {
+            if (scrollY <= 5 && dy < -30) {
                 transitionToHero();
             }
         }
@@ -371,8 +402,11 @@ if (prefersReducedMotion) {
 
     // ── Keyboard Navigation ────────────────────────────
     window.addEventListener('keydown', e => {
-        if (document.body.classList.contains('modal-open') || isTransitioning) {
-            if (e.key === 'Escape' && window.closeProjectModal) window.closeProjectModal();
+        if (document.body.classList.contains('modal-open')) return;
+        if (isTransitioning) {
+            if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', ' ', 'Home', 'End'].includes(e.key)) {
+                e.preventDefault();
+            }
             return;
         }
 
@@ -380,31 +414,47 @@ if (prefersReducedMotion) {
             if (e.key === 'ArrowDown' || e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey)) {
                 e.preventDefault();
                 transitionToServices();
+            } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                e.preventDefault();
             }
             return;
         }
 
         if (currentMode === 'services') {
             const scrollY = window.scrollY || window.pageYOffset || 0;
-            if (scrollY <= 5 && (e.key === 'ArrowUp' || e.key === 'PageUp')) {
+            if (scrollY <= 2 && (e.key === 'ArrowUp' || e.key === 'PageUp')) {
                 e.preventDefault();
                 transitionToHero();
             }
         }
     });
 
-    // ── Anchor Link Smooth Navigation ──────────────────
-    document.querySelectorAll('a[href^="#"]').forEach(link => {
+    // ── Anchor Link & Logo Navigation ──────────────────
+    const logoLink = document.getElementById('logo');
+    if (logoLink) {
+        logoLink.addEventListener('click', (e) => {
+            if (window.location.pathname === '/' || window.location.pathname === '') {
+                e.preventDefault();
+                if (currentMode === 'services') {
+                    forceScrollToTop();
+                    transitionToHero();
+                }
+            }
+        });
+    }
+
+    document.querySelectorAll('a[href^="#"], a[href^="/#"]').forEach(link => {
         link.addEventListener('click', e => {
-            const hash = link.getAttribute('href').replace('#', '');
+            const rawHref = link.getAttribute('href');
+            const hash = rawHref.includes('#') ? rawHref.substring(rawHref.indexOf('#') + 1) : '';
             if (!hash) return;
 
             e.preventDefault();
 
             if (hash === 'hero') {
                 if (currentMode === 'services') {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                    setTimeout(() => transitionToHero(), 300);
+                    forceScrollToTop();
+                    transitionToHero();
                 }
                 return;
             }
@@ -424,7 +474,7 @@ if (prefersReducedMotion) {
                     transitionToServices(() => {
                         setTimeout(() => {
                             targetEl.scrollIntoView({ behavior: 'smooth' });
-                        }, 50);
+                        }, 60);
                     });
                 } else {
                     targetEl.scrollIntoView({ behavior: 'smooth' });

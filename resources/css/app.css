@@ -472,8 +472,7 @@ body.modal-open {
     overflow: hidden;
     text-align: center;
     padding: 120px 48px 80px;
-    position: absolute;
-    inset: 0;
+    position: relative;
     width: 100%;
     min-height: 100vh;
     min-height: 100dvh;
