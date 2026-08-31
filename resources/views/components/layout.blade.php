@@ -16,7 +16,11 @@
 </head>
 <body>
     @include('components.navbar')
-    <main>{{ $slot }}</main>
+    <div id="smooth-wrapper">
+        <div id="smooth-content">
+            <main>{{ $slot }}</main>
+        </div>
+    </div>
     @stack('scripts')
 </body>
 </html>

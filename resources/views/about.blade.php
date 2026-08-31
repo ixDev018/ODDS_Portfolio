@@ -4,24 +4,13 @@
 @endpush
 
 <style>
-    /* ─── SCROLL & ROOT OVERRIDES FOR ABSOLUTE STICKY COMPATIBILITY ─── */
+    /* ─── ABOUT PAGE: ROOT THEME OVERRIDES ─── */
+    /* Note: overflow is managed by #smooth-wrapper (ScrollSmoother).
+       Do NOT set overflow: visible on html/body — it breaks smooth scroll. */
     html:has(.odds-about-universe),
     body:has(.odds-about-universe) {
-        overflow: visible !important;
-        overflow-x: visible !important;
-        overflow-y: visible !important;
-        height: auto !important;
-        min-height: 100% !important;
-        width: 100% !important;
-        max-width: 100% !important;
         background-color: #f8fafc !important;
         color: #0f172a !important;
-    }
-
-    body:has(.odds-about-universe) main {
-        overflow: visible !important;
-        height: auto !important;
-        min-height: 100% !important;
     }
 
     /* ─── NAVBAR OVERRIDES FOR ABOUT PAGE ─── */
@@ -275,10 +264,11 @@
             display: block;
             width: 340px;
             flex-shrink: 0;
-            position: -webkit-sticky;
-            position: sticky;
-            top: 6rem;
+            /* position:sticky replaced by ScrollTrigger pin —
+               CSS sticky breaks inside ScrollSmoother's transform layer */
+            position: relative;
             z-index: 20;
+            align-self: flex-start;
         }
     }
 
@@ -1295,6 +1285,34 @@ function execCopy(text) {
         document.addEventListener('DOMContentLoaded', setupSpy);
     } else {
         setupSpy();
+    }
+})();
+
+// ScrollTrigger Pin — replaces CSS position:sticky for the sidebar
+// (sticky doesn't work inside ScrollSmoother's transform layer)
+(function initAboutSidebarPin() {
+    const sidebar = document.querySelector('.about-sidebar-column');
+    const feed = document.querySelector('.about-articles-feed');
+    if (!sidebar || !feed || window.innerWidth < 1024) return;
+
+    // Wait for ScrollSmoother to be ready before pinning
+    function doPin() {
+        if (typeof ScrollTrigger === 'undefined') return;
+        ScrollTrigger.create({
+            trigger: feed,
+            start: 'top 6rem',
+            end: 'bottom bottom',
+            pin: sidebar,
+            pinSpacing: false,
+        });
+    }
+
+    // If smoother is already active, pin right away; otherwise wait a tick
+    if (window.smoother && !window.smoother.paused()) {
+        doPin();
+    } else {
+        // Defer until smoother activates (fires after DOMContentLoaded)
+        requestAnimationFrame(() => setTimeout(doPin, 200));
     }
 })();
 </script>

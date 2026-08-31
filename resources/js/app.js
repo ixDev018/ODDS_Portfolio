@@ -1,17 +1,38 @@
 import './bootstrap';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { SplitText } from 'gsap/SplitText';
 import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 
-gsap.registerPlugin(ScrollTrigger, SplitText, ScrambleTextPlugin, DrawSVGPlugin);
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, ScrambleTextPlugin, DrawSVGPlugin);
 
 window.gsap = gsap;
 window.ScrollTrigger = ScrollTrigger;
+window.ScrollSmoother = ScrollSmoother;
 window.SplitText = SplitText;
 window.ScrambleTextPlugin = ScrambleTextPlugin;
 window.DrawSVGPlugin = DrawSVGPlugin;
+
+// ─── GSAP ScrollSmoother ─────────────────────────────────
+// On the home page (#hero exists), starts paused so the Hero
+// full-page lock engine takes control first — it unpauses
+// ScrollSmoother once Services mode is active.
+// On all other pages (About, Our Work…), starts active immediately.
+const hasHeroSection = !!document.getElementById('hero');
+let smoother = null;
+if (document.getElementById('smooth-wrapper') && document.getElementById('smooth-content')) {
+    smoother = ScrollSmoother.create({
+        wrapper: '#smooth-wrapper',
+        content: '#smooth-content',
+        smooth: 1.4,          // inertia duration in seconds
+        effects: true,         // enable data-speed parallax on elements
+        paused: hasHeroSection, // only pause on home (hero→services transition handles unpause)
+        normalizeScroll: true, // prevent mobile Safari bounce & unify scroll events
+    });
+}
+window.smoother = smoother;
 
 // ─── Navbar & Mobile Drawer setup ──────────────────────
 const navbar = document.getElementById('navbar');
@@ -101,6 +122,8 @@ if (prefersReducedMotion) {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
         document.documentElement.scrollTop = 0;
         document.body.scrollTop = 0;
+        // Also reset ScrollSmoother's virtual scroll position
+        if (smoother) smoother.scrollTop(0);
     }
 
     function applyNavTheme(key) {
@@ -202,6 +225,14 @@ if (prefersReducedMotion) {
                 gsap.set(toEls, { clearProps: 'transform,opacity,scale,skewX,x,y' });
 
                 applyNavTheme('services');
+
+                // ── Activate ScrollSmoother once Services mode is live ──
+                if (smoother) {
+                    smoother.scrollTop(0);
+                    smoother.paused(false);
+                    ScrollTrigger.refresh();
+                }
+
                 setTimeout(() => {
                     isTransitioning = false;
                     if (callback) callback();
@@ -250,6 +281,10 @@ if (prefersReducedMotion) {
             if (callback) callback();
             return;
         }
+
+        // Pause ScrollSmoother before resetting scroll so
+        // forceScrollToTop() works without fighting momentum
+        if (smoother) smoother.paused(true);
 
         const scrollY = window.scrollY || window.pageYOffset || 0;
         if (scrollY > 5) {
@@ -758,12 +793,16 @@ if (ctaVideo && ctaCanvas) {
         modal.setAttribute('aria-hidden', 'false');
 
         document.body.classList.add('modal-open');
+        // Pause ScrollSmoother so page doesn't scroll behind the modal
+        if (smoother) smoother.paused(true);
     }
 
     function closeProjectModal() {
         modal.classList.remove('is-active');
         modal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('modal-open');
+        // Resume ScrollSmoother if we're in services mode
+        if (smoother && !document.body.classList.contains('hero-active')) smoother.paused(false);
 
         setTimeout(() => {
             if (!modal.classList.contains('is-active')) {
@@ -1073,12 +1112,16 @@ if (ctaVideo && ctaCanvas) {
         modal.setAttribute('aria-hidden', 'false');
 
         document.body.classList.add('modal-open');
+        // Pause ScrollSmoother so page doesn't scroll behind the modal
+        if (smoother) smoother.paused(true);
     }
 
     function closeServiceModal() {
         modal.classList.remove('is-active');
         modal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('modal-open');
+        // Resume ScrollSmoother if we're in services mode
+        if (smoother && !document.body.classList.contains('hero-active')) smoother.paused(false);
 
         // Always clear selection state so the marquee animation resumes
         clearCarouselSelection();
