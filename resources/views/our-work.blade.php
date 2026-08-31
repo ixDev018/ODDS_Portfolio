@@ -1165,6 +1165,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Keyboard Arrow Navigation
     window.addEventListener('keydown', (e) => {
+        const targetTag = e.target.tagName;
+        if (targetTag === 'INPUT' || targetTag === 'TEXTAREA' || targetTag === 'SELECT' || e.target.isContentEditable) {
+            return;
+        }
+
         const modal = document.getElementById('project-modal');
         if (modal && modal.classList.contains('is-active')) return;
 

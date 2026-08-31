@@ -461,6 +461,14 @@ document.addEventListener('DOMContentLoaded', () => {
     chatWindow.style.opacity = '0';
     chatWindow.style.transform = 'scale(0.92) translateY(15px)';
 
+    // Prevent key and scroll events from leaking to global page transitions
+    chatInput.addEventListener('keydown', (e) => {
+        e.stopPropagation();
+    });
+    chatWindow.addEventListener('wheel', (e) => {
+        e.stopPropagation();
+    }, { passive: true });
+
     // Handle form submit
     chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();

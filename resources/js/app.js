@@ -320,6 +320,7 @@ if (prefersReducedMotion) {
     // ── Mouse Wheel Input ──────────────────────────────
     window.addEventListener('wheel', e => {
         if (document.body.classList.contains('modal-open') || isTransitioning) return;
+        if (e.target.closest('#chat-window') || e.target.closest('#odds-chat-container')) return;
 
         if (currentMode === 'hero') {
             if (e.deltaY > 12) {
@@ -350,6 +351,7 @@ if (prefersReducedMotion) {
 
     window.addEventListener('touchend', e => {
         if (document.body.classList.contains('modal-open') || isTransitioning) return;
+        if (e.target.closest('#chat-window') || e.target.closest('#odds-chat-container')) return;
 
         const touchEndY = e.changedTouches[0].clientY;
         const dy = touchY0 - touchEndY; // dy > 0: swiped up (scrolling down)
@@ -371,6 +373,12 @@ if (prefersReducedMotion) {
 
     // ── Keyboard Navigation ────────────────────────────
     window.addEventListener('keydown', e => {
+        // Do not intercept keystrokes when user is typing in form inputs, textareas, or contenteditables
+        const targetTag = e.target.tagName;
+        if (targetTag === 'INPUT' || targetTag === 'TEXTAREA' || targetTag === 'SELECT' || e.target.isContentEditable) {
+            return;
+        }
+
         if (document.body.classList.contains('modal-open') || isTransitioning) {
             if (e.key === 'Escape' && window.closeProjectModal) window.closeProjectModal();
             return;
@@ -1076,6 +1084,10 @@ if (ctaVideo && ctaCanvas) {
 
     // Keyboard navigation when Why section is in view
     window.addEventListener('keydown', (e) => {
+        const targetTag = e.target.tagName;
+        if (targetTag === 'INPUT' || targetTag === 'TEXTAREA' || targetTag === 'SELECT' || e.target.isContentEditable) {
+            return;
+        }
         if (document.body.classList.contains('modal-open')) return;
         const whySec = document.getElementById('why');
         if (whySec) {
