@@ -30,9 +30,13 @@
 
     {{-- Natural Scroll Sections: Standard Smooth Page Experience --}}
     @include('sections.works')
-    {{-- @include('sections.testimonials') --}}
-    @include('sections.why')
-    @include('sections.process')
+    {{-- Why & Process Integrated Horizontal Transition Stage --}}
+    <div class="why-process-track-wrapper" id="why-process-wrapper">
+        <div class="why-process-track" id="why-process-track">
+            @include('sections.why')
+            @include('sections.process')
+        </div>
+    </div>
     @include('sections.faq')
     @include('sections.cta')
 

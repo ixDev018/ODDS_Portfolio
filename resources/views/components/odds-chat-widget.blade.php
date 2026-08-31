@@ -408,6 +408,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    // Teleport container to document.body so ScrollSmoother transform on #smooth-content does not trap position: fixed
+    if (container.parentElement !== document.body) {
+        document.body.appendChild(container);
+    }
+
     // Toggle chat window open/close
     toggleBtn.addEventListener('click', toggleChat);
     closeBtn.addEventListener('click', closeChat);

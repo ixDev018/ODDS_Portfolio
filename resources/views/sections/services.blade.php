@@ -65,28 +65,46 @@ $serviceItems = isset($services) && count($services) > 0 ? $services : collect(a
     <div class="services-cards" id="svc-cards">
         <div class="services-track">
             <div class="services-group">
-                @foreach($serviceItems as $svc)
+                @foreach($serviceItems as $index => $svc)
                 @php
                     $cleanName = trim(str_replace(["\r\n", "\r", "\n"], ' ', $svc->name));
                     $itemConfig = $defaultMap[$cleanName] ?? null;
                     $displayName = !empty($svc->name) ? $svc->name : ($itemConfig['name'] ?? $cleanName);
+                    $iconSvg = !empty($svc->icon_svg) ? $svc->icon_svg : ($itemConfig['icon'] ?? '');
+                    $tagline = $svc->tagline ?? ($itemConfig['tagline'] ?? 'Engineering Service');
                 @endphp
-                <div class="svc-card">
-                    <div class="svc-icon">{!! !empty($svc->icon_svg) ? $svc->icon_svg : ($itemConfig['icon'] ?? '') !!}</div>
+                <div class="svc-card service-card-trigger"
+                     data-service-index="{{ $index }}"
+                     data-service-id="{{ $svc->id ?? $index }}"
+                     data-service-name="{{ $displayName }}"
+                     data-service-tagline="{{ $tagline }}"
+                     data-service-desc="{{ $svc->description ?? '' }}"
+                     data-service-cover="{{ $svc->cover_image_url ?? ($svc->cover_image ?? '') }}"
+                     data-service-path="ODDS_Studio/Services/{{ \Illuminate\Support\Str::studly($cleanName) }}/Overview">
+                    <div class="svc-icon">{!! $iconSvg !!}</div>
                     <h3 class="svc-card-name" style="white-space:pre-line;">{{ $displayName }}</h3>
                 </div>
                 @endforeach
             </div>
             <!-- Duplicate group for infinite loop marquee -->
             <div class="services-group" aria-hidden="true">
-                @foreach($serviceItems as $svc)
+                @foreach($serviceItems as $index => $svc)
                 @php
                     $cleanName = trim(str_replace(["\r\n", "\r", "\n"], ' ', $svc->name));
                     $itemConfig = $defaultMap[$cleanName] ?? null;
                     $displayName = !empty($svc->name) ? $svc->name : ($itemConfig['name'] ?? $cleanName);
+                    $iconSvg = !empty($svc->icon_svg) ? $svc->icon_svg : ($itemConfig['icon'] ?? '');
+                    $tagline = $svc->tagline ?? ($itemConfig['tagline'] ?? 'Engineering Service');
                 @endphp
-                <div class="svc-card">
-                    <div class="svc-icon">{!! !empty($svc->icon_svg) ? $svc->icon_svg : ($itemConfig['icon'] ?? '') !!}</div>
+                <div class="svc-card service-card-trigger"
+                     data-service-index="{{ $index }}"
+                     data-service-id="{{ $svc->id ?? $index }}"
+                     data-service-name="{{ $displayName }}"
+                     data-service-tagline="{{ $tagline }}"
+                     data-service-desc="{{ $svc->description ?? '' }}"
+                     data-service-cover="{{ $svc->cover_image_url ?? ($svc->cover_image ?? '') }}"
+                     data-service-path="ODDS_Studio/Services/{{ \Illuminate\Support\Str::studly($cleanName) }}/Overview">
+                    <div class="svc-icon">{!! $iconSvg !!}</div>
                     <h3 class="svc-card-name" style="white-space:pre-line;">{{ $displayName }}</h3>
                 </div>
                 @endforeach
@@ -98,3 +116,35 @@ $serviceItems = isset($services) && count($services) > 0 ? $services : collect(a
         <a href="#cta" class="btn-dark fade-up">Let's Build</a>
     </div>
 </section>
+
+{{-- High-fidelity JSON Data Payload for Services Modal Stories --}}
+<script type="application/json" id="odds-services-data">
+{!! json_encode($serviceItems->map(function($svc, $idx) use ($defaultMap) {
+    $cleanName = trim(str_replace(["\r\n", "\r", "\n"], ' ', $svc->name ?? ''));
+    $itemConfig = $defaultMap[$cleanName] ?? null;
+    $rawBlocks = $svc->body_content ?? [];
+    if (is_string($rawBlocks)) {
+        $decoded = json_decode($rawBlocks, true);
+        $rawBlocks = is_array($decoded) ? $decoded : [];
+    }
+    $svcFeatures = $svc->features ?? null;
+    $featuresArr = is_array($svcFeatures) ? $svcFeatures : (is_string($svcFeatures) ? (json_decode($svcFeatures, true) ?? []) : ($itemConfig['features'] ?? []));
+    return [
+        'id' => $svc->id ?? ($idx + 1),
+        'name' => $svc->name ?? 'ODDS Service',
+        'clean_name' => $cleanName,
+        'tagline' => $svc->tagline ?? ($itemConfig['tagline'] ?? 'Engineering Service'),
+        'description' => $svc->description ?? '',
+        'icon_svg' => !empty($svc->icon_svg ?? null) ? $svc->icon_svg : ($itemConfig['icon'] ?? ''),
+        'cover_image' => $svc->cover_image_url ?? ($svc->cover_image ?? ''),
+        'features' => $featuresArr,
+        'body_content' => $rawBlocks,
+        'action_btn_text' => $svc->action_btn_text ?? "Let's Build",
+        'action_btn_url' => $svc->action_btn_url ?? '#cta',
+        'path_str' => 'ODDS_Studio/Services/' . \Illuminate\Support\Str::studly($cleanName ?: 'Service') . '/Overview',
+    ];
+})->values()) !!}
+</script>
+
+{{-- Service Detail Modal --}}
+@include('components.service-modal')

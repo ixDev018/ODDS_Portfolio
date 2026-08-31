@@ -1,0 +1,31 @@
+<svg width="394" height="502" viewBox="0 0 394 502" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g filter="url(#filter0_i_307_747)">
+<rect width="394" height="501.36" rx="26.0582" fill="#3C3C3C"/>
+</g>
+<rect x="8.33862" y="8.33862" width="377.323" height="484.683" rx="17.7196" stroke="white" stroke-width="16.6772"/>
+<rect opacity="0.02" x="5.21094" y="8.33862" width="383.577" height="487.81" rx="25.0159" fill="url(#pattern0_307_747)"/>
+<path d="M183.615 242.275C183.715 243.612 184.537 244.787 185.759 245.339L226.397 263.693C228.928 264.836 231.759 262.855 231.553 260.086L229.586 233.636C229.487 232.299 228.665 231.124 227.443 230.572L186.805 212.218C184.274 211.075 181.442 213.056 181.648 215.826L183.615 242.275Z" fill="white"/>
+<path d="M181.214 247.586C182.283 246.777 183.709 246.617 184.931 247.169L225.569 265.522C228.099 266.665 228.486 270.1 226.272 271.776L205.128 287.788C204.059 288.597 202.634 288.757 201.412 288.205L160.774 269.852C158.243 268.709 157.857 265.274 160.07 263.598L181.214 247.586Z" fill="white"/>
+<path d="M268.919 251.201C268.919 290.922 236.719 323.122 196.999 323.122C157.278 323.122 125.078 290.922 125.078 251.201C125.078 211.48 157.278 179.28 196.999 179.28C236.719 179.28 268.919 211.48 268.919 251.201ZM140.53 251.201C140.53 282.388 165.812 307.67 196.999 307.67C228.186 307.67 253.468 282.388 253.468 251.201C253.468 220.014 228.186 194.732 196.999 194.732C165.812 194.732 140.53 220.014 140.53 251.201Z" fill="white"/>
+<defs>
+<filter id="filter0_i_307_747" x="-5.21164" y="0" width="399.212" height="509.698" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="-5.21164" dy="8.33862"/>
+<feGaussianBlur stdDeviation="10.9444"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0"/>
+<feBlend mode="normal" in2="shape" result="effect1_innerShadow_307_747"/>
+</filter>
+<pattern id="pattern0_307_747" patternUnits="userSpaceOnUse" patternTransform="matrix(27.6842 0 0 55.3685 5.21094 8.33862)" preserveAspectRatio="none" viewBox="0 0 26.56 53.12" width="1" height="1">
+<use xlink:href="#pattern0_307_747_inner" transform="translate(-26.56 0)"/>
+<g id="pattern0_307_747_inner">
+<path d="M6.51116 7.00708C6.52222 7.15578 6.6137 7.28655 6.7496 7.34792L11.2699 9.38947C11.5514 9.5166 11.8664 9.29626 11.8435 8.98824L11.6247 6.04618C11.6137 5.89747 11.5222 5.76671 11.3863 5.70533L6.86595 3.66378C6.58445 3.53665 6.26946 3.757 6.29237 4.06502L6.51116 7.00708Z" fill="white"/>
+<path d="M6.24639 7.59789C6.36527 7.50787 6.52385 7.49004 6.65975 7.55142L11.1801 9.59296C11.4616 9.7201 11.5045 10.1021 11.2583 10.2886L8.90639 12.0696C8.78751 12.1596 8.62893 12.1775 8.49303 12.1161L3.97269 10.0745C3.69119 9.9474 3.64824 9.56539 3.89448 9.37892L6.24639 7.59789Z" fill="white"/>
+<path d="M16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8ZM1.71872 8C1.71872 11.4691 4.53095 14.2813 8 14.2813C11.4691 14.2813 14.2813 11.4691 14.2813 8C14.2813 4.53095 11.4691 1.71872 8 1.71872C4.53095 1.71872 1.71872 4.53095 1.71872 8Z" fill="white"/>
+</g>
+<use xlink:href="#pattern0_307_747_inner" transform="translate(-13.28 26.56)"/>
+<use xlink:href="#pattern0_307_747_inner" transform="translate(13.28 26.56)"/>
+</pattern></defs>
+</svg>
