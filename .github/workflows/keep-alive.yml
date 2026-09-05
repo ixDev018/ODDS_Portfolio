@@ -2,25 +2,84 @@ name: Keep Render Alive
 
 on:
   schedule:
-    # Trigger every 12 minutes to beat Render's 15-minute inactivity timer
-    - cron: '*/12 * * * *'
-  workflow_dispatch: # Allows testing/running manually from GitHub Actions tab
+    # Trigger every 5 minutes to prevent Render free-tier from sleeping (15-min idle timeout)
+    - cron: '*/5 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+concurrency:
+  group: keep-alive-render
+  cancel-in-progress: false
 
 jobs:
   ping:
-    name: Ping Health Check
+    name: Ping Health Check & Keep Warm
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Send keep-alive HTTP ping
         run: |
-          # Use repository secret/var if configured, otherwise default URL
           APP_URL="${{ vars.RENDER_APP_URL || secrets.RENDER_APP_URL || 'https://odds-portfolio.onrender.com' }}"
-          echo "Pinging ${APP_URL}/up at $(date -u)"
-          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "${APP_URL}/up" || true)
-          echo "Response code: $HTTP_STATUS"
-          if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 301 ] || [ "$HTTP_STATUS" -eq 302 ]; then
-            echo "Service is awake and healthy."
+          # Strip trailing slash if present
+          APP_URL="${APP_URL%/}"
+          
+          echo "============================================="
+          echo " Render Keep-Alive Pulse"
+          echo " Timestamp: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo " Target:    ${APP_URL}"
+          echo "============================================="
+
+          # Function to ping an endpoint with robust retry, timeout, and metrics
+          ping_endpoint() {
+            local ENDPOINT="$1"
+            local LABEL="$2"
+            echo ""
+            echo "--> Pinging ${LABEL}: ${ENDPOINT}"
+
+            # -L: follow redirects (http->https)
+            # --max-time 90: generous timeout in case Render is in a cold boot (takes ~50s)
+            # --connect-timeout 20: fail fast if DNS/socket is unresponsive
+            # --retry 3: retry on transient network failures
+            # --retry-delay 3: wait 3s between retries
+            local RESPONSE
+            RESPONSE=$(curl -s -S -L -o /dev/null \
+              --connect-timeout 20 \
+              --max-time 90 \
+              --retry 3 \
+              --retry-delay 3 \
+              -w "status=%{http_code} time=%{time_total}s size=%{size_download}b" \
+              "${ENDPOINT}" || echo "status=000 time=0s size=0b")
+
+            echo "    Result: ${RESPONSE}"
+
+            local STATUS
+            STATUS=$(echo "${RESPONSE}" | grep -o 'status=[0-9]*' | cut -d'=' -f2)
+
+            if [ -n "${STATUS}" ] && [ "${STATUS}" -ge 200 ] && [ "${STATUS}" -lt 400 ]; then
+              echo "    ✓ ${LABEL} is active (HTTP ${STATUS})."
+              return 0
+            else
+              echo "    ⚠ Warning: ${LABEL} returned HTTP ${STATUS}."
+              return 1
+            fi
+          }
+
+          # 1. Ping Laravel healthcheck route (/up)
+          HEALTH_OK=0
+          ping_endpoint "${APP_URL}/up" "Healthcheck Route" || HEALTH_OK=1
+
+          # 2. Ping homepage (keeps Blade cache, routing & DB warm)
+          HOME_OK=0
+          ping_endpoint "${APP_URL}" "Homepage / Root" || HOME_OK=1
+
+          # 3. Overall status summary
+          echo ""
+          echo "============================================="
+          if [ "${HEALTH_OK}" -eq 0 ] || [ "${HOME_OK}" -eq 0 ]; then
+            echo " SUCCESS: Service pinged successfully. Render instance is awake."
+            echo "============================================="
+            exit 0
           else
-            echo "Fallback ping to root URL..."
-            curl -s -o /dev/null -w "%{http_code}" --max-time 30 "${APP_URL}" || true
+            echo " ERROR: Both endpoints failed to return a 2xx/3xx response."
+            echo "============================================="
+            exit 1
           fi
