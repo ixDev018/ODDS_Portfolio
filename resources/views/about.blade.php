@@ -950,7 +950,7 @@
                             <span class="sidebar-label-dot"></span>
                             <span>Studio Chapters</span>
                         </div>
-                        <span class="sidebar-count-badge">{{ $sections->count() }} Chapters</span>
+                        <span class="sidebar-count-badge">{{ $sections->isEmpty() ? 3 : $sections->count() }} Chapters</span>
                     </div>
 
                     <nav class="toc-nav-list" id="toc-nav">
@@ -960,9 +960,17 @@
                                 <span class="truncate">{{ $sec->title }}</span>
                             </a>
                         @empty
-                            <a href="#philosophy" class="toc-link-item active">
+                            <a href="#section-1" class="toc-link-item active">
                                 <span class="toc-chapter-num">01.</span>
-                                <span>The ODDS Philosophy</span>
+                                <span class="truncate">The Bet We Made</span>
+                            </a>
+                            <a href="#section-2" class="toc-link-item">
+                                <span class="toc-chapter-num">02.</span>
+                                <span class="truncate">We Never Picked a Specialty</span>
+                            </a>
+                            <a href="#section-3" class="toc-link-item">
+                                <span class="toc-chapter-num">03.</span>
+                                <span class="truncate">We Didn't Start Here</span>
                             </a>
                         @endforelse
                     </nav>
@@ -994,7 +1002,7 @@
             <div class="lg:hidden mobile-chapter-selector">
                 <div class="mobile-selector-header">
                     <span class="mobile-selector-title">Chapter Navigation</span>
-                    <span class="text-xs font-mono text-purple-600 font-bold">{{ $sections->count() }} Chapters</span>
+                    <span class="text-xs font-mono text-purple-600 font-bold">{{ $sections->isEmpty() ? 3 : $sections->count() }} Chapters</span>
                 </div>
                 <div class="mobile-chip-scroll" id="mobile-toc-nav">
                     @forelse($sections as $idx => $sec)
@@ -1003,17 +1011,25 @@
                             <span>{{ $sec->title }}</span>
                         </a>
                     @empty
-                        <a href="#philosophy" class="mobile-chip active">
+                        <a href="#section-1" class="mobile-chip active">
                             <span class="font-mono text-purple-600 font-bold">01.</span>
-                            <span>The ODDS Philosophy</span>
+                            <span>The Bet We Made</span>
+                        </a>
+                        <a href="#section-2" class="mobile-chip">
+                            <span class="font-mono text-purple-600 font-bold">02.</span>
+                            <span>We Never Picked a Specialty</span>
+                        </a>
+                        <a href="#section-3" class="mobile-chip">
+                            <span class="font-mono text-purple-600 font-bold">03.</span>
+                            <span>We Didn't Start Here</span>
                         </a>
                     @endforelse
                 </div>
             </div>
 
             @if($sections->isEmpty())
-                {{-- Default Fallback Section --}}
-                <article class="chapter-article-card" id="philosophy">
+                {{-- Fallback: CH.01 --}}
+                <article class="chapter-article-card" id="section-1">
                     <div class="chapter-card-topbar">
                         <div class="chapter-badge-wrap">
                             <span class="chapter-index-pill">CH.01</span>
@@ -1022,50 +1038,107 @@
                         <div class="chapter-meta-right">
                             <span>By <strong class="chapter-author-tag">ODDS Core Team</strong></span>
                             <span>•</span>
+                            <span>4 MIN READ</span>
+                        </div>
+                    </div>
+
+                    <h2 class="chapter-main-title">The Bet We Made</h2>
+                    <p class="chapter-deck-subtitle">
+                        How we ended up building the parts of your business nobody applauds — and the parts everyone judges you by — under one roof.
+                    </p>
+
+                    <div class="blog-stream-body">
+                        <h2 class="blog-block-h2">Nobody Asks For What They're Actually Missing</h2>
+                        <p class="blog-block-p">
+                            Most people come to a studio knowing what they want. A site. An app. A logo. What they usually don't know is what's actually broken — the thing quietly costing them money, trust, or time, that nobody's bothered to name yet. We got good at finding that thing. Not because we're consultants. Because we've built enough of everything to recognize a gap on sight.
+                        </p>
+                        <p class="blog-block-p">
+                            We don't wait for a brief. We look for the hole first, then decide what fills it.
+                        </p>
+
+                        <h2 class="blog-block-h2">We Refused to Pick a Lane</h2>
+                        <p class="blog-block-p">
+                            Somewhere along the way, "development studio" and "the people who make you look good" became two different businesses, staffed by two different teams, billed on two different invoices. We never understood why. So we didn't split ourselves in half. Same people who ship the thing running underneath your business are the ones deciding how it should feel the moment someone sees it.
+                        </p>
+                        <p class="blog-block-p">
+                            One team. One standard. Nothing gets handed off half-finished.
+                        </p>
+                    </div>
+                </article>
+
+                {{-- Fallback: CH.02 --}}
+                <article class="chapter-article-card" id="section-2">
+                    <div class="chapter-card-topbar">
+                        <div class="chapter-badge-wrap">
+                            <span class="chapter-index-pill">CH.02</span>
+                            <span class="chapter-category-pill">RANGE</span>
+                        </div>
+                        <div class="chapter-meta-right">
+                            <span>By <strong class="chapter-author-tag">ODDS Architecture</strong></span>
+                            <span>•</span>
                             <span>3 MIN READ</span>
                         </div>
                     </div>
 
-                    <h2 class="chapter-main-title">Why Speed and Stack-Agnostic Precision Matter</h2>
+                    <h2 class="chapter-main-title">We Never Picked a Specialty</h2>
                     <p class="chapter-deck-subtitle">
-                        Replacing slow corporate timelines and bloated frameworks with clean, flexible execution.
+                        Because the problem never announces what kind of solution it needs — so neither do we.
                     </p>
 
                     <div class="blog-stream-body">
-                        <blockquote class="blog-block-quote">
-                            "Choosing a development partner shouldn't feel like a gamble. We map precise sequences and execute aggressively to ship stable, production-ready systems."
-                        </blockquote>
-
-                        <h2 class="blog-block-h2">Velocity-Driven Delivery</h2>
+                        <h2 class="blog-block-h2">The Job Was Never "One Thing"</h2>
                         <p class="blog-block-p">
-                            At ODDS, we believe that software momentum is a competitive advantage. Rather than drowning in endless design loops or speculative architectures, our multidisciplinary team architects what fits your reality.
+                            Ask us what we do and you'll get a different answer depending on the week. That's not a lack of focus. It's the opposite. We built the habit of showing up as whatever the problem actually required, instead of forcing every problem through the one skill we happened to be comfortable with. Some weeks that looks like a system running quietly behind a business. Other weeks it looks like the first thing a customer ever sees of you.
+                        </p>
+                        <p class="blog-block-p">
+                            We don't ask "is this our thing?" We ask "does it need building?" Then we build it.
                         </p>
 
-                        <div class="blog-block-callout">
-                            <div class="callout-icon-badge">
-                                <i class="fa-solid fa-bolt"></i>
-                            </div>
-                            <div>
-                                <div class="font-bold text-xs uppercase font-mono tracking-wider text-purple-900 mb-0.5">Core Benchmark</div>
-                                <div class="text-sm text-slate-700">From concept wireframe to production deployment in tight velocity sprints with zero fluff.</div>
-                            </div>
-                        </div>
+                        <h2 class="blog-block-h2">Range Isn't the Same as Scattered</h2>
+                        <p class="blog-block-p">
+                            Studios that do "a bit of everything" usually do all of it half-heartedly. That's not what this is. Every direction we go, we go all the way — because the standard doesn't change depending on what we're building, only the shape of the work does. The thing running in the background gets the same attention as the thing on the front page. Neither one is the "real" work and the other the afterthought.
+                        </p>
+                        <p class="blog-block-p">
+                            Nothing here is a side project. Everything ships like it's the main thing.
+                        </p>
+                    </div>
+                </article>
 
-                        <h3 class="blog-block-h3">Our Technical Versatility</h3>
-                        <div class="space-y-2.5 mt-4">
-                            <div class="blog-block-bullet-item">
-                                <span class="blog-bullet-icon"><i class="fa-solid fa-circle-check"></i></span>
-                                <div><strong class="text-slate-900">Enterprise Web & Cloud Systems:</strong> High-throughput applications with clean backend architectures.</div>
-                            </div>
-                            <div class="blog-block-bullet-item">
-                                <span class="blog-bullet-icon"><i class="fa-solid fa-circle-check"></i></span>
-                                <div><strong class="text-slate-900">Mobile & Multi-Platform:</strong> Native and hybrid mobile experiences built for velocity and responsiveness.</div>
-                            </div>
-                            <div class="blog-block-bullet-item">
-                                <span class="blog-bullet-icon"><i class="fa-solid fa-circle-check"></i></span>
-                                <div><strong class="text-slate-900">IoT, Hardware & Embedded:</strong> Real-time microcontroller firmware and live telemetry pipelines.</div>
-                            </div>
+                {{-- Fallback: CH.03 --}}
+                <article class="chapter-article-card" id="section-3">
+                    <div class="chapter-card-topbar">
+                        <div class="chapter-badge-wrap">
+                            <span class="chapter-index-pill">CH.03</span>
+                            <span class="chapter-category-pill">ORIGIN</span>
                         </div>
+                        <div class="chapter-meta-right">
+                            <span>By <strong class="chapter-author-tag">ODDS Core Team</strong></span>
+                            <span>•</span>
+                            <span>4 MIN READ</span>
+                        </div>
+                    </div>
+
+                    <h2 class="chapter-main-title">We Didn't Start Here</h2>
+                    <p class="chapter-deck-subtitle">
+                        Long before ODDS shipped a system, it was pointing a camera at something and figuring out how to make people feel it.
+                    </p>
+
+                    <div class="blog-stream-body">
+                        <h2 class="blog-block-h2">Nobody Taught Us to Stay in One Room</h2>
+                        <p class="blog-block-p">
+                            We didn't come up through a computer science program that told us where the lane markers were. We came up building things that had to work and had to move people — and nobody ever separated those into two departments. So when the tools changed, we changed with them. The instinct stayed the same: figure out what makes something land, then go build it, whatever it turns out to be made of.
+                        </p>
+                        <p class="blog-block-p">
+                            We were never hired to write code. We were hired to make something people couldn't look away from — code just became one of the ways we did that.
+                        </p>
+
+                        <h2 class="blog-block-h2">The Habit Never Left</h2>
+                        <p class="blog-block-p">
+                            That's the part that didn't change when the studio did. The same eye that used to frame a shot is the one deciding how a dashboard should feel to open. The same instinct that used to cut a trailer for tension is the one that decides where a user's attention should land first. We didn't inherit a technical philosophy and bolt storytelling onto it later. It was always one skill, wearing different outfits depending on the year.
+                        </p>
+                        <p class="blog-block-p">
+                            Everything we build still has to do the one thing we never stopped chasing: make someone feel something on purpose.
+                        </p>
                     </div>
                 </article>
             @else
