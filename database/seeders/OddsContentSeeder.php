@@ -164,31 +164,256 @@ class OddsContentSeeder extends Seeder
         }
 
         // 3. Works
-        if (OddsWork::count() === 0) {
-            $works = [
-                ['title' => 'THEODORE', 'year' => '2024', 'category' => 'Web App & AI', 'desc' => 'High-velocity AI integration and document automation system.'],
-                ['title' => 'ClassGuard', 'year' => '2024', 'category' => 'Security & Systems', 'desc' => 'Automated attendance & campus security hardware-software module.'],
-                ['title' => 'PRISMA', 'year' => '2024', 'category' => 'Analytics Platform', 'desc' => 'Real-time telemetry and data aggregation dashboard for enterprise.'],
-                ['title' => 'Sentry', 'year' => '2023', 'category' => 'DevOps & Monitoring', 'desc' => 'Infrastructure monitoring pipeline with ultra-low latency alerts.'],
-                ['title' => 'SPCC Website', 'year' => '2023', 'category' => 'Web Development', 'desc' => 'Modern institutional web portal designed for scale and accessibility.'],
-                ['title' => 'LISAI Website', 'year' => '2023', 'category' => 'Web & CMS', 'desc' => 'Custom content-managed portal with dynamic case study showcases.'],
-                ['title' => 'ALAMS', 'year' => '2023', 'category' => 'Enterprise System', 'desc' => 'Asset lifecycle & maintenance scheduling architecture.'],
-                ['title' => 'AVONIC', 'year' => '2023', 'category' => 'Hardware & IoT', 'desc' => 'Embedded device control system and smart terminal firmware.'],
-                ['title' => 'SPCC Portal', 'year' => '2022', 'category' => 'Academic System', 'desc' => 'Student enrollment and grading pipeline with role-based access.'],
+        $defaultWorks = [
+            [
+                'title' => 'THEODORE',
+                'year' => '2024',
+                'category' => 'Web App & AI',
+                'desc' => 'High-velocity AI integration and document automation system.',
+                'client' => 'Enterprise AI Solutions',
+                'role' => 'Full-Stack Architecture & AI Integration',
+                'tech_stack' => ['Laravel', 'Python', 'FastAPI', 'OpenAI', 'Tailwind CSS'],
+                'body_content' => [
+                    ['type' => 'callout', 'content' => '<strong>Executive Summary:</strong> High-velocity AI integration and document automation platform for enterprise workflows.'],
+                    ['type' => 'heading2', 'content' => 'The Challenge'],
+                    ['type' => 'paragraph', 'content' => 'Legacy document handling created high operational latency and manual processing errors.'],
+                    ['type' => 'heading2', 'content' => 'The ODDS Solution'],
+                    ['type' => 'paragraph', 'content' => 'Engineered automated AI pipelines and responsive dashboards built for rapid throughput.'],
+                ],
+            ],
+            [
+                'title' => 'ClassGuard',
+                'year' => '2024',
+                'category' => 'Security & Systems',
+                'desc' => 'Automated attendance & campus security hardware-software module.',
+                'client' => 'Educational & Institutional Security',
+                'role' => 'Embedded Systems & Real-Time Monitoring',
+                'tech_stack' => ['ESP32', 'RFID/Biometrics', 'Laravel', 'WebSockets', 'MySQL'],
+                'body_content' => [
+                    ['type' => 'callout', 'content' => '<strong>Executive Summary:</strong> Integrated hardware-software security and automated attendance telemetry system.'],
+                    ['type' => 'heading2', 'content' => 'The Challenge'],
+                    ['type' => 'paragraph', 'content' => 'Manual campus verification caused long queues and unreliable entry audit trails.'],
+                    ['type' => 'heading2', 'content' => 'The ODDS Solution'],
+                    ['type' => 'paragraph', 'content' => 'Developed custom micro-controller access gates paired with a real-time web monitoring suite.'],
+                ],
+            ],
+            [
+                'title' => 'PRISMA',
+                'year' => '2024',
+                'category' => 'Analytics Platform',
+                'desc' => 'Multi-branch retail intelligence platform replacing static sales sheets with real-time KPI telemetry, Holt-Winters predictive demand forecasting, and automated RFM customer clustering.',
+                'client' => null,
+                'role' => null,
+                'tech_stack' => ['Laravel', 'MySQL', 'Chart.js', 'Tailwind CSS', 'Holt-Winters Engine', 'DomPDF', 'Docker'],
+                'count_in_kpi' => true,
+                'body_content' => [
+                    [
+                        'type' => 'callout',
+                        'content' => '<strong>Executive Summary:</strong> PRISMA replaces end-of-day spreadsheets across multi-branch retail chains with live operational telemetry, predictive Holt-Winters demand forecasting, and automated RFM customer segmentation.',
+                    ],
+                    [
+                        'type' => 'heading2',
+                        'content' => '1. The Challenge: Fragmented Data & Reactive Stocking',
+                    ],
+                    [
+                        'type' => 'paragraph',
+                        'content' => 'Retail chains with distributed store locations frequently operate with siloed point-of-sale systems and disconnected end-of-day reports. This creates critical operational blind spots: inventory shortages are caught only after sales are already lost, branch managers lack localized visibility, and customer purchase data remains unmined.',
+                    ],
+                    [
+                        'type' => 'image',
+                        'src' => '/storage/works/prisma/dashboard-overview.png',
+                        'caption' => 'PRISMA Executive Dashboard: Real-time branch revenue telemetry, KPI cards, and dynamic sales trends.',
+                    ],
+                    [
+                        'type' => 'heading2',
+                        'content' => '2. The Solution: Unified Intelligence & Predictive Modeling',
+                    ],
+                    [
+                        'type' => 'paragraph',
+                        'content' => 'ODDS architected PRISMA from the ground up as a unified web platform that ingests raw branch transaction logs and transforms them into predictive operational intelligence.',
+                    ],
+                    [
+                        'type' => 'heading3',
+                        'content' => 'Key Capabilities Delivered',
+                    ],
+                    [
+                        'type' => 'bullet',
+                        'content' => '<strong>Holt-Winters Predictive Forecasting:</strong> Statistical triple-exponential smoothing projecting demand trends with 95% confidence bounds and real-time MAPE validation.',
+                    ],
+                    [
+                        'type' => 'bullet',
+                        'content' => '<strong>RFM Customer Segmentation:</strong> Automated scoring (Recency, Frequency, Monetary) that dynamically categorizes customers into VIP, Loyal, and At-Risk tiers.',
+                    ],
+                    [
+                        'type' => 'bullet',
+                        'content' => '<strong>Market Basket & Cross-Selling:</strong> Apriori-style association analysis calculating Support, Confidence, and Lift to optimize shelf merchandising.',
+                    ],
+                    [
+                        'type' => 'bullet',
+                        'content' => '<strong>Automated Inventory Audits:</strong> Hourly background cron auditing threshold limits per branch, dispatching throttled email alerts before out-of-stock events occur.',
+                    ],
+                    [
+                        'type' => 'image',
+                        'src' => '/storage/works/prisma/forecasting-rfm-analytics.png',
+                        'caption' => 'Holt-Winters demand projection curves with confidence intervals alongside RFM customer clustering.',
+                    ],
+                    [
+                        'type' => 'heading2',
+                        'content' => '3. Architecture & Enterprise Security',
+                    ],
+                    [
+                        'type' => 'paragraph',
+                        'content' => 'Engineered with strict multi-branch data isolation, localized role-based access control (RBAC), and SHA-256 deduplicated CSV batch ingestion to ensure data integrity under high daily transaction loads.',
+                    ],
+                    [
+                        'type' => 'image',
+                        'src' => '/storage/works/prisma/mobile-responsive-showcase.png',
+                        'caption' => 'Responsive mobile-first interface designed for store managers on the floor with dark/light mode support.',
+                    ],
+                    [
+                        'type' => 'heading2',
+                        'content' => '4. Business Outcomes',
+                    ],
+                    [
+                        'type' => 'numbered',
+                        'content' => '<strong>90% Reduction in Reporting Overhead:</strong> Eliminated manual spreadsheet collation across branches.',
+                    ],
+                    [
+                        'type' => 'numbered',
+                        'content' => '<strong>Zero Preventable Stockouts:</strong> Proactive safety stock threshold alerts protected core margins.',
+                    ],
+                    [
+                        'type' => 'numbered',
+                        'content' => '<strong>High-Yield Cross Selling:</strong> Data-driven product bundle suggestions boosted average transaction value.',
+                    ],
+                ],
+            ],
+            [
+                'title' => 'Sentry',
+                'year' => '2023',
+                'category' => 'DevOps & Monitoring',
+                'desc' => 'Infrastructure monitoring pipeline with ultra-low latency alerts.',
+                'client' => 'Cloud Infrastructure Systems',
+                'role' => 'DevOps & Telemetry Engineering',
+                'tech_stack' => ['Docker', 'Prometheus', 'Grafana', 'Laravel', 'Redis'],
+                'body_content' => [
+                    ['type' => 'callout', 'content' => '<strong>Executive Summary:</strong> Zero-downtime infrastructure heartbeat monitor with instant alert routing.'],
+                    ['type' => 'heading2', 'content' => 'The Challenge'],
+                    ['type' => 'paragraph', 'content' => 'Unmonitored cloud instances led to delayed outage detection and high recovery MTTR.'],
+                    ['type' => 'heading2', 'content' => 'The ODDS Solution'],
+                    ['type' => 'paragraph', 'content' => 'Architected a lightweight heartbeat collector with automated alert dispatch.'],
+                ],
+            ],
+            [
+                'title' => 'SPCC Website',
+                'year' => '2023',
+                'category' => 'Web Development',
+                'desc' => 'Modern institutional web portal designed for scale and accessibility.',
+                'client' => 'Educational Institution',
+                'role' => 'Frontend UI/UX & Web Architecture',
+                'tech_stack' => ['Laravel', 'Tailwind CSS', 'Alpine.js', 'MySQL'],
+                'body_content' => [
+                    ['type' => 'callout', 'content' => '<strong>Executive Summary:</strong> High-performance educational web portal built for accessibility and high traffic.'],
+                    ['type' => 'heading2', 'content' => 'The Challenge'],
+                    ['type' => 'paragraph', 'content' => 'Outdated institutional site suffered from sluggish loading times on mobile devices.'],
+                    ['type' => 'heading2', 'content' => 'The ODDS Solution'],
+                    ['type' => 'paragraph', 'content' => 'Complete modern redesign with responsive layouts and sub-second page loads.'],
+                ],
+            ],
+            [
+                'title' => 'LISAI Website',
+                'year' => '2023',
+                'category' => 'Web & CMS',
+                'desc' => 'Custom content-managed portal with dynamic case study showcases.',
+                'client' => 'Design & Creative Studio',
+                'role' => 'CMS Development & Interactive Motion',
+                'tech_stack' => ['Laravel', 'GSAP', 'Tailwind CSS', 'Livewire'],
+                'body_content' => [
+                    ['type' => 'callout', 'content' => '<strong>Executive Summary:</strong> Interactive brand showcase and dynamic case study CMS.'],
+                    ['type' => 'heading2', 'content' => 'The Challenge'],
+                    ['type' => 'paragraph', 'content' => 'Need for custom storytelling blocks without sacrificing web performance.'],
+                    ['type' => 'heading2', 'content' => 'The ODDS Solution'],
+                    ['type' => 'paragraph', 'content' => 'Custom block editor paired with GSAP micro-animations and zero-layout shift.'],
+                ],
+            ],
+            [
+                'title' => 'ALAMS',
+                'year' => '2023',
+                'category' => 'Enterprise System',
+                'desc' => 'Asset lifecycle & maintenance scheduling architecture.',
+                'client' => 'Industrial Operations',
+                'role' => 'Enterprise Backend & Lifecycle Automation',
+                'tech_stack' => ['Laravel', 'PostgreSQL', 'Tailwind CSS', 'Chart.js'],
+                'body_content' => [
+                    ['type' => 'callout', 'content' => '<strong>Executive Summary:</strong> Comprehensive equipment lifecycle and scheduled maintenance tracking.'],
+                    ['type' => 'heading2', 'content' => 'The Challenge'],
+                    ['type' => 'paragraph', 'content' => 'Unscheduled equipment downtime caused significant operational delays.'],
+                    ['type' => 'heading2', 'content' => 'The ODDS Solution'],
+                    ['type' => 'paragraph', 'content' => 'Automated preventative maintenance scheduling and asset depreciation tracking.'],
+                ],
+            ],
+            [
+                'title' => 'AVONIC',
+                'year' => '2023',
+                'category' => 'Hardware & IoT',
+                'desc' => 'Embedded device control system and smart terminal firmware.',
+                'client' => 'Hardware Innovation Group',
+                'role' => 'Firmware & Telemetry Gateway',
+                'tech_stack' => ['C/C++', 'ESP32', 'MQTT', 'Laravel', 'Vue.js'],
+                'body_content' => [
+                    ['type' => 'callout', 'content' => '<strong>Executive Summary:</strong> Embedded hardware terminal and cloud telemetry dashboard.'],
+                    ['type' => 'heading2', 'content' => 'The Challenge'],
+                    ['type' => 'paragraph', 'content' => 'Connecting diverse sensor nodes to cloud dashboards with minimal power draw.'],
+                    ['type' => 'heading2', 'content' => 'The ODDS Solution'],
+                    ['type' => 'paragraph', 'content' => 'Low-power MQTT telemetry client and real-time visualization dashboard.'],
+                ],
+            ],
+            [
+                'title' => 'SPCC Portal',
+                'year' => '2022',
+                'category' => 'Academic System',
+                'desc' => 'Student enrollment and grading pipeline with role-based access.',
+                'client' => 'Academic Administration',
+                'role' => 'Database Architecture & RBAC System',
+                'tech_stack' => ['Laravel', 'MySQL', 'Bootstrap', 'jQuery'],
+                'body_content' => [
+                    ['type' => 'callout', 'content' => '<strong>Executive Summary:</strong> Secure academic portal managing student enrollment and grading pipelines.'],
+                    ['type' => 'heading2', 'content' => 'The Challenge'],
+                    ['type' => 'paragraph', 'content' => 'High peak load during enrollment periods leading to database lockups.'],
+                    ['type' => 'heading2', 'content' => 'The ODDS Solution'],
+                    ['type' => 'paragraph', 'content' => 'Optimized database indices, transaction queues, and strict RBAC.'],
+                ],
+            ],
+        ];
+
+        foreach ($defaultWorks as $index => $w) {
+            $slug = Str::slug($w['title']);
+            $existing = OddsWork::where('title', $w['title'])->first();
+
+            $data = [
+                'title' => $w['title'],
+                'slug' => $existing ? $existing->slug : ($slug . '-' . ($index + 1)),
+                'category' => $w['category'],
+                'year' => $w['year'],
+                'client' => $w['client'] ?? null,
+                'role' => $w['role'] ?? null,
+                'tech_stack' => $w['tech_stack'] ?? null,
+                'description' => $w['desc'],
+                'body_content' => $w['body_content'] ?? null,
+                'story_content' => "<h3>The Challenge</h3><p>{$w['desc']}</p><h3>The ODDS Solution</h3><p>Engineered using stack-agnostic principles for high stability and immediate deployment.</p>",
+                'sort_order' => $index + 1,
+                'is_featured' => true,
+                'is_active' => true,
+                'count_in_kpi' => $w['count_in_kpi'] ?? true,
             ];
 
-            foreach ($works as $index => $w) {
-                OddsWork::create([
-                    'title' => $w['title'],
-                    'slug' => Str::slug($w['title'] . '-' . ($index + 1)),
-                    'category' => $w['category'],
-                    'year' => $w['year'],
-                    'description' => $w['desc'],
-                    'story_content' => "<h3>The Challenge</h3><p>{$w['desc']}</p><h3>The ODDS Solution</h3><p>Engineered using stack-agnostic principles for high stability and immediate deployment.</p>",
-                    'sort_order' => $index + 1,
-                    'is_featured' => true,
-                    'is_active' => true,
-                ]);
+            if ($existing) {
+                // If existing has no body_content or we are updating PRISMA specifically, update it
+                if (empty($existing->body_content) || $w['title'] === 'PRISMA') {
+                    $existing->update($data);
+                }
+            } else {
+                OddsWork::create($data);
             }
         }
 
