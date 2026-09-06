@@ -306,18 +306,105 @@ class OddsContentSeeder extends Seeder
             ],
             [
                 'title' => 'SPCC Website',
-                'year' => '2023',
-                'category' => 'Web Development',
-                'desc' => 'Modern institutional web portal designed for scale and accessibility.',
-                'client' => 'Educational Institution',
-                'role' => 'Frontend UI/UX & Web Architecture',
-                'tech_stack' => ['Laravel', 'Tailwind CSS', 'Alpine.js', 'MySQL'],
+                'year' => '2024',
+                'category' => 'Web Architecture & Dynamic CMS',
+                'desc' => 'Complete institutional digital transformation overhauling a legacy static site into a high-performance web portal with dynamic admissions, live student journalism CMS, and real-time administrative control.',
+                'client' => null,
+                'role' => null,
+                'tech_stack' => ['Laravel 12', 'Blade Components', 'Tailwind CSS', 'MySQL', 'Figma Design System', 'JavaScript'],
+                'count_in_kpi' => true,
                 'body_content' => [
-                    ['type' => 'callout', 'content' => '<strong>Executive Summary:</strong> High-performance educational web portal built for accessibility and high traffic.'],
-                    ['type' => 'heading2', 'content' => 'The Challenge'],
-                    ['type' => 'paragraph', 'content' => 'Outdated institutional site suffered from sluggish loading times on mobile devices.'],
-                    ['type' => 'heading2', 'content' => 'The ODDS Solution'],
-                    ['type' => 'paragraph', 'content' => 'Complete modern redesign with responsive layouts and sub-second page loads.'],
+                    [
+                        'type' => 'callout',
+                        'content' => '<strong>Executive Summary:</strong> A complete digital transformation replacing Systems Plus Computer College’s abandoned static website with an agile, high-conversion web platform. Features instantaneous page routing, categorized admission funnels, an integrated student journalism engine, and a full-featured admin CMS.',
+                    ],
+                    [
+                        'type' => 'heading2',
+                        'content' => '1. The Challenge: Legacy Bottlenecks & Frozen Content',
+                    ],
+                    [
+                        'type' => 'paragraph',
+                        'content' => 'Prior to the overhaul, the institution’s web presence suffered from severe technical and usability handicaps that directly damaged credibility and student recruitment:',
+                    ],
+                    [
+                        'type' => 'bullet',
+                        'content' => '<strong>The "Static Code" Maintenance Trap:</strong> The website lacked an admin dashboard. Even minor typo corrections, schedule adjustments, or emergency announcements required manual code editing and redeployment, leaving the campus calendar frozen for over 2 years.',
+                    ],
+                    [
+                        'type' => 'bullet',
+                        'content' => '<strong>Forced Loading Screens & High Bounce Rates:</strong> A mandatory 1–3 second loading screen interrupted every single internal page navigation, causing high friction for mobile-first prospective students and parents.',
+                    ],
+                    [
+                        'type' => 'bullet',
+                        'content' => '<strong>Fragmented Information Architecture:</strong> Confusing dual menus (top bar plus dark vertical sidebar) and buried calls-to-action resulted in missed enrollment conversions and user frustration.',
+                    ],
+                    [
+                        'type' => 'image',
+                        'src' => '/storage/works/spcc/legacy-audit-comparison.png',
+                        'caption' => 'Legacy Website Audit: Outdated design, frozen event calendar, poor text contrast, and intrusive loading screens.',
+                    ],
+                    [
+                        'type' => 'heading2',
+                        'content' => '2. The Solution: Institutional Modernization & Dynamic CMS Engine',
+                    ],
+                    [
+                        'type' => 'paragraph',
+                        'content' => 'ODDS executed a complete ground-up re-architecture using Laravel 12 and a Figma-engineered Design System, delivered through a continuous deployment assembly line.',
+                    ],
+                    [
+                        'type' => 'heading3',
+                        'content' => 'Core Systems Delivered',
+                    ],
+                    [
+                        'type' => 'bullet',
+                        'content' => '<strong>Unified Institutional CMS & Admin Suite:</strong> Empowered non-technical academic staff to manage announcements, update program curricula, edit academic calendars, and moderate user feedback in real time without touching code.',
+                    ],
+                    [
+                        'type' => 'bullet',
+                        'content' => '<strong>Dynamic Multi-Tier Admissions Portal:</strong> Replaced generic requirement lists with an interactive admissions funnel that automatically tailors prerequisites and steps based on applicant status (New Student, Transferee, Irregular).',
+                    ],
+                    [
+                        'type' => 'bullet',
+                        'content' => '<strong>The SPCnian Bugle (Digital Journalism Hub):</strong> Integrated a content management workflow for the official student publication, featuring multi-category articles, editorial approval states, and rich media showcases.',
+                    ],
+                    [
+                        'type' => 'bullet',
+                        'content' => '<strong>Zero-Latency Public Portal:</strong> Eliminated all artificial loading barriers, delivering sub-second page transitions, responsive mobile typography, and branded high-contrast UI (SPCC Navy & Gold).',
+                    ],
+                    [
+                        'type' => 'image',
+                        'src' => '/storage/works/spcc/modernized-portal-showcase.png',
+                        'caption' => 'The Modernized SPCC Platform: High-conversion hero section, dynamic programs catalog, and interactive campus facilities gallery.',
+                    ],
+                    [
+                        'type' => 'heading2',
+                        'content' => '3. Architecture & Agile Execution',
+                    ],
+                    [
+                        'type' => 'paragraph',
+                        'content' => 'Built with modular Laravel Blade components and strict role-based access control (RBAC), ensuring that administrative permissions are securely segregated between super administrators, faculty contributors, and student editors.',
+                    ],
+                    [
+                        'type' => 'image',
+                        'src' => '/storage/works/spcc/spcc-admin-dashboard.png',
+                        'caption' => 'Administrative Control Center: Real-time event publisher, inquiry inbox routing, and automated activity logging.',
+                    ],
+                    [
+                        'type' => 'heading2',
+                        'content' => '4. Business & Institutional Impact',
+                    ],
+                    [
+                        'type' => 'numbered',
+                        'content' => '<strong>100% Operational Autonomy:</strong> Completely eliminated reliance on external developers for routine content publishing and institutional notices.',
+                    ],
+                    [
+                        'type' => 'numbered',
+                        'content' => '<strong>Streamlined Enrollment Funnel:</strong> Prominent "Apply Now" CTAs and intelligent dynamic requirements accelerated admission inquiry turnaround times.',
+                    ],
+                    [
+                        'type' => 'numbered',
+                        'content' => '<strong>Elevated Institutional Brand:</strong> Transformed a neglected digital footprint into a responsive, award-worthy flagship portal for thousands of students and faculty members.',
+                    ],
                 ],
             ],
             [
@@ -495,8 +582,8 @@ class OddsContentSeeder extends Seeder
             ];
 
             if ($existing) {
-                // If existing has no body_content or we are updating PRISMA / AVONIC specifically, update it
-                if (empty($existing->body_content) || in_array($w['title'], ['PRISMA', 'AVONIC'])) {
+                // If existing has no body_content or we are updating PRISMA / AVONIC / SPCC Website specifically, update it
+                if (empty($existing->body_content) || in_array($w['title'], ['PRISMA', 'AVONIC', 'SPCC Website'])) {
                     $existing->update($data);
                 }
             } else {
