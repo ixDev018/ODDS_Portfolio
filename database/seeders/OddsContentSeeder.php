@@ -354,18 +354,105 @@ class OddsContentSeeder extends Seeder
             ],
             [
                 'title' => 'AVONIC',
-                'year' => '2023',
-                'category' => 'Hardware & IoT',
-                'desc' => 'Embedded device control system and smart terminal firmware.',
-                'client' => 'Hardware Innovation Group',
-                'role' => 'Firmware & Telemetry Gateway',
-                'tech_stack' => ['C/C++', 'ESP32', 'MQTT', 'Laravel', 'Vue.js'],
+                'year' => '2024',
+                'category' => 'IoT & AgriTech Automation',
+                'desc' => 'Sensor-integrated IoT vermicomposting automation platform protecting African Nightcrawler colonies from environmental stressors with real-time telemetry and closed-loop micro-climate regulation.',
+                'client' => null,
+                'role' => null,
+                'tech_stack' => ['ESP32', 'C/C++ Firmware', 'Capacitive Moisture V2.0', 'DHT22', 'MQ-135 Gas Sensor', 'Relay Actuation', 'Tailwind CSS', 'JavaScript Telemetry'],
+                'count_in_kpi' => true,
                 'body_content' => [
-                    ['type' => 'callout', 'content' => '<strong>Executive Summary:</strong> Embedded hardware terminal and cloud telemetry dashboard.'],
-                    ['type' => 'heading2', 'content' => 'The Challenge'],
-                    ['type' => 'paragraph', 'content' => 'Connecting diverse sensor nodes to cloud dashboards with minimal power draw.'],
-                    ['type' => 'heading2', 'content' => 'The ODDS Solution'],
-                    ['type' => 'paragraph', 'content' => 'Low-power MQTT telemetry client and real-time visualization dashboard.'],
+                    [
+                        'type' => 'callout',
+                        'content' => '<strong>Executive Summary:</strong> AVONIC transforms traditional, high-risk vermicomposting into an automated, precision-regulated bio-manufacturing system. By integrating edge sensors with automatic overhead misting and localized web telemetry, it prevents costly worm colony crashes and accelerates organic fertilizer production for commercial vegetable farms.',
+                    ],
+                    [
+                        'type' => 'heading2',
+                        'content' => '1. The Challenge: Silent Colony Mortality & High Chemical Input Costs',
+                    ],
+                    [
+                        'type' => 'paragraph',
+                        'content' => 'Commercial vegetable farming in the Philippines faces severe economic pressure, spending up to ₱60,000 per season on synthetic fertilizers that degrade soil over time. While vermicast (organic worm castings from African Nightcrawlers / <em>Eudrilus eugeniae</em>) offers a superior biological alternative, traditional open-bin setups fail because worms are biological organisms hyper-sensitive to micro-climate swings.',
+                    ],
+                    [
+                        'type' => 'bullet',
+                        'content' => '<strong>Thermal & Moisture Stress:</strong> Temperatures exceeding 30°C or substrate moisture falling below 45% trigger mass worm escape behaviors or sudden mortality within hours.',
+                    ],
+                    [
+                        'type' => 'bullet',
+                        'content' => '<strong>Toxic Gas Accumulation:</strong> Anaerobic pocketing from excessive wetness causes rapid rotting and dangerous ammonia/methane spikes.',
+                    ],
+                    [
+                        'type' => 'bullet',
+                        'content' => '<strong>Zero Feedback Loops:</strong> Farmers rely on subjective "touch and smell" checks, discovering colony failure only after the biological investment is lost.',
+                    ],
+                    [
+                        'type' => 'image',
+                        'src' => '/storage/works/avonic/avonic-problem-environment.png',
+                        'caption' => 'Environmental stressors affecting worm vitality: Extreme heat, dryness, oversaturation, and toxic gas buildup.',
+                    ],
+                    [
+                        'type' => 'heading2',
+                        'content' => '2. The Solution: Closed-Loop Sensor Regulation & Edge Telemetry',
+                    ],
+                    [
+                        'type' => 'paragraph',
+                        'content' => 'ODDS engineered AVONIC as a dual-bin, autonomous hardware-software unit. Rather than relying on cloud dependency in remote farm areas, AVONIC executes real-time sensor processing directly on the ESP32 micro-controller while hosting an offline-capable localized web telemetry portal.',
+                    ],
+                    [
+                        'type' => 'heading3',
+                        'content' => 'Engineered Subsystems & Technology Stack',
+                    ],
+                    [
+                        'type' => 'bullet',
+                        'content' => '<strong>Multi-Point Abiotic Telemetry:</strong> Integrates corrosion-resistant Capacitive Moisture Sensors V2.0, dual DHT22 ambient temperature/humidity probes, and MQ-135 electrochemical gas sensors to monitor ammonia levels continuously.',
+                    ],
+                    [
+                        'type' => 'bullet',
+                        'content' => '<strong>Closed-Loop Micro-Climate Actuation:</strong> Automatically triggers relay-controlled overhead misting nozzles the second moisture dips below biological safety limits, stabilizing bin temperature without oversaturating the compost bed.',
+                    ],
+                    [
+                        'type' => 'bullet',
+                        'content' => '<strong>Offline-First Farm Dashboard:</strong> Broadcasts an instant local Wi-Fi telemetry suite with responsive gauge visuals, status indicators (Normal, Too Dry, Too Hot, Gas Spike), and real-time manual override toggles.',
+                    ],
+                    [
+                        'type' => 'bullet',
+                        'content' => '<strong>Dual-Language Operator UX:</strong> Packaged with English and Tagalog field manuals and clear color-coded vital cards designed for direct adoption by agricultural field staff.',
+                    ],
+                    [
+                        'type' => 'image',
+                        'src' => '/storage/works/avonic/avonic-dashboard-telemetry.png',
+                        'caption' => 'AVONIC Real-Time Telemetry Interface: Multi-sensor gauges, bin condition status, and automated actuation controls.',
+                    ],
+                    [
+                        'type' => 'heading2',
+                        'content' => '3. Why It Works: Precision-Targeted Biological Optimization',
+                    ],
+                    [
+                        'type' => 'paragraph',
+                        'content' => 'By maintaining the bin within the golden ratio (60–80% moisture, 24–28°C, and sub-threshold gas levels), African Nightcrawlers remain in peak reproductive and digestion states. Organic crop waste is converted into nutrient-dense vermicast and liquid worm tea in accelerated 15–30 day cycles, directly competing with synthetic fertilizer timelines.',
+                    ],
+                    [
+                        'type' => 'image',
+                        'src' => '/storage/works/avonic/avonic-hardware-assembly.png',
+                        'caption' => 'Dual-bin modular enclosure with integrated sensor probes, misting relays, and ESP32 controller unit.',
+                    ],
+                    [
+                        'type' => 'heading2',
+                        'content' => '4. Business & Ecological Outcomes',
+                    ],
+                    [
+                        'type' => 'numbered',
+                        'content' => '<strong>Eliminated Colony Loss:</strong> Autonomous threshold regulation reduced worm mortality and escape rates to near zero.',
+                    ],
+                    [
+                        'type' => 'numbered',
+                        'content' => '<strong>Significant Fertilizer Cost Reductions:</strong> Enabled on-site recycling of crop residues into high-grade bio-fertilizer, slashing chemical input dependency.',
+                    ],
+                    [
+                        'type' => 'numbered',
+                        'content' => '<strong>Measurable ESG & SDG Alignment:</strong> Directly advances UN SDG 2 (Zero Hunger), SDG 12 (Responsible Production), and SDG 15 (Life on Land) through soil regeneration.',
+                    ],
                 ],
             ],
             [
@@ -408,8 +495,8 @@ class OddsContentSeeder extends Seeder
             ];
 
             if ($existing) {
-                // If existing has no body_content or we are updating PRISMA specifically, update it
-                if (empty($existing->body_content) || $w['title'] === 'PRISMA') {
+                // If existing has no body_content or we are updating PRISMA / AVONIC specifically, update it
+                if (empty($existing->body_content) || in_array($w['title'], ['PRISMA', 'AVONIC'])) {
                     $existing->update($data);
                 }
             } else {
