@@ -34,20 +34,53 @@ college, while he was simultaneously developing his own capstone project.
 He chose to share the opportunity with his CTO rather than pursue it solo,
 which became a founding principle for how the studio operates.
 
-## Past Projects (Portfolio)
-- **Theodore**: Automated fire alarm system with BFP calling integration
-  (A9G GSM, ESP32-CAM) — ODDS's first project.
-- **ClassGuard**: RFID-based attendance system built for a school client
-  (ESP32, MFRC522 RFID, HiveMQ MQTT/TLS, Laravel backend with Sanctum, MySQL),
-  including full circuit design, flowcharts, and feature documentation.
-- **piezo-web**: A Laravel-based IoT dashboard for a piezoelectric energy
-  harvesting project, with Google OAuth, HiveMQ MQTT, Aiven MySQL, hosted
-  on Render.
-- **Pesowise**: A Flutter-based personal budgeting PWA using local Hive
-  storage, deployed on Vercel.
-- **CG-Web / GRCWeb**: Laravel and React web projects built for school clients.
-- **LISAI website**: A bilingual React/Vite/Tailwind website with Web3Forms
-  integration and a resume builder flow, built during an OJT engagement.
+## Our Works & Portfolio (The 9 Key Projects)
+ODDS has built and shipped 9 core studio systems and client platforms across IoT, Web, AI, and Mobile:
+
+1. **Liberty (LISAI Website)**:
+   - Category: Web & CMS (2023)
+   - Scope: Corporate web portal and digital presence built for Liberty Investigation & Security Agency Inc. (LISAI).
+   - Tech/Features: Modern responsive architecture, clean lead generation, showcase of security case studies, and smooth kinetic interactions.
+
+2. **SPCC Website**:
+   - Category: Web Development & Architecture (2023)
+   - Scope: Comprehensive institutional web portal for Systems Plus Computer College.
+   - Tech/Features: High-accessibility portal designed for heavy student throughput, multi-tier program directories, dynamic news/announcements, and responsive mobile-first UI.
+
+3. **AVONIC**:
+   - Category: Hardware & IoT (2023)
+   - Scope: Smart vermicomposting monitor and agricultural IoT terminal.
+   - Tech/Features: Microcontroller telemetry system monitoring soil moisture, temperature, methane/toxic gas levels, and relative humidity with real-time feedback alerts.
+
+4. **MoneySense**:
+   - Category: Mobile App & Computer Vision (2022)
+   - Scope: Assistive Philippine currency recognition mobile application.
+   - Tech/Features: On-device image scanning and ML classification to detect and announce Philippine peso bill denominations, designed for the visually impaired and fast transaction validation.
+
+5. **SIBOL**:
+   - Category: IoT & AgriTech (2023)
+   - Scope: Smart agricultural IoT platform with real-time crop climate telemetry.
+   - Tech/Features: Sensor array tracking micro-climates, soil nutrients, and irrigation metrics paired with a web analytics dashboard to optimize yield and prevent crop damage.
+
+6. **THEODORE**:
+   - Category: Security & Vision / AI Integration (2024, Studio's Genesis Project)
+   - Scope: AI-powered CCTV fire hazard detection and emergency dispatch platform.
+   - Tech/Features: Computer vision smoke/flame detection pipeline using cameras (ESP32-CAM/CCTV feeds), remote camera pan-tilt control, automated SMS/call alerts to Bureau of Fire Protection (BFP) via GSM modules.
+
+7. **HALLET**:
+   - Category: Mobile App & FinTech (2023)
+   - Scope: Personal finance and budget management mobile application.
+   - Tech/Features: Multi-wallet management, categorised expense tracking, spending analytics charts, and encrypted offline-first local data storage.
+
+8. **LITIKS**:
+   - Category: Analytics Platform & Enterprise SaaS (2024)
+   - Scope: Multi-branch retail and commercial sales analytics platform.
+   - Tech/Features: Real-time telemetry pipeline, demand forecasting models, automated revenue reporting, and customer segmentation dashboards for multi-location business operations.
+
+9. **TRYSEN (formerly ClassGuard)**:
+   - Category: Security & Systems / Biometrics (2024)
+   - Scope: Campus facial recognition attendance and physical access control terminal.
+   - Tech/Features: High-accuracy facial verification, automated gate/door unlocking, anti-spoofing protocols, and real-time attendance syncing to a central administrative portal with parent SMS notifications.
 
 ## How We Work
 ODDS operates as a small, tight-knit team of designer-developers, with work
