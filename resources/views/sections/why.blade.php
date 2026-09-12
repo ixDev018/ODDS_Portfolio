@@ -90,9 +90,68 @@ $accentThemes = ['purple', 'pink', 'cyan'];
                                 <p class="why-card-text">{{ $r->text }}</p>
                             </div>
 
-                            {{-- Background Tech Grid Watermark --}}
+                            {{-- Background Geometric Tech Wireframe Watermark --}}
                             <div class="why-card-bg" aria-hidden="true">
-                                <img src="{{ asset('assets/img/img_placeholder.svg') }}" alt="" draggable="false">
+                                @if($theme === 'purple' || $index === 0)
+                                    {{-- Stack-Agnostic: Isometric Layers / Modular Cube Wireframe --}}
+                                    <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full opacity-60">
+                                        <g stroke="#7B51F3" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                                            <!-- Top Layer -->
+                                            <path d="M80 15L135 45L80 75L25 45Z" fill="#7B51F3" fill-opacity="0.06"/>
+                                            <path d="M80 35L107 50L80 65L53 50Z" stroke-dasharray="2 3"/>
+                                            <!-- Mid Layer -->
+                                            <path d="M80 50L135 80L80 110L25 80Z" fill="#7B51F3" fill-opacity="0.04"/>
+                                            <!-- Bottom Layer -->
+                                            <path d="M80 85L135 115L80 145L25 115Z" fill="#7B51F3" fill-opacity="0.08"/>
+                                            <!-- Connecting Nodes -->
+                                            <line x1="80" y1="15" x2="80" y2="145" stroke-dasharray="3 4"/>
+                                            <line x1="135" y1="45" x2="135" y2="115"/>
+                                            <line x1="25" y1="45" x2="25" y2="115"/>
+                                            <!-- Tech crosshairs -->
+                                            <circle cx="80" cy="75" r="3" fill="#7B51F3" fill-opacity="0.4"/>
+                                            <circle cx="135" cy="80" r="2.5" fill="#7B51F3" fill-opacity="0.5"/>
+                                            <circle cx="25" cy="80" r="2.5" fill="#7B51F3" fill-opacity="0.5"/>
+                                        </g>
+                                    </svg>
+                                @elseif($theme === 'pink' || $index === 1)
+                                    {{-- End-to-End Flexibility: Dynamic Concentric Nodes & Interconnected Mesh --}}
+                                    <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full opacity-60">
+                                        <g stroke="#F359B0" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                                            <!-- Concentric rings -->
+                                            <circle cx="100" cy="100" r="65" stroke-dasharray="4 4" fill="#F359B0" fill-opacity="0.03"/>
+                                            <circle cx="100" cy="100" r="45" stroke-opacity="0.7"/>
+                                            <circle cx="100" cy="100" r="25" stroke-dasharray="2 3" fill="#F359B0" fill-opacity="0.06"/>
+                                            <circle cx="100" cy="100" r="8" fill="#F359B0" fill-opacity="0.4"/>
+                                            <!-- Orbital Axis Nodes -->
+                                            <line x1="20" y1="100" x2="160" y2="100" stroke-dasharray="3 4"/>
+                                            <line x1="100" y1="20" x2="100" y2="160" stroke-dasharray="3 4"/>
+                                            <line x1="43" y1="43" x2="145" y2="145" stroke-opacity="0.4"/>
+                                            <circle cx="145" cy="100" r="3" fill="#F359B0"/>
+                                            <circle cx="100" cy="55" r="3" fill="#F359B0"/>
+                                            <circle cx="68" cy="68" r="2" fill="#F359B0"/>
+                                        </g>
+                                    </svg>
+                                @else
+                                    {{-- Velocity-Driven Delivery: High-Speed Cyber Matrix & Accelerated Vectors --}}
+                                    <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full opacity-60">
+                                        <g stroke="#00B4D8" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                                            <!-- Perspective Grid Mesh -->
+                                            <path d="M10 150L150 150L130 90L30 90Z" fill="#00B4D8" fill-opacity="0.05"/>
+                                            <line x1="30" y1="90" x2="10" y2="150"/>
+                                            <line x1="60" y1="90" x2="50" y2="150"/>
+                                            <line x1="90" y1="90" x2="90" y2="150"/>
+                                            <line x1="115" y1="90" x2="130" y2="150"/>
+                                            <line x1="130" y1="90" x2="150" y2="150"/>
+                                            <line x1="20" y1="120" x2="140" y2="120" stroke-dasharray="3 3"/>
+                                            <!-- Velocity Chevrons -->
+                                            <path d="M90 20L135 65L90 110" stroke-width="1.8" stroke-opacity="0.8"/>
+                                            <path d="M65 35L100 70L65 105" stroke-opacity="0.5" stroke-dasharray="2 3"/>
+                                            <path d="M45 50L70 75L45 100" stroke-opacity="0.3"/>
+                                            <!-- Fast telemetry pulse -->
+                                            <circle cx="135" cy="65" r="3" fill="#00B4D8"/>
+                                        </g>
+                                    </svg>
+                                @endif
                             </div>
                         </div>
                     </div>
