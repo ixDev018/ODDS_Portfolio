@@ -23,8 +23,8 @@ class OddsFaqSeeder extends Seeder
                 'answer'   => "We default to milestone-based quotes so you know the exact deliverables and timeline upfront with zero surprise billing. For evolving product builds or R&D, flexible sprint retainers are also available.",
             ],
             [
-                'question' => "Who owns the code and intellectual property once complete?",
-                'answer'   => "You do. 100% of the source code, repository commits, design assets, and intellectual property transfer directly to you upon milestone completion. No vendor lock-in, ever.",
+                'question' => "How fast can we kick off and ship?",
+                'answer'   => "Following initial scoping, we can typically kick off within 48 to 72 hours. Focused modules ship in days to a couple of weeks, while full platforms are delivered in rapid, testable sprint increments.",
             ],
         ];
 
