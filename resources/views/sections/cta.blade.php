@@ -39,7 +39,7 @@
                             {!! $settings->cta_desc ?? "Tell us what you're facing.<br>Whether you need a quick technical module or an end-to-end package solution, our team is ready to execute. Expect a response with clear next steps within 24 hours." !!}
                         </p>
 
-                        <a href="mailto:{{ $settings->cta_email ?? 'hello@odds.dev' }}" class="cta-btn">Let's Build!</a>
+                        <a href="mailto:{{ $settings->cta_email ?? 'oddsdevph@gmail.com' }}" class="cta-btn">Let's Build!</a>
                     </div>
 
                     <div class="cta-visual">
@@ -54,9 +54,8 @@
                 <!-- <div class="cta-terminal-footer">
                     <span>facebook: {{ $settings->cta_facebook ?? 'ODDS Comp.' }}</span>
                     <span>instagram: {{ $settings->cta_instagram ?? 'ODDS Comp.' }}</span>
-                    <span>mail: {{ $settings->cta_email ?? 'hello@odds.dev' }}</span>
+                    <span>mail: {{ $settings->cta_email ?? 'oddsdevph@gmail.com' }}</span>
                     <span>youtube: {{ $settings->cta_youtube ?? 'ODDS Comp.' }}</span>
-                    <span>contact: {{ $settings->cta_phone ?? '0999999999' }}</span>
                 </div> -->
             </div>
 

@@ -36,8 +36,8 @@ return new class extends Migration
             // CTA & Terminal
             $table->string('cta_title')->default("Let's Build\nSomething Real.");
             $table->text('cta_desc')->nullable();
-            $table->string('cta_email')->default('hello@odds.dev');
-            $table->string('cta_phone')->default('0999999999');
+            $table->string('cta_email')->default('oddsdevph@gmail.com');
+            $table->string('cta_phone')->nullable();
             $table->string('cta_facebook')->default('ODDS Comp.');
             $table->string('cta_instagram')->default('ODDS Comp.');
             $table->string('cta_youtube')->default('ODDS Comp.');

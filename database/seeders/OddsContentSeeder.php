@@ -16,7 +16,11 @@ class OddsContentSeeder extends Seeder
     public function run(): void
     {
         // 1. Settings
-        OddsSetting::current();
+        $settings = OddsSetting::current();
+        $settings->update([
+            'cta_email' => 'oddsdevph@gmail.com',
+            'cta_phone' => '',
+        ]);
 
         // 2. Services
         $defaultServicesData = [

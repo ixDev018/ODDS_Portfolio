@@ -13,6 +13,7 @@ an 8-person team working on client projects and our own products, built on
 - Revenue model: 10-20% finder fee on client projects, with the remainder
   split among the developers who worked on it, plus a 10-15% company pool.
 - Project pricing typically ranges from ₱10,000 to ₱20,000 depending on scope.
+- Official studio contact email: oddsdevph@gmail.com (no telephone or mobile hotline).
 
 ## Flagship Product: Simula
 Simula is ODDS's flagship product: a centralized Philippine internship

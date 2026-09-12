@@ -67,15 +67,9 @@
                 </div>
                 <ul class="footer-links-list">
                     <li>
-                        <a href="mailto:{{ $settings->cta_email ?? 'hello@odds.dev' }}" class="footer-link text-slate-300">
+                        <a href="mailto:{{ $settings->cta_email ?? 'oddsdevph@gmail.com' }}" class="footer-link text-slate-300">
                             <i class="fa-regular fa-envelope text-xs text-purple-400"></i>
-                            <span>{{ $settings->cta_email ?? 'hello@odds.dev' }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="tel:{{ $settings->cta_phone ?? '+1 (555) 019-2834' }}" class="footer-link text-slate-300">
-                            <i class="fa-solid fa-phone text-xs text-purple-400"></i>
-                            <span>{{ $settings->cta_phone ?? '+1 (555) 019-2834' }}</span>
+                            <span>{{ $settings->cta_email ?? 'oddsdevph@gmail.com' }}</span>
                         </a>
                     </li>
                 </ul>
