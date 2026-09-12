@@ -164,8 +164,9 @@ class OddsContentSeeder extends Seeder
         }
 
         // 3. Works — real project names + thumbnail images copied on every seed run
-        // Resolve source folder: local dev path or Render/Docker volume mount
+        // Resolve source folder: bundled repo images (Render + local), fallback to Windows path
         $imageSrcDirs = [
+            database_path('seeders/images/works'),
             '/app/odds-pfl-images',
             'C:/Users/sanch/OneDrive/Pictures/ODDS-PFL',
         ];
