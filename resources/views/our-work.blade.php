@@ -685,31 +685,7 @@ $startingItem = $workItems->get($startIndex) ?: $workItems->first();
             <span class="works-heading-deliver draw-highlight-wrap">We Deliver.<svg class="draw-highlight-svg" viewBox="0 0 160 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M 2 10 C 40 2, 80 11, 158 4" stroke="#f359b0" stroke-width="3" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></span>
         </h1>
 
-        {{-- Stats row --}}
-        <div class="works-stats-row animate-fade-up fade-up" id="stats-row">
 
-            {{-- Projects Accomplished --}}
-            <div class="works-stat-cell works-stat-cell--bordered">
-                <span class="kpi-num" data-target="{{ $accomplishedCount }}" data-suffix="">{{ $accomplishedCount }}</span>
-                <span class="kpi-label">Projects Accomplished</span>
-            </div>
-
-            {{-- Client Satisfaction --}}
-            <div class="works-stat-cell works-stat-cell--bordered">
-                <div class="kpi-satisfaction">
-                    <span class="kpi-num" data-target="5" data-suffix="">5</span>
-                    <span class="kpi-fraction">/5</span>
-                </div>
-                <span class="kpi-label">Client Satisfaction</span>
-            </div>
-
-            {{-- Reliability --}}
-            <div class="works-stat-cell">
-                <span class="kpi-num" data-target="{{ preg_replace('/[^0-9]/', '', $settings->kpi_reliability ?? '99') }}" data-suffix="%">{{ $settings->kpi_reliability ?? '99%' }}</span>
-                <span class="kpi-label">{{ $settings->kpi_reliability_label ?? 'The Reliability Angle' }}</span>
-            </div>
-
-        </div>
 
         {{-- Description --}}
         <p class="works-description animate-fade-up fade-up">

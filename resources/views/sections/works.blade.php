@@ -24,38 +24,7 @@ $workItems = isset($works) && count($works) > 0 ? $works : collect([
       <span class="works-heading-deliver">We Deliver.</span>
     </h2>
 
-    {{-- Stats row --}}
-    <div class="works-stats-row animate-fade-up fade-up" id="stats-row" style="animation-delay: 150ms;">
 
-      {{-- Projects Accomplished --}}
-      <div class="works-stat-cell works-stat-cell--bordered">
-        @php
-          $projCount = $accomplishedCount ?? (isset($works) ? $works->where('count_in_kpi', true)->count() : count($workItems));
-        @endphp
-        <span class="kpi-num" data-target="{{ $projCount }}" data-suffix="">{{ $projCount }}</span>
-        <span class="kpi-label">Projects Accomplished</span>
-      </div>
-
-      {{-- Client Satisfaction --}}
-      <div class="works-stat-cell works-stat-cell--bordered">
-        <div class="kpi-satisfaction">
-          @php
-            $satVal = $clientSatisfactionAvg ?? 5;
-            $satDenom = $clientSatisfactionDenom ?? '/5';
-          @endphp
-          <span class="kpi-num" data-target="{{ $satVal }}" data-suffix="">{{ $satVal }}</span>
-          <span class="kpi-fraction">{{ $satDenom }}</span>
-        </div>
-        <span class="kpi-label">Client Satisfaction</span>
-      </div>
-
-      {{-- Reliability --}}
-      <div class="works-stat-cell">
-        <span class="kpi-num" data-target="{{ preg_replace('/[^0-9]/', '', $settings->kpi_reliability ?? '99') }}" data-suffix="%">{{ $settings->kpi_reliability ?? '99%' }}</span>
-        <span class="kpi-label">{{ $settings->kpi_reliability_label ?? 'The Reliability Angle' }}</span>
-      </div>
-
-    </div>
 
     {{-- Description --}}
     <p class="works-description animate-fade-up fade-up" style="animation-delay: 200ms;">
