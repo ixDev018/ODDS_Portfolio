@@ -1,3 +1,4 @@
+@php
 $faqList = isset($faqs) && count($faqs) > 0 ? $faqs : collect([
     (object)[
         'question' => "We only have a rough idea, not a finished technical spec. Can you still help?",
