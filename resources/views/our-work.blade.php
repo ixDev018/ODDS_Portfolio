@@ -653,41 +653,22 @@
 
 @php
 $workItems = isset($works) && count($works) > 0 ? $works : collect([
-    (object)['id' => 1, 'title' => 'THEODORE', 'category' => 'Web App & AI', 'year' => '2024', 'description' => 'Scalable enterprise application built for rapid throughput.', 'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 2, 'title' => 'ClassGuard', 'category' => 'Security & Vision', 'year' => '2024', 'description' => 'Real-time security monitoring and automated access protocol system.', 'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 3, 'title' => 'PRISMA', 'category' => 'Data Analytics', 'year' => '2024', 'description' => 'High-velocity telemetry pipeline and data visualization platform.', 'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 4, 'title' => 'Sentry', 'category' => 'DevOps Automation', 'year' => '2024', 'description' => 'Infrastructure heartbeat monitor with zero-downtime deployment pipelines.', 'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 5, 'title' => 'SPCC Website', 'category' => 'Web Architecture', 'year' => '2023', 'description' => 'Educational portal with responsive multi-tier course management.', 'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 6, 'title' => 'LISAI Website', 'category' => 'Brand & Platform', 'year' => '2023', 'description' => 'Interactive digital showcase with smooth kinetic motion.', 'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 7, 'title' => 'ALAMS', 'category' => 'Hardware & IoT', 'year' => '2023', 'description' => 'Integrated micro-controller system with live sensor analytics.', 'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 8, 'title' => 'AVONIC', 'category' => 'Hardware Systems', 'year' => '2022', 'description' => 'Embedded control architecture with rapid telemetry feedback.', 'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 9, 'title' => 'SPCC Web App', 'category' => 'Cloud Systems', 'year' => '2022', 'description' => 'Enterprise administrative system for institutional workflows.', 'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 1, 'title' => 'Liberty',      'category' => 'Web & CMS',          'year' => '2023', 'description' => 'Corporate security agency website for Liberty Investigation & Security Agency Inc.',               'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 2, 'title' => 'SPCC Website', 'category' => 'Web Development',    'year' => '2023', 'description' => 'Modern institutional web portal for Systems Plus Computer College.',                               'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 3, 'title' => 'AVONIC',       'category' => 'Hardware & IoT',     'year' => '2023', 'description' => 'IoT vermicompost monitor with soil moisture, gas, temperature, and humidity sensors.',             'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 4, 'title' => 'MoneySense',   'category' => 'Mobile App',         'year' => '2022', 'description' => 'Philippine currency recognition app with bill scanning and denomination tracking.',                'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 5, 'title' => 'SIBOL',        'category' => 'IoT & AgriTech',     'year' => '2023', 'description' => 'Smart farming IoT platform with real-time crop and environmental monitoring.',                     'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 6, 'title' => 'THEODORE',     'category' => 'Security & Vision',  'year' => '2024', 'description' => 'AI-powered CCTV fire detection and remote camera control system.',                               'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 7, 'title' => 'HALLET',       'category' => 'Mobile App',         'year' => '2023', 'description' => 'Personal finance mobile app with multi-wallet, transaction tracking, and spending analytics.',    'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 8, 'title' => 'LITIKS',       'category' => 'Analytics Platform', 'year' => '2024', 'description' => 'Multi-branch sales analytics, forecasting, and customer segmentation SaaS.',                      'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 9, 'title' => 'TRYSEN',       'category' => 'Security & Systems', 'year' => '2024', 'description' => 'Facial recognition attendance system with secure campus access control.',                          'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
 ]);
 
 $accomplishedCount = isset($works) && $works->count() > 0 ? $works->count() : count($workItems);
 
-// Fix 2: Determine starting active slide index
+// Always start from the first slide (index 0); JS handles infinite wrap-around
 $totalSlides = count($workItems);
-$middleIndex = $totalSlides > 0 ? (int) floor($totalSlides / 2) : 0;
-
-$featuredIndex = null;
-$featuredCount = 0;
-foreach ($workItems as $idx => $item) {
-    if (data_get($item, 'is_featured')) {
-        $featuredCount++;
-        if ($featuredIndex === null) {
-            $featuredIndex = $idx;
-        }
-    }
-}
-
-if ($featuredCount > 0 && $featuredCount < $totalSlides) {
-    $startIndex = $featuredIndex;
-} elseif ($featuredCount === 1) {
-    $startIndex = $featuredIndex;
-} else {
-    $startIndex = $middleIndex;
-}
+$startIndex  = 0;
 
 $startingItem = $workItems->get($startIndex) ?: $workItems->first();
 @endphp
@@ -920,12 +901,6 @@ $startingItem = $workItems->get($startIndex) ?: $workItems->first();
             </div>
 
             <div class="showcase-nav-group">
-                <div class="showcase-counter">
-                    <span id="showcase-current-idx">{{ str_pad($startIndex + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                    <span class="text-neutral-400 font-normal"> / </span>
-                    <span id="showcase-total-idx">{{ str_pad($totalSlides, 2, '0', STR_PAD_LEFT) }}</span>
-                </div>
-
                 <button type="button" class="showcase-arrow-btn showcase-arrow-prev" id="showcase-prev-btn" aria-label="Previous project">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M15 18l-6-6 6-6"/>
@@ -1041,8 +1016,55 @@ document.addEventListener('DOMContentLoaded', () => {
         const slideWidth = activeSlide.offsetWidth;
         const slideGap = 36;
         const offset = (viewportWidth / 2) - (slideWidth / 2) - (activeIndex * (slideWidth + slideGap));
-        
-        track.style.transform = `translateX(${offset}px)`;
+
+        if (!animate) {
+            track.style.transition = 'none';
+            track.style.transform = `translateX(${offset}px)`;
+            void track.offsetWidth; // force reflow so next transition re-enables cleanly
+            track.style.transition = '';
+        } else {
+            track.style.transform = `translateX(${offset}px)`;
+        }
+    }
+
+    // Infinite boundary wrap: move last slide to left of first (or first to right of last)
+    // so peek slots are never empty. Uses instant CSS transform (no slide-level transition).
+    let _boundaryWrappedIdx = null;
+    function applyBoundaryWrap() {
+        if (isMobile() || totalSlides <= 2) return;
+
+        // Clear previous wrap instantly (slide is distant / off-screen at this point)
+        if (_boundaryWrappedIdx !== null) {
+            const prev = slides[_boundaryWrappedIdx];
+            if (prev) {
+                prev.style.transition = 'none';
+                prev.style.transform = '';
+                void prev.offsetWidth;
+                prev.style.transition = '';
+            }
+            _boundaryWrappedIdx = null;
+        }
+
+        const slideWidth = slides[0].offsetWidth;
+        const fullWidth  = slideWidth + 36; // slideGap
+
+        if (activeIndex === 0) {
+            // Last slide peeks on the LEFT of first
+            const wrap = slides[totalSlides - 1];
+            wrap.style.transition = 'none';
+            wrap.style.transform  = `translateX(-${totalSlides * fullWidth}px)`;
+            void wrap.offsetWidth;
+            wrap.style.transition = '';
+            _boundaryWrappedIdx = totalSlides - 1;
+        } else if (activeIndex === totalSlides - 1) {
+            // First slide peeks on the RIGHT of last
+            const wrap = slides[0];
+            wrap.style.transition = 'none';
+            wrap.style.transform  = `translateX(${totalSlides * fullWidth}px)`;
+            void wrap.offsetWidth;
+            wrap.style.transition = '';
+            _boundaryWrappedIdx = 0;
+        }
     }
 
     function updateSlideStates(triggerStagger = true) {
@@ -1073,6 +1095,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // Apply infinite boundary wrapping after classes are set
+        applyBoundaryWrap();
+
         // Update Metadata
         const currData = projectsData[activeIndex] || {};
         const title = currData.title || (slides[activeIndex] ? slides[activeIndex].getAttribute('aria-label') : 'Project');
@@ -1082,6 +1107,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (titleEl) titleEl.textContent = title;
         if (subtitleEl) subtitleEl.textContent = `${category} • ${year}${desc}`;
+        // counter elements removed — no-op if null
         if (currIdxEl) currIdxEl.textContent = String(activeIndex + 1).padStart(2, '0');
         if (totalIdxEl) totalIdxEl.textContent = String(totalSlides).padStart(2, '0');
 
@@ -1102,10 +1128,121 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function goToSlide(index) {
         if (index === activeIndex && !isAnimating) return;
+        const prevIndex = activeIndex;
         activeIndex = (index + totalSlides) % totalSlides;
-        updateTrackPosition(true);
-        updateSlideStates(true);
+
+        const isBoundary = !isMobile() && totalSlides > 2 &&
+            ((prevIndex === 0 && activeIndex === totalSlides - 1) ||
+             (prevIndex === totalSlides - 1 && activeIndex === 0));
+
+        if (isBoundary) {
+            // ── Smooth infinite boundary transition ──────────────────────────
+            const slideWidth = slides[0].offsetWidth;
+            const fullWidth  = slideWidth + 36;
+            const viewportWidth = viewport.offsetWidth || window.innerWidth;
+            const wrapOffset = totalSlides * fullWidth;
+
+            // Direction: +1 = last→first (track moves left), -1 = first→last (track moves right)
+            const goingForward = (prevIndex === totalSlides - 1); // TRYSEN → Liberty
+            const wrapSign = goingForward ? 1 : -1;
+
+            // Target track offset: center new activeSlide at its WRAPPED visual position
+            //   last→first: Liberty is at +wrapOffset → target = vw/2 - sw/2 - wrapOffset
+            //   first→last: TRYSEN is at -wrapOffset + (N-1)*full → visual -fullWidth → target = vw/2 - sw/2 + fullWidth
+            const targetOffset = goingForward
+                ? (viewportWidth / 2) - (slideWidth / 2) - wrapOffset
+                : (viewportWidth / 2) - (slideWidth / 2) + fullWidth;
+
+            // Secondary peek: the slide adjacent to the primary on the SAME side needs the same wrap.
+            //   last→first: slide[1] (SPCC Website) wraps RIGHT (+wrapOffset)
+            //   first→last: slide[N-2] (HALLET) wraps LEFT (-wrapOffset)
+            const secondaryIdx  = goingForward ? 1 : (totalSlides - 2);
+            const secondarySlide = slides[secondaryIdx];
+            if (secondarySlide) {
+                secondarySlide.style.transition = 'none';
+                secondarySlide.style.transform  = `translateX(${wrapSign * wrapOffset}px)`;
+                void secondarySlide.offsetWidth;
+                secondarySlide.style.transition = '';
+            }
+
+            // Update slide classes (keep current primary wrap during animation)
+            const mob = isMobile();
+            slides.forEach((slide, idx) => {
+                slide.classList.remove('is-active', 'is-peeking', 'is-prev', 'is-next', 'is-distant');
+                if (idx === activeIndex) {
+                    slide.classList.add('is-active');
+                } else if (!mob && idx === (activeIndex - 1 + totalSlides) % totalSlides) {
+                    slide.classList.add('is-peeking', 'is-prev');
+                } else if (!mob && idx === (activeIndex + 1) % totalSlides) {
+                    slide.classList.add('is-peeking', 'is-next');
+                } else {
+                    slide.classList.add('is-distant');
+                }
+            });
+
+            // Animate track toward the wrapped position
+            track.style.transform = `translateX(${targetOffset}px)`;
+
+            // Update metadata immediately
+            const currData = projectsData[activeIndex] || {};
+            if (titleEl) titleEl.textContent = currData.title || '';
+            if (subtitleEl) {
+                const d = currData.description ? ` — ${currData.description}` : '';
+                subtitleEl.textContent = `${currData.category || ''} • ${currData.year || ''}${d}`;
+            }
+
+            // After CSS transition: silent snap to natural layout
+            setTimeout(() => {
+                // 1. Clear secondary wrap
+                if (secondarySlide) {
+                    secondarySlide.style.transition = 'none';
+                    secondarySlide.style.transform  = '';
+                    void secondarySlide.offsetWidth;
+                    secondarySlide.style.transition = '';
+                }
+
+                // 2. Clear primary wrap
+                if (_boundaryWrappedIdx !== null) {
+                    const ws = slides[_boundaryWrappedIdx];
+                    if (ws) {
+                        ws.style.transition = 'none';
+                        ws.style.transform  = '';
+                        void ws.offsetWidth;
+                        ws.style.transition = '';
+                    }
+                    _boundaryWrappedIdx = null;
+                }
+
+                // 3. Snap track to natural position (no animation)
+                const naturalOffset = (viewportWidth / 2) - (slideWidth / 2) - (activeIndex * fullWidth);
+                track.style.transition = 'none';
+                track.style.transform  = `translateX(${naturalOffset}px)`;
+                void track.offsetWidth;
+                track.style.transition = '';
+
+                // 4. Apply boundary wrap for the NEW active slide
+                applyBoundaryWrap();
+
+                // 5. GSAP artifact entrance
+                const activeSlide = slides[activeIndex];
+                if (activeSlide && window.gsap) {
+                    const artifacts = activeSlide.querySelectorAll('.stage-artifact');
+                    if (artifacts.length > 0) {
+                        window.gsap.fromTo(artifacts,
+                            { scale: 0.84, opacity: 0, y: 14 },
+                            { scale: 1, opacity: 1, y: 0, duration: 0.52, ease: 'power3.out', stagger: 0.06, overwrite: 'auto' }
+                        );
+                    }
+                }
+            }, 700);
+
+        } else {
+            // ── Normal (non-boundary) transition ─────────────────────────────
+            updateTrackPosition(true);
+            updateSlideStates(true);
+        }
     }
+
 
     function openModalForCurrent() {
         const item = projectsData[activeIndex];

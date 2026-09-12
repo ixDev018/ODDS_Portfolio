@@ -163,33 +163,57 @@ class OddsContentSeeder extends Seeder
             }
         }
 
-        // 3. Works
-        if (OddsWork::count() === 0) {
-            $works = [
-                ['title' => 'THEODORE', 'year' => '2024', 'category' => 'Web App & AI', 'desc' => 'High-velocity AI integration and document automation system.'],
-                ['title' => 'ClassGuard', 'year' => '2024', 'category' => 'Security & Systems', 'desc' => 'Automated attendance & campus security hardware-software module.'],
-                ['title' => 'PRISMA', 'year' => '2024', 'category' => 'Analytics Platform', 'desc' => 'Real-time telemetry and data aggregation dashboard for enterprise.'],
-                ['title' => 'Sentry', 'year' => '2023', 'category' => 'DevOps & Monitoring', 'desc' => 'Infrastructure monitoring pipeline with ultra-low latency alerts.'],
-                ['title' => 'SPCC Website', 'year' => '2023', 'category' => 'Web Development', 'desc' => 'Modern institutional web portal designed for scale and accessibility.'],
-                ['title' => 'LISAI Website', 'year' => '2023', 'category' => 'Web & CMS', 'desc' => 'Custom content-managed portal with dynamic case study showcases.'],
-                ['title' => 'ALAMS', 'year' => '2023', 'category' => 'Enterprise System', 'desc' => 'Asset lifecycle & maintenance scheduling architecture.'],
-                ['title' => 'AVONIC', 'year' => '2023', 'category' => 'Hardware & IoT', 'desc' => 'Embedded device control system and smart terminal firmware.'],
-                ['title' => 'SPCC Portal', 'year' => '2022', 'category' => 'Academic System', 'desc' => 'Student enrollment and grading pipeline with role-based access.'],
-            ];
+        // 3. Works — real project names + thumbnail images copied on every seed run
+        // Resolve source folder: local dev path or Render/Docker volume mount
+        $imageSrcDirs = [
+            '/app/odds-pfl-images',
+            'C:/Users/sanch/OneDrive/Pictures/ODDS-PFL',
+        ];
+        $imageSrcDir = null;
+        foreach ($imageSrcDirs as $dir) {
+            if (is_dir($dir)) { $imageSrcDir = rtrim($dir, '/\\'); break; }
+        }
 
-            foreach ($works as $index => $w) {
-                OddsWork::create([
-                    'title' => $w['title'],
-                    'slug' => Str::slug($w['title'] . '-' . ($index + 1)),
-                    'category' => $w['category'],
-                    'year' => $w['year'],
-                    'description' => $w['desc'],
-                    'story_content' => "<h3>The Challenge</h3><p>{$w['desc']}</p><h3>The ODDS Solution</h3><p>Engineered using stack-agnostic principles for high stability and immediate deployment.</p>",
-                    'sort_order' => $index + 1,
-                    'is_featured' => true,
-                    'is_active' => true,
-                ]);
-            }
+        $storageDir = storage_path('app/public/odds/works');
+        if (!is_dir($storageDir)) { mkdir($storageDir, 0775, true); }
+
+        $copyImage = function (string $filename) use ($imageSrcDir, $storageDir): ?string {
+            if ($imageSrcDir === null) return null;
+            $src  = $imageSrcDir . DIRECTORY_SEPARATOR . $filename;
+            if (!file_exists($src)) return null;
+            $dest = $storageDir . DIRECTORY_SEPARATOR . $filename;
+            if (!file_exists($dest)) { copy($src, $dest); }
+            return '/storage/odds/works/' . $filename;
+        };
+
+        $works = [
+            ['title' => 'Liberty',      'slug' => 'liberty-1',      'year' => '2023', 'category' => 'Web & CMS',            'desc' => 'Corporate security agency website for Liberty Investigation & Security Agency Inc.',                     'image' => 'Liberty_thumbnail.png', 'sort' => 1],
+            ['title' => 'SPCC Website', 'slug' => 'spcc-website-2', 'year' => '2023', 'category' => 'Web Development',      'desc' => 'Modern institutional web portal for Systems Plus Computer College.',                                    'image' => 'SPCC WEBSITE.png',      'sort' => 2],
+            ['title' => 'AVONIC',       'slug' => 'avonic-3',       'year' => '2023', 'category' => 'Hardware & IoT',       'desc' => 'IoT vermicompost monitor with soil moisture, gas, temperature, and humidity sensors.',                  'image' => 'Avonic_thumbnail.png',  'sort' => 3],
+            ['title' => 'MoneySense',   'slug' => 'moneysense-4',   'year' => '2022', 'category' => 'Mobile App',           'desc' => 'Philippine currency recognition app with bill scanning and denomination tracking.',                      'image' => 'MoneySense.png',        'sort' => 4],
+            ['title' => 'SIBOL',        'slug' => 'sibol-5',        'year' => '2023', 'category' => 'IoT & AgriTech',       'desc' => 'Smart farming IoT platform with real-time crop and environmental monitoring.',                          'image' => 'sibol.png',             'sort' => 5],
+            ['title' => 'THEODORE',     'slug' => 'theodore-6',     'year' => '2024', 'category' => 'Security & Vision',    'desc' => 'AI-powered CCTV fire detection and remote camera control system.',                                        'image' => 'THEODORE PREVIEW.png',  'sort' => 6],
+            ['title' => 'HALLET',       'slug' => 'hallet-7',       'year' => '2023', 'category' => 'Mobile App',           'desc' => 'Personal finance mobile app with multi-wallet, transaction tracking, and spending analytics.',          'image' => 'HALLET.png',            'sort' => 7],
+            ['title' => 'LITIKS',       'slug' => 'litiks-8',       'year' => '2024', 'category' => 'Analytics Platform',   'desc' => 'Multi-branch sales analytics, forecasting, and customer segmentation SaaS.',                           'image' => 'LITIKS_THUMBNA.png',    'sort' => 8],
+            ['title' => 'TRYSEN',       'slug' => 'trysen-9',       'year' => '2024', 'category' => 'Security & Systems',   'desc' => 'Facial recognition attendance system with secure campus access control.',                               'image' => 'TRYSEN_Thumbnail.png',  'sort' => 9],
+        ];
+
+        // Always truncate + re-seed works so names and images stay in sync
+        OddsWork::truncate();
+        foreach ($works as $w) {
+            OddsWork::create([
+                'title'         => $w['title'],
+                'slug'          => $w['slug'],
+                'category'      => $w['category'],
+                'year'          => $w['year'],
+                'description'   => $w['desc'],
+                'story_content' => "<h3>The Challenge</h3><p>{$w['desc']}</p><h3>The ODDS Solution</h3><p>Engineered using stack-agnostic principles for high stability and immediate deployment.</p>",
+                'cover_image'   => $copyImage($w['image']),
+                'sort_order'    => $w['sort'],
+                'is_featured'   => true,
+                'is_active'     => true,
+                'count_in_kpi'  => true,
+            ]);
         }
 
         // 4. Testimonials

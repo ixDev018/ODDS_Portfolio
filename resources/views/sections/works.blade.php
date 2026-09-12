@@ -1,14 +1,14 @@
 @php
 $workItems = isset($works) && count($works) > 0 ? $works : collect([
-    (object)['title' => 'THEODORE', 'category' => 'Full-Stack Platform', 'year' => '2024', 'description' => 'Scalable enterprise application built for rapid throughput.'],
-    (object)['title' => 'ClassGuard', 'category' => 'Security & Vision', 'year' => '2024', 'description' => 'Real-time security monitoring and automated access protocol system.'],
-    (object)['title' => 'PRISMA', 'category' => 'Data Analytics', 'year' => '2024', 'description' => 'High-velocity telemetry pipeline and data visualization platform.'],
-    (object)['title' => 'Sentry', 'category' => 'DevOps Automation', 'year' => '2024', 'description' => 'Infrastructure heartbeat monitor with zero-downtime deployment pipelines.'],
-    (object)['title' => 'SPCC Website', 'category' => 'Web Architecture', 'year' => '2023', 'description' => 'Educational portal with responsive multi-tier course management.'],
-    (object)['title' => 'LISAI Website', 'category' => 'Brand & Platform', 'year' => '2023', 'description' => 'Interactive digital showcase with smooth kinetic motion.'],
-    (object)['title' => 'ALAMS', 'category' => 'Hardware & IoT', 'year' => '2023', 'description' => 'Integrated micro-controller system with live sensor analytics.'],
-    (object)['title' => 'AVONIC', 'category' => 'Hardware Systems', 'year' => '2022', 'description' => 'Embedded control architecture with rapid telemetry feedback.'],
-    (object)['title' => 'SPCC Web App', 'category' => 'Cloud Systems', 'year' => '2022', 'description' => 'Enterprise administrative system for institutional workflows.'],
+    (object)['title' => 'Liberty',      'category' => 'Web & CMS',          'year' => '2023', 'description' => 'Corporate security agency website for Liberty Investigation & Security Agency Inc.'],
+    (object)['title' => 'SPCC Website', 'category' => 'Web Development',    'year' => '2023', 'description' => 'Modern institutional web portal for Systems Plus Computer College.'],
+    (object)['title' => 'AVONIC',       'category' => 'Hardware & IoT',     'year' => '2023', 'description' => 'IoT vermicompost monitor with soil moisture, gas, temperature, and humidity sensors.'],
+    (object)['title' => 'MoneySense',   'category' => 'Mobile App',         'year' => '2022', 'description' => 'Philippine currency recognition app with bill scanning and denomination tracking.'],
+    (object)['title' => 'SIBOL',        'category' => 'IoT & AgriTech',     'year' => '2023', 'description' => 'Smart farming IoT platform with real-time crop and environmental monitoring.'],
+    (object)['title' => 'THEODORE',     'category' => 'Security & Vision',  'year' => '2024', 'description' => 'AI-powered CCTV fire detection and remote camera control system.'],
+    (object)['title' => 'HALLET',       'category' => 'Mobile App',         'year' => '2023', 'description' => 'Personal finance mobile app with multi-wallet, transaction tracking, and spending analytics.'],
+    (object)['title' => 'LITIKS',       'category' => 'Analytics Platform', 'year' => '2024', 'description' => 'Multi-branch sales analytics, forecasting, and customer segmentation SaaS.'],
+    (object)['title' => 'TRYSEN',       'category' => 'Security & Systems', 'year' => '2024', 'description' => 'Facial recognition attendance system with secure campus access control.'],
 ]);
 @endphp
 

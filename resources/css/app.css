@@ -1344,6 +1344,11 @@ body.modal-open {
 }
 
 @media (max-width: 991.98px) {
+    .why-process-track-wrapper {
+        overflow: visible;
+        width: 100%;
+    }
+
     .why-process-track {
         display: block;
         width: 100%;
@@ -1352,6 +1357,10 @@ body.modal-open {
 
     .why-process-track > .why {
         margin-right: 0 !important;
+        min-height: auto;
+        height: auto;
+        width: 100%;
+        max-width: 100%;
     }
 
     .why-process-track > .why,
@@ -1359,6 +1368,33 @@ body.modal-open {
         width: 100%;
         min-width: 100%;
         max-width: 100%;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 991.98px) {
+    .why {
+        padding: 96px 0 60px;
+        min-height: auto;
+    }
+
+    .why-deck {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 16px !important;
+        max-width: 100% !important;
+        padding: 0 24px !important;
+    }
+
+    .why-card {
+        position: relative !important;
+        width: 100% !important;
+        height: 480px !important;
+        pointer-events: auto !important;
+    }
+
+    .why-mobile-controls,
+    .why-swipe-hint {
+        display: none !important;
     }
 }
 
@@ -1521,14 +1557,8 @@ body.modal-open {
     background: transparent;
     border: none;
     padding: 0;
-    box-sizing: border-box;
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     will-change: transform;
     outline: none;
-}
-
-.why-card:hover {
-    transform: translateY(-8px);
 }
 
 .why-card-inner {

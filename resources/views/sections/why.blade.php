@@ -47,7 +47,7 @@ $accentThemes = ['purple', 'pink', 'cyan'];
             </p>
         </div>
 
-        <div class="why-deck-wrap">
+        <div class="why-deck-wrap" id="why-deck-wrap">
             <div class="why-deck" id="why-deck">
                 @foreach($reasonsList as $index => $r)
                 @php
