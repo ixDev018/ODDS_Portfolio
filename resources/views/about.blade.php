@@ -264,8 +264,6 @@
             display: block;
             width: 340px;
             flex-shrink: 0;
-            /* position:sticky replaced by ScrollTrigger pin —
-               CSS sticky breaks inside ScrollSmoother's transform layer */
             position: relative;
             z-index: 20;
             align-self: flex-start;
@@ -1364,29 +1362,57 @@ function execCopy(text) {
 // ScrollTrigger Pin — replaces CSS position:sticky for the sidebar
 // (sticky doesn't work inside ScrollSmoother's transform layer)
 (function initAboutSidebarPin() {
-    const sidebar = document.querySelector('.about-sidebar-column');
-    const feed = document.querySelector('.about-articles-feed');
-    if (!sidebar || !feed || window.innerWidth < 1024) return;
+    function setupPin() {
+        const sidebar = document.querySelector('.about-sidebar-column');
+        const feed = document.querySelector('.about-articles-feed');
+        if (!sidebar || !feed) return;
+        if (window.innerWidth < 1024) return;
 
-    // Wait for ScrollSmoother to be ready before pinning
-    function doPin() {
-        if (typeof ScrollTrigger === 'undefined') return;
+        // If ScrollTrigger is not yet ready, retry shortly
+        if (typeof ScrollTrigger === 'undefined') {
+            setTimeout(setupPin, 50);
+            return;
+        }
+
+        // Kill existing triggers for this sidebar to prevent duplicates
+        ScrollTrigger.getAll().forEach(st => {
+            if (st.pin === sidebar) st.kill();
+        });
+
+        const navbar = document.getElementById('navbar');
+        // Dynamic top offset: navbar height + comfortable 32px breathing room
+        const getTopOffset = () => {
+            const navH = navbar ? navbar.offsetHeight : (window.innerHeight * 0.10);
+            return navH + 32;
+        };
+
         ScrollTrigger.create({
             trigger: feed,
-            start: 'top 6rem',
-            end: 'bottom bottom',
+            start: () => `top ${getTopOffset()}px`,
+            end: () => `bottom ${sidebar.offsetHeight + getTopOffset()}px`,
             pin: sidebar,
             pinSpacing: false,
+            invalidateOnRefresh: true,
         });
+
+        ScrollTrigger.refresh();
     }
 
-    // If smoother is already active, pin right away; otherwise wait a tick
-    if (window.smoother && !window.smoother.paused()) {
-        doPin();
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupPin);
     } else {
-        // Defer until smoother activates (fires after DOMContentLoaded)
-        requestAnimationFrame(() => setTimeout(doPin, 200));
+        setupPin();
     }
+
+    window.addEventListener('load', () => {
+        setTimeout(setupPin, 100);
+    });
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(setupPin, 150);
+    });
 })();
 </script>
 </x-layout>
