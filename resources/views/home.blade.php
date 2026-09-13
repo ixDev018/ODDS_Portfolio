@@ -2,6 +2,9 @@
     {{-- Hero Section: Signature Natural Fluid Scroll --}}
     @include('sections.hero')
 
+    {{-- Who We Are Section --}}
+    @include('sections.who-we-are')
+
     {{-- Works Showcase Section --}}
     @include('sections.works')
 

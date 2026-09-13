@@ -1,0 +1,34 @@
+<section class="who-we-are" id="who-we-are">
+    <div class="who-we-are-inner">
+        {{-- Left Content Column with Dotted Grid Pattern --}}
+        <div class="who-we-are-left">
+            <div class="who-we-are-dots" aria-hidden="true"></div>
+            <div class="who-we-are-content">
+                <p class="who-we-are-label fade-up">Who we are</p>
+                <h2 class="who-we-are-statement who-we-are-heading fade-up">
+                    <span class="who-we-are-text-dark">The partners you bring in<br class="hidden md:inline"> when getting it right isn't optional.<br class="hidden md:inline"></span>
+                    <span class="who-we-are-text-muted">We strip away the noise and<br class="hidden md:inline"> overcomplicated processes to build<br class="hidden md:inline"> clean, intuitive products that<br class="hidden md:inline"></span>
+                    <strong class="who-we-are-text-bold">solve real-world problems.</strong>
+                </h2>
+                <div class="who-we-are-action fade-up">
+                    <a href="#why-process-wrapper" class="who-we-are-btn" id="who-we-are-btn" aria-label="Learn how we work">
+                        <span>How we work</span>
+                        <svg class="who-we-are-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M2.5 8H13.5M13.5 8L8.5 3M13.5 8L8.5 13" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {{-- Right Column with Edge-to-Edge Founders Group Photograph --}}
+        <div class="who-we-are-right">
+            <img src="{{ asset('storage/odds/whoweare/ODDS_founder_grouppic_noframe.png') }}"
+                 alt="ODDS Founders Team"
+                 class="who-we-are-img"
+                 loading="eager"
+                 fetchpriority="high"
+                 decoding="async">
+        </div>
+    </div>
+</section>

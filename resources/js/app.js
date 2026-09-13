@@ -2037,6 +2037,7 @@ function initHeadingReveals() {
 
     // 2. All Major Section Headings Across The Site (Hero & Services are managed by cyber blade stage)
     const headingSelectors = [
+        '.who-we-are-heading',
         '.why-title',
         '.works-heading',
         '.testi-title',
