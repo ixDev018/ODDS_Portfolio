@@ -66,26 +66,48 @@
 
     /* ─── MAIN TWO-COLUMN LAYOUT ─── */
     .faqs-grid {
-        display: grid;
-        grid-template-columns: 320px 1fr;
-        gap: 56px;
-        align-items: start;
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    @media (min-width: 960px) {
+        .faqs-grid {
+            flex-direction: row;
+            gap: 56px;
+            align-items: flex-start;
+        }
+
+        .faqs-sidebar {
+            width: 320px;
+            flex-shrink: 0;
+            position: relative;
+            align-self: flex-start;
+            z-index: 20;
+        }
+
+        .faqs-sidebar-sticky {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            width: 100%;
+        }
+
+        .faqs-content-col {
+            flex: 1;
+            min-width: 0;
+        }
     }
 
     @media (min-width: 1200px) {
         .faqs-grid {
-            grid-template-columns: 340px 1fr;
             gap: 68px;
         }
-    }
-
-    /* ─── LEFT SIDEBAR (STICKY) ─── */
-    .faqs-sidebar {
-        position: sticky;
-        top: calc(var(--nav-height, 72px) + 24px);
-        display: flex;
-        flex-direction: column;
-        gap: 32px;
+        .faqs-sidebar {
+            width: 340px;
+        }
     }
 
     .faqs-page-title {
@@ -298,6 +320,7 @@
         display: flex;
         flex-direction: column;
         gap: 40px;
+        width: 100%;
     }
 
     .faq-group-section {
@@ -494,6 +517,7 @@
         margin-bottom: 24px;
         scrollbar-width: none;
         -webkit-overflow-scrolling: touch;
+        width: 100%;
     }
 
     .mobile-topics-scroll::-webkit-scrollbar {
@@ -523,13 +547,20 @@
     /* ─── RESPONSIVE BREAKPOINTS ─── */
     @media (max-width: 960px) {
         .faqs-grid {
-            grid-template-columns: 1fr;
-            gap: 32px;
+            flex-direction: column;
+            gap: 28px;
         }
 
         .faqs-sidebar {
+            width: 100%;
             position: static;
+        }
+
+        .faqs-sidebar-sticky {
+            display: flex;
+            flex-direction: column;
             gap: 20px;
+            width: 100%;
         }
 
         .faqs-topics-menu {
@@ -630,66 +661,68 @@
     <div class="faqs-container">
         <div class="faqs-grid">
 
-            {{-- Left Column: Sidebar --}}
-            <aside class="faqs-sidebar" aria-label="FAQ Navigation and Search">
-                <div>
-                    <h1 class="faqs-page-title">Frequently Asked Questions</h1>
-                </div>
+            {{-- Left Column: Sticky Sidebar --}}
+            <aside class="faqs-sidebar" id="faqs-sidebar" aria-label="FAQ Navigation and Search">
+                <div class="faqs-sidebar-sticky" id="faqs-sidebar-sticky">
+                    <div class="faqs-title-wrap">
+                        <h1 class="faqs-page-title">Frequently Asked Questions</h1>
+                    </div>
 
-                {{-- Live Search Input --}}
-                <div class="faqs-search-box">
-                    <input type="text" 
-                           id="faq-search-input" 
-                           class="faqs-search-input" 
-                           placeholder="Search questions..." 
-                           autocomplete="off" 
-                           aria-label="Search frequently asked questions">
-                    <i class="fa-solid fa-magnifying-glass faqs-search-icon" aria-hidden="true"></i>
-                    <button type="button" id="faq-search-clear" class="faqs-search-clear" aria-label="Clear search">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
+                    {{-- Live Search Input --}}
+                    <div class="faqs-search-box">
+                        <input type="text" 
+                               id="faq-search-input" 
+                               class="faqs-search-input" 
+                               placeholder="Search questions..." 
+                               autocomplete="off" 
+                               aria-label="Search frequently asked questions">
+                        <i class="fa-solid fa-magnifying-glass faqs-search-icon" aria-hidden="true"></i>
+                        <button type="button" id="faq-search-clear" class="faqs-search-clear" aria-label="Clear search">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
 
-                {{-- Mobile Topic Pills --}}
-                <div class="mobile-topics-scroll" id="mobile-topics-scroll">
-                    <button type="button" class="mobile-topic-pill is-active" data-topic="all">
-                        All ({{ $totalFaqsCount }})
-                    </button>
-                    @foreach($groupedFaqs as $category => $items)
-                    <button type="button" class="mobile-topic-pill" data-topic="{{ \Illuminate\Support\Str::slug($category) }}">
-                        {{ $category }} ({{ $items->count() }})
-                    </button>
-                    @endforeach
-                </div>
-
-                {{-- Desktop Topics List --}}
-                <nav class="faqs-topics-nav" aria-label="FAQ Categories">
-                    <ul class="faqs-topics-menu" id="faq-topics-menu">
-                        <li>
-                            <button type="button" class="faqs-topic-btn is-active" data-topic="all">
-                                <span>All Topics</span>
-                                <span class="faqs-topic-count">{{ $totalFaqsCount }}</span>
-                            </button>
-                        </li>
+                    {{-- Mobile Topic Pills (Visible on mobile only) --}}
+                    <div class="mobile-topics-scroll" id="mobile-topics-scroll">
+                        <button type="button" class="mobile-topic-pill is-active" data-topic="all">
+                            All ({{ $totalFaqsCount }})
+                        </button>
                         @foreach($groupedFaqs as $category => $items)
-                        <li>
-                            <button type="button" class="faqs-topic-btn" data-topic="{{ \Illuminate\Support\Str::slug($category) }}">
-                                <span>{{ $category }}</span>
-                                <span class="faqs-topic-count">{{ $items->count() }}</span>
-                            </button>
-                        </li>
+                        <button type="button" class="mobile-topic-pill" data-topic="{{ \Illuminate\Support\Str::slug($category) }}">
+                            {{ $category }} ({{ $items->count() }})
+                        </button>
                         @endforeach
-                    </ul>
-                </nav>
+                    </div>
 
-                {{-- Still Have Questions Card --}}
-                <div class="faqs-support-card">
-                    <h3 class="support-card-title">Still have questions?</h3>
-                    <p class="support-card-desc">If you didn't find your answer, feel free to reach out to our engineering team.</p>
-                    <a href="{{ url('/#cta') }}" class="support-card-btn">
-                        <span>Get In Touch</span>
-                        <i class="fa-solid fa-arrow-right text-xs"></i>
-                    </a>
+                    {{-- Desktop Topics List --}}
+                    <nav class="faqs-topics-nav" aria-label="FAQ Categories">
+                        <ul class="faqs-topics-menu" id="faq-topics-menu">
+                            <li>
+                                <button type="button" class="faqs-topic-btn is-active" data-topic="all">
+                                    <span>All Topics</span>
+                                    <span class="faqs-topic-count">{{ $totalFaqsCount }}</span>
+                                </button>
+                            </li>
+                            @foreach($groupedFaqs as $category => $items)
+                            <li>
+                                <button type="button" class="faqs-topic-btn" data-topic="{{ \Illuminate\Support\Str::slug($category) }}">
+                                    <span>{{ $category }}</span>
+                                    <span class="faqs-topic-count">{{ $items->count() }}</span>
+                                </button>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </nav>
+
+                    {{-- Still Have Questions Card --}}
+                    <div class="faqs-support-card">
+                        <h3 class="support-card-title">Still have questions?</h3>
+                        <p class="support-card-desc">If you didn't find your answer, feel free to reach out to our team.</p>
+                        <a href="{{ url('/#cta') }}" class="support-card-btn">
+                            <span>Get In Touch</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
                 </div>
             </aside>
 
@@ -806,6 +839,9 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 openCard(card);
             }
+            if (window.__refreshFaqsPin) {
+                setTimeout(window.__refreshFaqsPin, 320);
+            }
         });
     });
 
@@ -860,6 +896,10 @@ document.addEventListener('DOMContentLoaded', function () {
             emptyState.classList.add('is-visible');
         } else {
             emptyState.classList.remove('is-visible');
+        }
+
+        if (window.__refreshFaqsPin) {
+            setTimeout(window.__refreshFaqsPin, 100);
         }
     }
 
@@ -934,6 +974,67 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+// ─── SCROLLTRIGGER PIN FOR FAQ SIDEBAR (ScrollSmoother compatible) ───
+(function initFaqsSidebarPin() {
+    function setupPin() {
+        const sidebar = document.getElementById('faqs-sidebar');
+        const feed = document.getElementById('faqs-content-col');
+        if (!sidebar || !feed) return;
+        if (window.innerWidth < 960) return;
+
+        // If ScrollTrigger is not yet ready, retry shortly
+        if (typeof ScrollTrigger === 'undefined') {
+            setTimeout(setupPin, 50);
+            return;
+        }
+
+        // Kill existing triggers for this sidebar to prevent duplicates
+        ScrollTrigger.getAll().forEach(st => {
+            if (st.pin === sidebar) st.kill();
+        });
+
+        const navbar = document.getElementById('navbar');
+        // Dynamic top offset: navbar height + 32px breathing room
+        const getTopOffset = () => {
+            const navH = navbar ? navbar.offsetHeight : 72;
+            return navH + 32;
+        };
+
+        ScrollTrigger.create({
+            trigger: feed,
+            start: () => `top ${getTopOffset()}px`,
+            end: () => `bottom ${sidebar.offsetHeight + getTopOffset()}px`,
+            pin: sidebar,
+            pinSpacing: false,
+            invalidateOnRefresh: true,
+        });
+
+        ScrollTrigger.refresh();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupPin);
+    } else {
+        setupPin();
+    }
+
+    window.addEventListener('load', () => {
+        setTimeout(setupPin, 100);
+    });
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(setupPin, 150);
+    });
+
+    window.__refreshFaqsPin = () => {
+        if (typeof ScrollTrigger !== 'undefined') {
+            ScrollTrigger.refresh();
+        }
+    };
+})();
 </script>
 @endpush
 </x-layout>
