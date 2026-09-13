@@ -624,7 +624,7 @@ body:not(.hero-active) .hero-services-stage {
     position: relative;
 }
 
-/* Left Content Column (60% Text Area) */
+/* Left Content Column (60% Text Area aligned to global grid) */
 .who-we-are-left {
     flex: 0 0 60%;
     width: 60%;
@@ -632,10 +632,13 @@ body:not(.hero-active) .hero-services-stage {
     height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
     justify-content: center;
     position: relative;
-    padding: clamp(32px, 5vh, 64px) clamp(32px, 5vw, 84px);
+    padding-left: clamp(36px, 5.5vw, 104px);
+    padding-right: clamp(24px, 3.5vw, 56px);
+    padding-top: calc(var(--nav-height, 80px) + clamp(10px, 1.8vh, 24px));
+    padding-bottom: clamp(16px, 2.2vh, 32px);
     background-color: #ffffff;
     overflow: hidden;
     box-sizing: border-box;
@@ -659,46 +662,48 @@ body:not(.hero-active) .hero-services-stage {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    text-align: left;
 }
 
 /* Eyebrow Label */
 .who-we-are-label {
-    font-size: clamp(15px, 1.15vw, 18px);
+    font-size: clamp(15px, 1.15vw, 19px);
     font-weight: 500;
     color: #9ca3af;
-    letter-spacing: 0.01em;
-    margin-bottom: clamp(18px, 2.5vh, 32px);
+    letter-spacing: -0.01em;
+    margin-bottom: clamp(18px, 2.8vh, 32px);
     font-family: var(--font-primary), -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* Unified Statement (Single Font Size with Varying Shades & Weights) */
+/* Unified Statement (Strict 6-Line Distribution with 3 Typographic Contrast Tiers) */
 .who-we-are-statement {
-    font-size: clamp(26px, 2.75vw, 46px);
-    line-height: 1.28;
-    letter-spacing: -0.028em;
-    margin-bottom: clamp(24px, 3.5vh, 44px);
+    font-size: clamp(32px, 3.55vw, 58px);
+    line-height: 1.15;
+    letter-spacing: -0.035em;
+    margin-bottom: clamp(24px, 3.8vh, 44px);
     font-family: var(--font-primary), -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .who-we-are-text-dark {
     color: #111111;
-    font-weight: 500;
+    font-weight: 550;
 }
 
 .who-we-are-text-muted {
-    color: #71717a;
+    color: #6b7280;
     font-weight: 400;
 }
 
 .who-we-are-text-bold {
-    color: #111111;
-    font-weight: 700;
+    color: #0f172a;
+    font-weight: 750;
 }
 
 /* CTA Pill Button */
 .who-we-are-action {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
 }
 
 .who-we-are-btn {
@@ -771,6 +776,7 @@ body:not(.hero-active) .hero-services-stage {
     .who-we-are-left {
         flex: none;
         width: 100%;
+        max-width: 100%;
         justify-content: flex-start;
         padding: 80px 32px 56px;
     }
@@ -782,6 +788,7 @@ body:not(.hero-active) .hero-services-stage {
     .who-we-are-right {
         flex: none;
         width: 100%;
+        max-width: 100%;
         min-height: auto;
         max-height: none;
         height: auto;
