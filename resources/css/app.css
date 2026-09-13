@@ -2876,7 +2876,7 @@ body:not(.hero-active) .hero-services-stage {
     background: #111111;
     color: #ffffff;
     border-radius: 9999px;
-    font-family: var(--font-mono), monospace;
+    
     font-size: 13px;
     font-weight: 700;
     letter-spacing: 0.06em;
@@ -3413,9 +3413,9 @@ body:not(.hero-active) .hero-services-stage {
    FOOTER (ODDS STUDIO SIGNATURE FOOTER)
    ============================================= */
 .odds-studio-footer {
-    background: #090d16;
-    border-top: 1px solid #1e293b;
-    color: #94a3b8;
+    background: #212121;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: #cbd5e1;
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     position: relative;
     z-index: 10;
@@ -3483,7 +3483,7 @@ body:not(.hero-active) .hero-services-stage {
 
 .footer-link {
     font-size: 0.875rem;
-    color: #94a3b8;
+    color: #cbd5e1;
     text-decoration: none;
     transition: all 0.2s ease;
     display: inline-flex;
@@ -3497,7 +3497,7 @@ body:not(.hero-active) .hero-services-stage {
 }
 
 .footer-link-active {
-    color: #c084fc;
+    color: #f359b0;
     font-weight: 600;
 }
 
@@ -3505,10 +3505,10 @@ body:not(.hero-active) .hero-services-stage {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.35rem 0.75rem;
+    padding: 0.35rem 0.85rem;
     border-radius: 9999px;
-    background: rgba(16, 185, 129, 0.1);
-    border: 1px solid rgba(16, 185, 129, 0.25);
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.35);
     color: #34d399;
     font-family: var(--font-mono, 'JetBrains Mono', monospace);
     font-size: 0.7rem;
@@ -3525,12 +3525,12 @@ body:not(.hero-active) .hero-services-stage {
 }
 
 .footer-social-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 0.65rem;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    color: #94a3b8;
+    width: 38px;
+    height: 38px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #e2e8f0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3540,11 +3540,11 @@ body:not(.hero-active) .hero-services-stage {
 }
 
 .footer-social-btn:hover {
-    background: #7039ec;
-    border-color: #7039ec;
+    background: #f359b0;
+    border-color: #f359b0;
     color: #ffffff;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(112, 57, 236, 0.35);
+    box-shadow: 0 4px 14px rgba(243, 89, 176, 0.35);
 }
 
 .footer-cta-action-btn {
@@ -3552,35 +3552,35 @@ body:not(.hero-active) .hero-services-stage {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0.7rem 1.25rem;
-    background: linear-gradient(to right, #7039ec, #9333ea);
-    color: #ffffff;
-    border-radius: 0.75rem;
-    font-size: 0.825rem;
+    padding: 0.75rem 1.5rem;
+    background: #ffffff;
+    color: #111827;
+    border-radius: 9999px;
+    font-size: 0.85rem;
     font-weight: 700;
     text-decoration: none;
     transition: all 0.2s ease;
-    margin-top: 1rem;
-    box-shadow: 0 4px 14px rgba(112, 57, 236, 0.3);
+    margin-top: 1.25rem;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 }
 
 .footer-cta-action-btn:hover {
-    background: linear-gradient(to right, #5e2bc7, #7e22ce);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(112, 57, 236, 0.45);
+    background: #f359b0;
     color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(243, 89, 176, 0.4);
 }
 
 .footer-bottom-bar {
     padding-top: 2rem;
-    border-top: 1px solid #1e293b;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
     font-size: 0.8rem;
-    color: #64748b;
+    color: #94a3b8;
 }
 
 @media (min-width: 768px) {
@@ -3590,14 +3590,14 @@ body:not(.hero-active) .hero-services-stage {
 }
 
 .footer-back-to-top {
-    background: transparent;
-    border: 1px solid #1e293b;
-    color: #94a3b8;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #cbd5e1;
     font-family: var(--font-mono, 'JetBrains Mono', monospace);
     font-size: 0.75rem;
     font-weight: 600;
-    padding: 0.35rem 0.85rem;
-    border-radius: 0.5rem;
+    padding: 0.45rem 1rem;
+    border-radius: 9999px;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -3606,9 +3606,10 @@ body:not(.hero-active) .hero-services-stage {
 }
 
 .footer-back-to-top:hover {
-    background: #1e293b;
+    background: rgba(255, 255, 255, 0.15);
     color: #ffffff;
-    border-color: #334155;
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
 }
 
 /* =============================================

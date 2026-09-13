@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="ODDS — We build what your business needs FAST. Custom software, web, mobile, backend and game development.">
     <title>ODDS — We Build What Your Business Needs</title>
+    <script>
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+        window.scrollTo(0, 0);
+        if (window.location.hash) {
+            history.replaceState(null, document.title, window.location.pathname + window.location.search);
+        }
+    </script>
     <link rel="icon" type="image/svg+xml" href="{{ asset('assets/img/ODDS_logo.svg') }}">
     <link rel="alternate icon" href="{{ asset('assets/img/ODDS_logo.svg') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">

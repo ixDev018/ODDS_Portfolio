@@ -16,13 +16,12 @@ window.ScrambleTextPlugin = ScrambleTextPlugin;
 window.DrawSVGPlugin = DrawSVGPlugin;
 
 // ─── GSAP ScrollSmoother ─────────────────────────────────
-// On the home page (#hero exists), starts paused so the Hero
-// full-page lock engine takes control first — it unpauses
-// ScrollSmoother once Services mode is active.
-// On all other pages (About, Our Work…), starts active immediately.
 if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
 }
+window.scrollTo(0, 0);
+if (document.documentElement) document.documentElement.scrollTop = 0;
+if (document.body) document.body.scrollTop = 0;
 
 const hasHeroSection = !!document.getElementById('hero');
 let smoother = null;
@@ -34,8 +33,31 @@ if (document.getElementById('smooth-wrapper') && document.getElementById('smooth
         smoothTouch: 0.1,      // responsive near-instant touch response on mobile & tablet
         paused: !!document.getElementById('fp-overlay'), // only pause if legacy cyber blade overlay is present
     });
+    if (smoother) {
+        smoother.scrollTop(0);
+    }
 }
 window.smoother = smoother;
+
+window.addEventListener('beforeunload', () => {
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+});
+
+window.addEventListener('pageshow', () => {
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+    if (window.smoother) {
+        window.smoother.scrollTop(0);
+    }
+    if (typeof ScrollTrigger !== 'undefined') {
+        ScrollTrigger.refresh();
+    }
+});
 
 // ─── Navbar & Mobile Drawer setup ──────────────────────
 const navbar = document.getElementById('navbar');
@@ -1487,9 +1509,11 @@ if (ctaVideo && ctaCanvas) {
 
     // ─── ScrollTrigger 4-Frame Playing Card Deal & Horizontal Transition to Process ───
     let dealScrollTrigger = null;
+    let dealIntroTrigger = null;
     let pathLength = 3600;
     let horizLen = 1200;
     let yToLengthTable = [];
+    let hasDealtOnce = false;
     const SAMPLES_COUNT = 300;
 
     const PATH_TAIL_D = "L 380 24 C 450 24 472 42 467.332 65.742 C 454.431 127.953 404.689 176.83 342.376 182.085 L 114.38 201.314 C 89.7562 203.391 66.5806 213.818 48.6935 230.868 C -13.312 289.973 14.502 394.256 97.7059 414.631 L 505.918 514.595 C 512.476 516.201 518.697 518.955 524.295 522.729 C 573.667 556.018 545.675 633.188 486.442 627.082 L 127.407 590.071 C 108.352 588.107 89.2368 593.184 73.668 604.345 C 11.7091 648.76 43.1302 746.523 119.364 746.523 H 150.72 C 201.364 746.523 241.681 788.937 239.117 839.515 L 234.832 924.023";
@@ -1588,6 +1612,10 @@ if (ctaVideo && ctaCanvas) {
             dealScrollTrigger.kill();
             dealScrollTrigger = null;
         }
+        if (dealIntroTrigger) {
+            dealIntroTrigger.kill();
+            dealIntroTrigger = null;
+        }
 
         const wrapper = document.getElementById('why-process-wrapper') || document.getElementById('why');
         const track = document.getElementById('why-process-track');
@@ -1609,14 +1637,38 @@ if (ctaVideo && ctaCanvas) {
         const card1 = cards[1];
         const card2 = cards[2];
 
-        // Frame 1: All 3 cards start stacked off-screen left and completely invisible.
-        // This guarantees that when scrolling down towards Why, cards are NOT already sitting in place in their columns!
         const dist = 405;
         const entryOffset = -(Math.max(window.innerWidth, 1400) + 400);
 
-        gsap.set(card0, { x: entryOffset, rotation: -6, opacity: 0 });
-        gsap.set(card1, { x: entryOffset - dist, rotation: -4, opacity: 0 });
-        gsap.set(card2, { x: entryOffset - (dist * 2), rotation: -2, opacity: 0 });
+        if (!hasDealtOnce) {
+            // Frame 1: Cards start off-screen left and fade in on first scroll approach
+            gsap.set(card0, { x: entryOffset, rotation: -6, opacity: 0 });
+            gsap.set(card1, { x: entryOffset - dist, rotation: -4, opacity: 0 });
+            gsap.set(card2, { x: entryOffset - (dist * 2), rotation: -2, opacity: 0 });
+
+            dealIntroTrigger = ScrollTrigger.create({
+                trigger: wrapper,
+                start: 'top 82%',
+                once: true,
+                onEnter: () => {
+                    hasDealtOnce = true;
+                    const introTL = gsap.timeline();
+                    // Stage 1: Slide stacked deck in from left to Column 0 & fade in
+                    introTL
+                        .to([card0, card1, card2], { opacity: 1, duration: 0.4, ease: 'power2.out' }, 0)
+                        .to(card0, { x: 0, rotation: -4, ease: 'power2.out', duration: 0.7 }, 0)
+                        .to(card1, { x: -dist, rotation: -2, ease: 'power2.out', duration: 0.7 }, 0)
+                        .to(card2, { x: -(dist * 2), rotation: 0, ease: 'power2.out', duration: 0.7 }, 0)
+                        // Stage 2: Deal cards across into Columns 1 & 2
+                        .to(card0, { rotation: 0, ease: 'power2.out', duration: 0.6 }, '+=0.08')
+                        .to(card1, { x: 0, rotation: 0, ease: 'power2.out', duration: 0.75 }, '<')
+                        .to(card2, { x: 0, rotation: 0, ease: 'power2.out', duration: 0.9 }, '<+=0.1');
+                }
+            });
+        } else {
+            // Once cards have dealt, permanently maintain settled 3-column placement
+            gsap.set([card0, card1, card2], { x: 0, y: 0, rotation: 0, opacity: 1 });
+        }
 
         if (track) gsap.set(track, { x: 0 });
         if (whyMain) gsap.set(whyMain, { x: 0, y: 0, opacity: 1, scale: 1 });
@@ -1629,11 +1681,12 @@ if (ctaVideo && ctaCanvas) {
             path.style.strokeDashoffset = res.pathLength;
         }
 
+        // Pinned Horizontal Scrub: Why -> Process
         const dealTL = gsap.timeline({
             scrollTrigger: {
                 trigger: wrapper,
                 start: 'top top',
-                end: '+=2800',
+                end: '+=2000',
                 pin: true,
                 scrub: 0.8,
                 anticipatePin: 1,
@@ -1647,36 +1700,19 @@ if (ctaVideo && ctaCanvas) {
 
         dealScrollTrigger = dealTL.scrollTrigger;
 
-        // ── STAGE 1 (0% to 25% progress): Slide entire stacked deck in from left to Column 0 & fade in ──
-        dealTL
-            .to([card0, card1, card2], { opacity: 1, duration: 0.35, ease: 'power1.out' }, 0)
-            .to(card0, { x: 0, rotation: -4, ease: 'power1.inOut', duration: 1 }, 0)
-            .to(card1, { x: -dist, rotation: -2, ease: 'power1.inOut', duration: 1 }, 0)
-            .to(card2, { x: -(dist * 2), rotation: 0, ease: 'power1.inOut', duration: 1 }, 0);
+        // Stage 1: Rest Window for cards exploration at center
+        dealTL.to({}, { duration: 0.4 });
 
-        // Short pause while stacked at Column 0
-        dealTL.to({}, { duration: 0.2 });
-
-        // ── STAGE 2 (25% to 45% progress): Deal cards across into Columns 1 & 2 ──
-        dealTL
-            .to(card0, { rotation: 0, ease: 'power2.out', duration: 0.8 })
-            .to(card1, { x: 0, rotation: 0, ease: 'power2.out', duration: 1.1 }, '<')
-            .to(card2, { x: 0, rotation: 0, ease: 'power2.out', duration: 1.4 }, '<+=0.12');
-
-        // ── STAGE 3 (45% to 55% progress): Rest Window for cards exploration ──
-        dealTL.to({}, { duration: 0.5 });
-
-        // ── STAGE 4 (55% to 95% progress): Why section slides smoothly to the left, through the 60vw space into Process ──
+        // Stage 2: Why section slides smoothly to the left, through the 60vw space into Process
         if (track) {
             dealTL.to(track, {
                 x: '-160vw',
                 ease: 'power1.inOut',
-                duration: 2.2
+                duration: 2.0
             });
         }
 
         if (path) {
-            // Path illuminates right next to Card 2 at the start of the slide and draws across into Process
             dealTL.to(path, {
                 opacity: 1,
                 duration: 0.08,
@@ -1685,12 +1721,12 @@ if (ctaVideo && ctaCanvas) {
             .to(path, {
                 strokeDashoffset: () => pathLength - horizLen,
                 ease: 'power1.inOut',
-                duration: 2.2
+                duration: 2.0
             }, '<');
         }
 
-        // Short buffer before unpinning cleanly into Process section
-        dealTL.to({}, { duration: 0.2 });
+        // Stage 3: Short buffer before unpinning cleanly into Process section
+        dealTL.to({}, { duration: 0.3 });
     }
 
     initCardDealScrollTrigger();
