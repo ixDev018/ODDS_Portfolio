@@ -32,9 +32,7 @@ if (document.getElementById('smooth-wrapper') && document.getElementById('smooth
         content: '#smooth-content',
         smooth: 1.4,          // inertia duration in seconds
         smoothTouch: 0.1,      // responsive near-instant touch response on mobile & tablet
-        effects: true,         // enable data-speed parallax on elements
-        paused: hasHeroSection, // only pause on home (hero→services transition handles unpause)
-        normalizeScroll: false, // avoid intercepting custom hero wheel/touch transitions
+        paused: !!document.getElementById('fp-overlay'), // only pause if legacy cyber blade overlay is present
     });
 }
 window.smoother = smoother;
@@ -102,6 +100,81 @@ if (prefersReducedMotion) {
     if (!secHero || !secServices) return;
 
     const overlay = document.getElementById('fp-overlay');
+    if (!overlay) {
+        document.body.classList.remove('hero-active');
+
+        const NAV = {
+            hero: { bg: 'rgba(14,14,14,0.65)', border: 'rgba(255,255,255,0.08)', light: false },
+            works: { bg: 'rgba(227,227,227,0.65)', border: 'rgba(0,0,0,0.06)', light: true },
+            services: { bg: 'rgba(32,32,32,0.85)', border: 'rgba(255,255,255,0.08)', light: false },
+            testimonials: { bg: 'rgba(243,89,176,0.65)', border: 'rgba(255,255,255,0.08)', light: false },
+            why: { bg: 'rgba(239,239,239,0.65)', border: 'rgba(0,0,0,0.06)', light: true },
+            process: { bg: 'rgba(240,240,245,0.65)', border: 'rgba(0,0,0,0.06)', light: true },
+            faq: { bg: 'rgba(255,255,255,0.65)', border: 'rgba(0,0,0,0.06)', light: true },
+            cta: { bg: 'rgba(0,0,0,0.65)', border: 'rgba(255,255,255,0.08)', light: false },
+        };
+
+        function applyNavTheme(key) {
+            if (!navbar) return;
+            const t = NAV[key] ?? NAV.hero;
+            gsap.to(navbar, { '--nav-bg': t.bg, '--nav-border': t.border, duration: 0.3, ease: 'none' });
+            navbar.classList.toggle('light-theme', t.light);
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"], a[href^="/#"]').forEach(link => {
+            link.addEventListener('click', e => {
+                const rawHref = link.getAttribute('href');
+                const hash = rawHref.includes('#') ? rawHref.substring(rawHref.indexOf('#') + 1) : '';
+                if (!hash) return;
+                const targetEl = document.getElementById(hash);
+                if (targetEl) {
+                    e.preventDefault();
+                    if (smoother) {
+                        smoother.scrollTo(targetEl, true);
+                    } else {
+                        targetEl.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+
+        // Dynamic navbar theme on scroll
+        const observedSections = [
+            { id: 'hero', key: 'hero' },
+            { id: 'works', key: 'works' },
+            { id: 'services', key: 'services' },
+            { id: 'why', key: 'why' },
+            { id: 'process', key: 'process' },
+            { id: 'faq', key: 'faq' },
+            { id: 'cta', key: 'cta' },
+        ];
+
+        function updateNavOnScroll() {
+            const scrollY = smoother ? smoother.scrollTop() : (window.scrollY || window.pageYOffset || 0);
+            const vh = window.innerHeight;
+            const probe = scrollY + vh * 0.35;
+
+            let activeKey = 'hero';
+            for (const item of observedSections) {
+                const el = document.getElementById(item.id);
+                if (el) {
+                    const top = el.offsetTop;
+                    if (probe >= top) {
+                        activeKey = item.key;
+                    }
+                }
+            }
+            applyNavTheme(activeKey);
+        }
+
+        window.addEventListener('scroll', updateNavOnScroll, { passive: true });
+        if (typeof ScrollTrigger !== 'undefined') {
+            ScrollTrigger.addEventListener('scroll', updateNavOnScroll);
+        }
+        updateNavOnScroll();
+        return;
+    }
     const blades = overlay ? Array.from(overlay.querySelectorAll('.cyber-blade')) : [];
     const rgbCyan = overlay ? overlay.querySelector('.rgb-cyan') : null;
     const rgbPink = overlay ? overlay.querySelector('.rgb-pink') : null;

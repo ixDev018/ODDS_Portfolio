@@ -1,35 +1,12 @@
 <x-layout>
-    {{-- Hero & Services Stage: Signature Cyber Blade Scroll Animation --}}
-    <div class="hero-services-stage" id="hero-services-stage">
-        {{-- Cyberpunk Digital Aperture & Chroma Shift Overlay (Confined to Hero <-> Services) --}}
-        <div class="fp-overlay" id="fp-overlay" aria-hidden="true">
-            <div class="cyber-stage" id="cyber-stage">
-                {{-- Chromatic Aberration RGB Glitch Flashes --}}
-                <div class="cyber-glitch-layer rgb-cyan"></div>
-                <div class="cyber-glitch-layer rgb-pink"></div>
-                <div class="cyber-scanlines"></div>
+    {{-- Hero Section: Signature Natural Fluid Scroll --}}
+    @include('sections.hero')
 
-                {{-- 8 Diagonal Kinetic Shear Blades with HUD Accents --}}
-                <div class="cyber-blades-wrap">
-                    @for ($b = 0; $b < 8; $b++)
-                        <div class="cyber-blade blade-{{ $b }}" data-blade="{{ $b }}">
-                            <div class="cyber-blade-surface"></div>
-                            <div class="cyber-blade-hud">
-                                <span class="cyber-hud-code">ODDS // 0{{ $b + 1 }}</span>
-                                <div class="cyber-hud-line"></div>
-                            </div>
-                        </div>
-                    @endfor
-                </div>
-            </div>
-        </div>
-
-        @include('sections.hero')
-        @include('sections.services')
-    </div>
-
-    {{-- Natural Scroll Sections: Standard Smooth Page Experience --}}
+    {{-- Works Showcase Section --}}
     @include('sections.works')
+
+    {{-- Services Signature Marquee Strip --}}
+    @include('sections.services')
     {{-- Why & Process Integrated Horizontal Transition Stage --}}
     <div class="why-process-track-wrapper" id="why-process-wrapper">
         <div class="why-process-track" id="why-process-track">

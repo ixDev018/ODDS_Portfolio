@@ -43,7 +43,7 @@ class OddsContentSeeder extends Seeder
                 ],
             ],
             [
-                'name' => "Web-App\nDevelopment",
+                'name' => "Web\nDevelopment",
                 'tagline' => 'Live. Fast. Yours.',
                 'description' => 'Scalable, modern cloud web applications with dynamic interactions, ultra-low latency, and responsive glassmorphism UI.',
                 'icon_svg' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line><line x1="2" y1="8" x2="22" y2="8"></line></svg>',
@@ -115,7 +115,7 @@ class OddsContentSeeder extends Seeder
                 ],
             ],
             [
-                'name' => "Hardware\nSolutions",
+                'name' => "IoT\nSystems",
                 'tagline' => 'Circuits with a pulse.',
                 'description' => 'Embedded firmware, IoT sensor telemetry, custom circuit boards, and industrial microcontroller integrations.',
                 'icon_svg' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="15" x2="23" y2="15"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="15" x2="4" y2="15"></line></svg>',

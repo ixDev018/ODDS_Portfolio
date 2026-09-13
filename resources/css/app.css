@@ -11,6 +11,7 @@
 :root {
     --font-primary: 'Plus Jakarta Sans', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
+    --font-krona: 'Krona One', sans-serif;
     --glow-color-inner: #FFFFFF;
     --glow-color-mid: #F359B0;
     --glow-color-outer: #D7018F;
@@ -343,7 +344,7 @@ body {
    HERO & SERVICES STAGE & CYBER BLADE OVERLAY
    ============================================= */
 body.hero-active {
-    overflow: hidden;
+    /* natural scroll enabled */
 }
 
 body.modal-open {
@@ -596,7 +597,141 @@ body:not(.hero-active) .hero-services-stage {
 }
 
 /* =============================================
-   SERVICES
+   SERVICES SIGNATURE MARQUEE STRIP
+   ============================================= */
+.services-marquee-strip {
+    width: 100%;
+    background: #202020;
+    overflow: hidden;
+    position: relative;
+    z-index: 25;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    box-sizing: border-box;
+}
+
+.services-marquee-inner {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: clamp(74px, 7vh, 88px);
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* Anchored Title on the Left */
+.services-marquee-header {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    background: #202020;
+    padding-left: clamp(24px, 5vw, 64px);
+    padding-right: clamp(16px, 2.5vw, 36px);
+    position: relative;
+    z-index: 10;
+}
+
+.services-marquee-title {
+    color: #FFFFFF;
+    font-family: var(--font-primary);
+    font-weight: 700;
+    font-size: clamp(20px, 1.75vw, 25px);
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    user-select: none;
+}
+
+/* Scrolling Marquee Viewport with Dual-Edge Fades */
+.services-marquee-viewport {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 48px, black calc(100% - 48px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 48px, black calc(100% - 48px), transparent 100%);
+}
+
+/* Left & Right Gradient Fade Edges */
+.services-fade-edge {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: clamp(36px, 5vw, 72px);
+    z-index: 5;
+    pointer-events: none;
+}
+
+.services-fade-left {
+    left: 0;
+    background: linear-gradient(to right, #202020 15%, rgba(32, 32, 32, 0) 100%);
+}
+
+.services-fade-right {
+    right: 0;
+    background: linear-gradient(to left, #202020 15%, rgba(32, 32, 32, 0) 100%);
+}
+
+/* Continuous Infinite Ticker Track */
+.services-marquee-track {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    will-change: transform;
+    animation: oddsMarqueeLoop 30s linear infinite;
+}
+
+.services-marquee-viewport:hover .services-marquee-track {
+    animation-play-state: paused;
+}
+
+.services-marquee-group {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.services-marquee-item {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.services-marquee-text {
+    font-family: var(--font-krona);
+    color: #8358FF;
+    text-transform: uppercase;
+    font-size: clamp(14px, 1.2vw, 17px);
+    letter-spacing: 0.03em;
+    line-height: 1.12;
+    white-space: nowrap;
+    user-select: none;
+    display: inline-block;
+}
+
+.services-marquee-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #8358FF;
+    flex-shrink: 0;
+    margin: 0 clamp(24px, 3.2vw, 48px);
+    display: inline-block;
+}
+
+@keyframes oddsMarqueeLoop {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* =============================================
+   SERVICES (LEGACY)
    ============================================= */
 .services {
     background: #f8fafc;
