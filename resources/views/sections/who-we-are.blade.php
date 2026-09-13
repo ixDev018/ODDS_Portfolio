@@ -5,6 +5,13 @@
             <div class="who-we-are-dots" aria-hidden="true"></div>
             <div class="who-we-are-content">
                 <p class="who-we-are-label fade-up">— Who we are</p>
+                <div class="who-we-are-mobile-media fade-up" aria-hidden="false">
+                    <img src="{{ asset('storage/odds/whoweare/ODDS_founder_grouppic_noframe.png') }}"
+                         alt="ODDS Founders Team"
+                         class="who-we-are-mobile-img"
+                         loading="lazy"
+                         decoding="async">
+                </div>
                 <h2 class="who-we-are-statement who-we-are-heading fade-up">
                     <span class="who-we-are-text-dark">The partners you bring in<br class="hidden lg:inline"> when getting it right isn't optional.<br class="hidden lg:inline"></span>
                     <span class="who-we-are-text-muted">We strip away the noise and<br class="hidden lg:inline"> overcomplicated processes to build clean, intuitive products that<br class="hidden lg:inline"></span>
