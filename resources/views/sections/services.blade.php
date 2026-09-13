@@ -37,7 +37,8 @@ foreach ($items as $svc) {
 }
 @endphp
 
-<section class="services-marquee-strip" id="services">
+<div class="services-marquee-wrapper" id="services">
+    <section class="services-marquee-strip">
     <div class="services-marquee-inner">
         {{-- Anchored Left Title --}}
         <div class="services-marquee-header">
@@ -82,5 +83,5 @@ foreach ($items as $svc) {
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+</div>

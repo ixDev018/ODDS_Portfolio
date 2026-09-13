@@ -817,14 +817,27 @@ body:not(.hero-active) .hero-services-stage {
 /* =============================================
    SERVICES SIGNATURE MARQUEE STRIP
    ============================================= */
-.services-marquee-strip {
-    width: 100%;
-    background: #202020;
-    overflow: hidden;
+.services-marquee-wrapper {
     position: relative;
+    z-index: 30;
+    width: 100%;
+    margin-top: -38px;
+    margin-bottom: -24px;
+    overflow: visible;
+    pointer-events: auto;
+}
+
+.services-marquee-strip {
+    width: calc(100vw + 140px);
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%) rotate(-1.84deg);
+    background: #1e1e1e;
+    overflow: hidden;
     z-index: 25;
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.24);
     box-sizing: border-box;
 }
 
@@ -843,9 +856,9 @@ body:not(.hero-active) .hero-services-stage {
     display: flex;
     align-items: center;
     height: 100%;
-    background: #202020;
-    padding-left: clamp(24px, 5vw, 64px);
-    padding-right: clamp(16px, 2.5vw, 36px);
+    background: #1e1e1e;
+    padding-left: calc(75px + clamp(24px, 4.5vw, 68px));
+    padding-right: clamp(18px, 2.5vw, 36px);
     position: relative;
     z-index: 10;
 }
