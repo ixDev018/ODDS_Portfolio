@@ -4008,17 +4008,17 @@ body:not(.hero-active) .hero-services-stage {
         z-index: 2;
     }
 
-    /* ─── Why Section Mobile Vertical Flow (<=768px) ─── */
+    /* ─── Why Section Mobile: Horizontal Swipe Carousel (<=768px) ─── */
     .why {
-        padding: calc(var(--nav-height) + 32px) 0 64px !important;
+        padding: calc(var(--nav-height) + 32px) 0 56px !important;
         min-height: auto !important;
         height: auto !important;
         justify-content: flex-start !important;
     }
 
     .why-center {
-        margin-bottom: 28px !important;
-        padding: 0 16px;
+        margin-bottom: 24px !important;
+        padding: 0 20px;
     }
 
     .why-title {
@@ -4035,106 +4035,123 @@ body:not(.hero-active) .hero-services-stage {
         margin-right: auto;
     }
 
-    /* ─── Vertical Cards Container ─── */
+    /* ─── Carousel Outer Wrapper ─── */
     .why-deck-wrap {
-        perspective: 1200px;
         width: 100%;
-        max-width: 390px;
+        max-width: 100%;
         margin: 0 auto;
-        padding: 0 16px;
+        padding: 0;
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: stretch;
         position: relative;
+        overflow: hidden;
     }
 
+    /* ─── Horizontal Scroll Track ─── */
     .why-deck {
         display: flex !important;
-        flex-direction: column !important;
-        gap: 48px !important;
+        flex-direction: row !important;
+        gap: 0 !important;
         width: 100% !important;
         max-width: 100% !important;
         height: auto !important;
-        margin: 0 auto;
-        transform-style: preserve-3d;
-        touch-action: pan-y !important;
-        user-select: auto;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-x: scroll !important;
+        scroll-snap-type: x mandatory !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+        transform: none !important;
+        transform-style: flat !important;
+        touch-action: pan-x !important;
+        user-select: none;
+        perspective: none !important;
     }
 
-    /* Mobile Vertical Card (Exact playing card proportions as PC: 394 / 502) */
+    .why-deck::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    /* ─── Carousel Slide (each card is a full-width slide) ─── */
     .why-card {
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        aspect-ratio: unset !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+        background: transparent !important;
+        border-radius: 0 !important;
+        scroll-snap-align: start !important;
+        scroll-snap-stop: always !important;
+        box-sizing: border-box !important;
         position: relative !important;
         top: auto !important;
         left: auto !important;
-        width: 100% !important;
-        min-width: 0 !important;
-        max-width: 320px !important;
-        aspect-ratio: 394 / 502 !important;
-        height: auto !important;
-        min-height: 0 !important;
-        margin: 0 auto;
-        padding: 0 !important;
-        border: none !important;
-        background: transparent !important;
-        border-radius: 26px !important;
-        box-sizing: border-box;
-        transform-origin: center center;
-        will-change: transform, opacity;
-        touch-action: pan-y !important;
+        transform: none !important;
         cursor: pointer !important;
         pointer-events: auto !important;
         z-index: 2 !important;
+        will-change: auto !important;
     }
 
+    /* ─── Card slide inner content frame ─── */
     .why-card-inner,
     .why-card-face {
-        border-radius: 26px !important;
+        border-radius: 20px !important;
         width: 100% !important;
         height: 100% !important;
         box-sizing: border-box;
+        transform: none !important;
+        transform-style: flat !important;
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
     }
 
-    /* Place the proper thick white border cleanly on mobile just like PC */
-    .why-card-svg-border {
-        display: block !important;
-        stroke: #ffffff !important;
-        stroke-width: 16.6772 !important;
-    }
-
+    /* ─── On mobile, hide the card back and show the front directly ─── */
     .why-card-back {
-        transform: rotateY(0deg) translateZ(1px) !important;
-        background: #ffffff !important;
-        border-radius: 26px !important;
-        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05) !important;
-        overflow: hidden !important;
-    }
-
-    .why-card-back-svg {
-        border-radius: 26px !important;
-        width: 100% !important;
-        height: 100% !important;
-        display: block !important;
-    }
-
-    .why-card-hint {
-        opacity: 0.95 !important;
-        transform: translateX(-50%) translateY(0) !important;
-        bottom: 20px;
+        display: none !important;
     }
 
     .why-card-front {
-        transform: rotateY(180deg) translateZ(1px) !important;
+        position: relative !important;
+        transform: none !important;
+        backface-visibility: visible !important;
+        -webkit-backface-visibility: visible !important;
+        margin: 0 20px !important;
+        width: calc(100% - 40px) !important;
         background: #ffffff !important;
-        padding: 28px 24px !important;
-        border-radius: 26px !important;
-        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        padding: 32px 28px 28px !important;
+        border-radius: 20px !important;
+        border: 1px solid rgba(0, 0, 0, 0.07) !important;
         border-left: 4px solid #7B51F3 !important;
-        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.10), 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.09), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
         overflow: hidden !important;
+        min-height: 240px;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
     }
 
-    /* Reset all swipe deck states so there are NO ghost borders, peeking cards, or stacking */
+    /* Theme accent border-left color per theme */
+    .why-card-front.theme-purple { border-left-color: #7B51F3 !important; }
+    .why-card-front.theme-pink   { border-left-color: #F359B0 !important; }
+    .why-card-front.theme-cyan   { border-left-color: #00B4D8 !important; }
+
+    /* ─── Hide card hint & flip prompt on mobile (not needed) ─── */
+    .why-card-hint,
+    .why-card-front-hint {
+        display: none !important;
+    }
+
+    /* ─── Reset stacking classes — no effect needed in carousel ─── */
     .why-card.is-active,
     .why-card.is-next,
     .why-card.is-back,
@@ -4147,38 +4164,128 @@ body:not(.hero-active) .hero-services-stage {
         z-index: 2 !important;
     }
 
+    .why-card-content {
+        position: relative;
+        z-index: 3;
+    }
+
     .why-card-title {
-        font-size: 19px;
+        font-size: 20px;
         font-weight: 750;
         line-height: 1.25;
         margin-bottom: 12px;
     }
 
     .why-card-text {
-        font-size: 13.5px;
-        line-height: 1.65;
+        font-size: 14px;
+        line-height: 1.7;
         max-width: 100%;
         color: #555;
     }
 
     .why-card-bg {
-        width: 190px;
-        height: 190px;
-        bottom: -30px;
-        right: -30px;
-        opacity: 0.75;
+        width: 180px;
+        height: 180px;
+        bottom: -20px;
+        right: -20px;
+        opacity: 0.6;
     }
 
     .why-card-num {
-        font-size: 24px;
-        margin-bottom: 10px;
+        font-size: 22px;
+        margin-bottom: 12px;
         opacity: 1 !important;
     }
 
-    /* Hide Mobile Deck Controls & Swipe Hint on mobile */
-    .why-mobile-controls,
+    /* ─── Show Mobile Carousel Controls ─── */
+    .why-mobile-controls {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        width: calc(100% - 40px);
+        margin: 16px auto 0;
+        padding: 0;
+        gap: 12px;
+    }
+
+    /* Hide swipe hint since we have arrow controls */
     .why-swipe-hint {
         display: none !important;
+    }
+
+    /* ─── Nav Arrow Buttons ─── */
+    .why-nav-arrow {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #111;
+        border: none;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: background 0.2s ease, transform 0.15s ease;
+        color: #fff;
+    }
+
+    .why-nav-arrow:hover {
+        background: #7B51F3;
+        transform: scale(1.08);
+    }
+
+    .why-nav-arrow:disabled {
+        background: rgba(0,0,0,0.12);
+        color: rgba(0,0,0,0.3);
+        cursor: default;
+        transform: none;
+    }
+
+    /* ─── Progress/Counter Bar ─── */
+    .why-progress-status {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        flex: 1;
+    }
+
+    .why-counter {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-family: var(--font-mono, monospace);
+        font-size: 12px;
+        font-weight: 600;
+        color: #888;
+        letter-spacing: 0.06em;
+    }
+
+    .why-current-idx {
+        color: #111;
+        font-weight: 700;
+    }
+
+    .why-counter-divider {
+        color: #bbb;
+    }
+
+    .why-segmented-bar {
+        display: flex;
+        gap: 5px;
+    }
+
+    .why-bar-segment {
+        width: 24px;
+        height: 3px;
+        border-radius: 2px;
+        background: rgba(0,0,0,0.12);
+        transition: background 0.25s ease, width 0.25s ease;
+    }
+
+    .why-bar-segment.active {
+        background: #7B51F3;
+        width: 36px;
     }
 
     .why-orb-1 {
@@ -4288,13 +4395,23 @@ body:not(.hero-active) .hero-services-stage {
         position: relative;
         z-index: 2;
         grid-template-columns: 1fr;
-        gap: 28px;
+        gap: 24px;
         padding: 0;
     }
 
-    .process-phase-content-side {
+    /* ─── Force consistent Text → Image order on all steps ─── */
+    .process-phase-block .process-phase-content-side,
+    .process-phase-block.is-flipped .process-phase-content-side {
+        order: 1 !important;
         position: relative;
         z-index: 3;
+    }
+
+    .process-phase-block .process-phase-media-side,
+    .process-phase-block.is-flipped .process-phase-media-side {
+        order: 2 !important;
+        position: relative;
+        z-index: 2;
     }
 
     .process-phase-text-body {
@@ -4310,11 +4427,6 @@ body:not(.hero-active) .hero-services-stage {
                 rgba(240, 240, 245, 0.80) 80%,
                 rgba(240, 240, 245, 0) 100%);
         filter: blur(18px);
-    }
-
-    .process-phase-media-side {
-        position: relative;
-        z-index: 2;
     }
 
     .process-image-frame {
@@ -4536,17 +4648,17 @@ body:not(.hero-active) .hero-services-stage {
 }
 
 @media (max-width: 380px) {
-    .why-deck-wrap {
-        max-width: 315px;
+    .why-card-front {
+        margin: 0 12px !important;
+        width: calc(100% - 24px) !important;
+        padding: 24px 20px !important;
+        min-height: 200px;
     }
 
-    .why-deck {
-        height: 330px;
-    }
-
-    .why-card {
-        height: 320px !important;
-        padding: 22px 18px !important;
+    .why-mobile-controls {
+        width: calc(100% - 24px) !important;
+        margin-left: 12px !important;
+        margin-right: 12px !important;
     }
 
     .why-card-title {
@@ -4554,14 +4666,14 @@ body:not(.hero-active) .hero-services-stage {
     }
 
     .why-card-text {
-        font-size: 12px !important;
-        line-height: 1.5 !important;
+        font-size: 12.5px !important;
+        line-height: 1.55 !important;
     }
 }
 
 @media (max-height: 650px) {
     .why {
-        padding: 54px 0 10px !important;
+        padding: 54px 0 16px !important;
     }
 
     .why-center {
@@ -4578,13 +4690,9 @@ body:not(.hero-active) .hero-services-stage {
         line-height: 1.35 !important;
     }
 
-    .why-deck {
-        height: 300px;
-    }
-
-    .why-card {
-        height: 290px !important;
-        padding: 18px 16px !important;
+    .why-card-front {
+        min-height: 180px !important;
+        padding: 20px 18px !important;
     }
 
     .why-card-title {

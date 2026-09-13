@@ -1765,40 +1765,8 @@ if (ctaVideo && ctaCanvas) {
         const isMobile = window.innerWidth <= 768;
 
         if (isMobile) {
-            // Mobile (<= 768px): Each card is dynamically revealed per scroll.
-            // Scrolling down pulls each card out from blank space into its dedicated place.
-            cards.forEach((card, idx) => {
-                const rot = idx % 2 === 0 ? -3 : 3;
-                const xOffset = idx % 2 === 0 ? -32 : 32;
-
-                gsap.set(card, {
-                    opacity: 0,
-                    y: 70,
-                    x: xOffset,
-                    scale: 0.88,
-                    rotation: rot
-                });
-
-                const tween = gsap.to(card, {
-                    opacity: 1,
-                    y: 0,
-                    x: 0,
-                    scale: 1,
-                    rotation: 0,
-                    ease: 'power2.out',
-                    scrollTrigger: {
-                        trigger: card,
-                        start: 'top 92%',
-                        end: 'top 52%',
-                        scrub: 0.5,
-                        invalidateOnRefresh: true,
-                    }
-                });
-
-                if (tween.scrollTrigger) {
-                    responsiveRevealTriggers.push(tween.scrollTrigger);
-                }
-            });
+            // Mobile (<=768px): Horizontal carousel — cards always visible, no scroll-trigger reveal needed.
+            cards.forEach(card => gsap.set(card, { clearProps: 'all' }));
         } else {
             // Tablet (769px - 991px): 3-column grid of cards
             const wrap = document.getElementById('why-deck-wrap') || document.querySelector('.why-deck-wrap');
@@ -1826,6 +1794,91 @@ if (ctaVideo && ctaCanvas) {
         }
     }
 
+    // ── Mobile Carousel Controller (prev/next arrows + segmented dots) ──
+    let carouselCleanup = null;
+
+    function initMobileCarousel() {
+        if (carouselCleanup) { carouselCleanup(); carouselCleanup = null; }
+        if (window.innerWidth > 768) return;
+
+        const deckEl   = document.getElementById('why-deck');
+        const prevBtn  = document.getElementById('why-nav-prev');
+        const nextBtn  = document.getElementById('why-nav-next');
+        const counter  = document.getElementById('why-current-idx');
+        const segments = Array.from(document.querySelectorAll('.why-bar-segment'));
+        if (!deckEl || !prevBtn || !nextBtn) return;
+
+        // Clear any GSAP residual transforms so offsetLeft is accurate
+        cards.forEach(card => {
+            gsap.set(card, { clearProps: 'all' });
+            card.style.transform = '';
+            card.style.opacity = '';
+        });
+
+        let currentIdx = 0;
+
+        function getCardLeft(idx) {
+            return cards[idx] ? cards[idx].offsetLeft : idx * deckEl.offsetWidth;
+        }
+
+        function scrollToCard(idx) {
+            idx = Math.max(0, Math.min(cards.length - 1, idx));
+            currentIdx = idx;
+            deckEl.scrollTo({ left: getCardLeft(idx), behavior: 'smooth' });
+            updateControls();
+        }
+
+        function updateControls() {
+            if (counter) counter.textContent = String(currentIdx + 1).padStart(2, '0');
+            segments.forEach((seg, i) => {
+                seg.classList.toggle('active', i === currentIdx);
+            });
+            prevBtn.disabled = currentIdx === 0;
+            nextBtn.disabled = currentIdx === cards.length - 1;
+        }
+
+        let scrollTimer = null;
+        function onScroll() {
+            clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(() => {
+                const scrollLeft = deckEl.scrollLeft;
+                let closest = 0;
+                let minDist = Infinity;
+                cards.forEach((card, i) => {
+                    const dist = Math.abs(getCardLeft(i) - scrollLeft);
+                    if (dist < minDist) { minDist = dist; closest = i; }
+                });
+                if (closest !== currentIdx) {
+                    currentIdx = closest;
+                    updateControls();
+                }
+            }, 80);
+        }
+
+        const onPrev = () => scrollToCard(currentIdx - 1);
+        const onNext = () => scrollToCard(currentIdx + 1);
+
+        prevBtn.addEventListener('click', onPrev);
+        nextBtn.addEventListener('click', onNext);
+        deckEl.addEventListener('scroll', onScroll, { passive: true });
+
+        // Segment dot clicks
+        segments.forEach((seg, i) => seg.addEventListener('click', () => scrollToCard(i)));
+
+        // Reset to first card after two paint frames so layout is fully settled
+        currentIdx = 0;
+        updateControls();
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            deckEl.scrollLeft = 0;
+        }));
+
+        carouselCleanup = () => {
+            prevBtn.removeEventListener('click', onPrev);
+            nextBtn.removeEventListener('click', onNext);
+            deckEl.removeEventListener('scroll', onScroll);
+        };
+    }
+
     // Handle viewport resize & device orientation changes smoothly
     let resizeTimer = null;
     function handleViewportChange() {
@@ -1834,6 +1887,7 @@ if (ctaVideo && ctaCanvas) {
             updateStack();
             initCardDealScrollTrigger();
             initResponsiveReveal();
+            initMobileCarousel();
             if (typeof ScrollTrigger !== 'undefined') {
                 ScrollTrigger.refresh();
             }
@@ -1845,6 +1899,7 @@ if (ctaVideo && ctaCanvas) {
     // Initialize initial view
     updateStack();
     initResponsiveReveal();
+    initMobileCarousel();
 })();
 
 
