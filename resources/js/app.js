@@ -1656,27 +1656,39 @@ if (ctaVideo && ctaCanvas) {
         const isMobile = window.innerWidth <= 768;
 
         if (isMobile) {
-            // Mobile (<= 768px): Each card is positioned vertically.
-            // As the user scrolls down, each card smoothly pulls into view individually.
-            cards.forEach((card) => {
-                gsap.set(card, { opacity: 0, y: 48, scale: 0.95 });
+            // Mobile (<= 768px): Each card is dynamically revealed per scroll.
+            // Scrolling down pulls each card out from blank space into its dedicated place.
+            cards.forEach((card, idx) => {
+                const rot = idx % 2 === 0 ? -3 : 3;
+                const xOffset = idx % 2 === 0 ? -32 : 32;
 
-                const st = ScrollTrigger.create({
-                    trigger: card,
-                    start: 'top 86%',
-                    once: true,
-                    onEnter: () => {
-                        gsap.to(card, {
-                            opacity: 1,
-                            y: 0,
-                            scale: 1,
-                            duration: 0.75,
-                            ease: 'power3.out',
-                            clearProps: 'transform,scale,y,opacity'
-                        });
+                gsap.set(card, {
+                    opacity: 0,
+                    y: 70,
+                    x: xOffset,
+                    scale: 0.88,
+                    rotation: rot
+                });
+
+                const tween = gsap.to(card, {
+                    opacity: 1,
+                    y: 0,
+                    x: 0,
+                    scale: 1,
+                    rotation: 0,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 92%',
+                        end: 'top 52%',
+                        scrub: 0.5,
+                        invalidateOnRefresh: true,
                     }
                 });
-                responsiveRevealTriggers.push(st);
+
+                if (tween.scrollTrigger) {
+                    responsiveRevealTriggers.push(tween.scrollTrigger);
+                }
             });
         } else {
             // Tablet (769px - 991px): 3-column grid of cards
@@ -1867,11 +1879,53 @@ if (ctaVideo && ctaCanvas) {
         requestAnimationFrame(loop);
     }
 
+    // ─── Mobile Process Line Trail Animation ───
+    const mobilePath = document.getElementById('process-mobile-line-path');
+    let mobileLineST = null;
+
+    function initMobileProcessLine() {
+        if (mobileLineST) {
+            mobileLineST.kill();
+            mobileLineST = null;
+        }
+
+        if (!mobilePath || window.innerWidth >= 992) return;
+
+        let totalLen = 1250;
+        try {
+            totalLen = Math.round(mobilePath.getTotalLength()) || 1250;
+        } catch (e) {
+            totalLen = 1250;
+        }
+
+        mobilePath.style.strokeDasharray = `${totalLen} ${totalLen}`;
+        mobilePath.style.strokeDashoffset = `${totalLen}`;
+
+        mobileLineST = ScrollTrigger.create({
+            trigger: '#process',
+            start: 'top 92%',
+            end: 'bottom 85%',
+            scrub: 0.35,
+            onUpdate: (self) => {
+                const drawOffset = totalLen * (1 - self.progress);
+                mobilePath.style.strokeDashoffset = Math.max(0, drawOffset);
+            }
+        });
+    }
+
+    initMobileProcessLine();
+
     window.addEventListener('scroll', calcTargetProgress, { passive: true });
-    window.addEventListener('resize', calcTargetProgress);
+    window.addEventListener('resize', () => {
+        calcTargetProgress();
+        initMobileProcessLine();
+    });
 
     if (typeof ScrollTrigger !== 'undefined') {
-        ScrollTrigger.addEventListener('refresh', calcTargetProgress);
+        ScrollTrigger.addEventListener('refresh', () => {
+            calcTargetProgress();
+            initMobileProcessLine();
+        });
     }
 
     requestAnimationFrame(loop);

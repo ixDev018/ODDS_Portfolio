@@ -102,7 +102,7 @@ $workItems = isset($works) && count($works) > 0 ? $works : collect([
     </div><!-- end grid -->
 
     {{-- See More button --}}
-    <a href="#cta" class="works-see-more animate-fade-up fade-up" style="animation-delay: 950ms;">
+    <a href="{{ route('portfolio.our-work') }}" class="works-see-more animate-fade-up fade-up" style="animation-delay: 950ms;">
       See More
     </a>
 

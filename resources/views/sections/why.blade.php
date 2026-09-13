@@ -53,7 +53,7 @@ $accentThemes = ['purple', 'pink', 'cyan'];
                 @php
                     $theme = $r->accent ?? ($accentThemes[$index % count($accentThemes)]);
                 @endphp
-                <div class="why-card scale-in" data-index="{{ $index }}" style="--card-index: {{ $index }};" role="button" tabindex="0" aria-label="Playing card 0{{ $index + 1 }}: {{ $r->title }}. Click to flip.">
+                <div class="why-card" data-index="{{ $index }}" style="--card-index: {{ $index }};" role="button" tabindex="0" aria-label="Playing card 0{{ $index + 1 }}: {{ $r->title }}. Click to flip.">
                     <div class="why-card-inner">
                         {{-- Inactive Card Face (Playing Card Back - Default State) --}}
                         <div class="why-card-face why-card-back">

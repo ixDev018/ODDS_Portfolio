@@ -64,8 +64,16 @@ $processPhases = [
             </svg>
         </div>
 
+        {{-- Mobile Animated Line Path SVG (replicates the PC horizontal sweep to right then downwards) --}}
+        <div class="process-mobile-linepath-wrap" aria-hidden="true">
+            <svg class="process-mobile-linepath-svg" viewBox="0 0 100 1200" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path id="process-mobile-line-path" class="process-mobile-line-path" d="M 10 30 C 25 30, 86 60, 86 140 C 86 220, 88 310, 86 380 C 84 440, 14 420, 14 490 C 14 560, 12 650, 14 720 C 16 780, 86 760, 86 830 C 86 900, 86 980, 84 1030 C 84 1040, 50 1035, 50 1050" stroke="#FF7E5D" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+            </svg>
+        </div>
+
         {{-- Editorial Zigzag Sequence (3 Phases) --}}
         <div class="process-editorial-feed">
+
             @foreach($processPhases as $idx => $phase)
             @php
                 $isFlipped = ($idx % 2 === 1);
