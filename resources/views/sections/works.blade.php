@@ -54,11 +54,11 @@ $workItems = isset($works) && count($works) > 0 ? $works : collect([
            data-project-github="{{ $item->github_url ?? '' }}"
            data-project-path="ODDS_Project/{{ Str::studly($item->title) }}/Project_Story">
         <div class="sync-ease absolute top-[1px] right-0 h-[31px] z-20 origin-right
-                    w-[200px] group-hover:w-[225px]
-                    bg-[#2b2b2b] text-white rounded-full font-semibold text-[11px] tracking-widest border border-[#1a1a1a]
-                    flex items-center justify-center shadow-md transition-all
+                    w-[150px] sm:w-[190px] md:w-[200px] md:group-hover:w-[225px]
+                    bg-[#2b2b2b] text-white rounded-full font-semibold text-[10px] sm:text-[11px] tracking-widest border border-[#1a1a1a]
+                    flex items-center justify-center shadow-md transition-all px-2.5
                     group-hover:bg-black group-hover:border-white/30 group-hover:shadow-lg">
-          <span class="sync-ease whitespace-nowrap transition-transform">{{ $item->title }}</span>
+          <span class="sync-ease whitespace-nowrap overflow-hidden text-ellipsis transition-transform">{{ $item->title }}</span>
         </div>
         <div class="absolute inset-0">
           <svg class="w-full h-full block overflow-visible" viewBox="-1 -1 408 248" fill="none" xmlns="http://www.w3.org/2000/svg">

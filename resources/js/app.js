@@ -1459,11 +1459,11 @@ if (ctaVideo && ctaCanvas) {
         const isHorizontalTrack = window.innerWidth >= 992;
 
         if (!isHorizontalTrack) {
-            path.setAttribute('d', `M 467.332 1.52271 ${PATH_TAIL_D}`);
+            path.setAttribute('d', `M 467.332 65.742 C 454.431 127.953 404.689 176.83 342.376 182.085 L 114.38 201.314 C 89.7562 203.391 66.5806 213.818 48.6935 230.868 C -13.312 289.973 14.502 394.256 97.7059 414.631 L 505.918 514.595 C 512.476 516.201 518.697 518.955 524.295 522.729 C 573.667 556.018 545.675 633.188 486.442 627.082 L 127.407 590.071 C 108.352 588.107 89.2368 593.184 73.668 604.345 C 11.7091 648.76 43.1302 746.523 119.364 746.523 H 150.72 C 201.364 746.523 241.681 788.937 239.117 839.515 L 234.832 924.023`);
             try {
-                pathLength = path.getTotalLength() || 2800;
+                pathLength = path.getTotalLength() || 2600;
             } catch (e) {
-                pathLength = 2800;
+                pathLength = 2600;
             }
             horizLen = 0;
             path.style.strokeDasharray = `${pathLength} ${pathLength}`;
@@ -1477,16 +1477,14 @@ if (ctaVideo && ctaCanvas) {
         const gapPx = winWidth * gapVw;
 
         if (card2 && wrapEl) {
-            // Calculate Card 2 right edge relative to wrapEl left edge in track space:
-            // Deck is centered in Why (100vw). 3 cards with width 385px and gap 20px span 1195px.
-            // Half-deck width = 597.5px.
-            // Card 2 right edge is at: 50vw + 597.5px in Why space.
-            // wrapEl is centered in Process (which is at (100vw + gapPx) .. (200vw + gapPx)):
-            // wrapEl left edge is at: 100vw + gapPx + (100vw - wrapWidth) / 2 = 150vw + gapPx - (wrapWidth / 2).
-            // Distance from wrapEl left to Card 2 right edge:
-            // deltaPx = (50vw + 597.5) - (150vw + gapPx - wrapWidth / 2) = 597.5 + (wrapWidth / 2) - winWidth - gapPx
-            const deckHalf = 597.5;
-            const deltaPx = deckHalf + (wrapWidth / 2) - winWidth - gapPx + 16; // 16px right of Card 2
+            // Dynamically calculate Card 2 right edge relative to wrapEl left edge in track space
+            const deckEl = document.getElementById('why-deck');
+            const deckWidth = deckEl ? deckEl.offsetWidth : Math.min(1195, winWidth);
+            const deckLeft = (winWidth - deckWidth) / 2;
+            const card2Width = card2.offsetWidth || 385;
+            const card2RightInWhy = deckLeft + (card2.offsetLeft || (deckWidth - card2Width)) + card2Width;
+            const wrapLeftInTrack = winWidth + gapPx + (winWidth - wrapWidth) / 2;
+            const deltaPx = card2RightInWhy - wrapLeftInTrack + 16;
             startX = Math.round((deltaPx / wrapWidth) * 565);
         } else {
             const distancePx = winWidth + gapPx + Math.max(0, (winWidth - wrapWidth) / 2);

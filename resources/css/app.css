@@ -14,6 +14,7 @@
     --glow-color-inner: #FFFFFF;
     --glow-color-mid: #F359B0;
     --glow-color-outer: #D7018F;
+    --nav-height: clamp(64px, 8vh, 80px);
 }
 
 *,
@@ -109,7 +110,7 @@ body {
     left: 0;
     right: 0;
     z-index: 100;
-    height: 10vh;
+    height: var(--nav-height);
     padding: 0;
     color: #fff;
     background: transparent;
@@ -356,6 +357,11 @@ body.modal-open {
     min-height: 100dvh;
     background: #0e0e0e;
     overflow: hidden;
+}
+
+body:not(.hero-active) .hero-services-stage {
+    overflow: visible !important;
+    height: auto !important;
 }
 
 /* ── Cyberpunk Digital Aperture & Chroma Shift Overlay (Hero <-> Services only) ── */
@@ -668,15 +674,13 @@ body.modal-open {
 /* Horizontal scrolling cards row */
 .services-cards {
     overflow: hidden;
-    margin-top: -10px;
-    margin-bottom: -30px;
-    padding-top: 35px;
-    padding-bottom: 55px;
-    /* Full-bleed: escape sec-inner padding to span entire viewport without transform conflict */
-    width: 100vw;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding-top: 25px;
+    padding-bottom: 35px;
+    width: 100%;
+    max-width: 100%;
     position: relative;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
 }
 
 .services-cards::-webkit-scrollbar {
@@ -765,6 +769,9 @@ body.modal-open {
     position: relative;
     overflow: hidden;
     flex: 0 0 280px;
+    width: 280px;
+    min-width: 280px;
+    flex-shrink: 0 !important;
     height: 250px;
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(12px);
@@ -893,7 +900,7 @@ body.modal-open {
     background: radial-gradient(ellipse 55% 70% at 0% 65%, rgba(185, 155, 235, 0.48) 0%, transparent 100%),
         radial-gradient(ellipse 55% 70% at 100% 65%, rgba(185, 155, 235, 0.48) 0%, transparent 100%),
         #ffffff;
-    padding: calc(10vh + 40px) 0 100px;
+    padding: calc(var(--nav-height) + 40px) 0 100px;
     font-family: var(--font-primary), sans-serif;
     display: flex;
     justify-content: center;
@@ -1415,6 +1422,10 @@ body.modal-open {
         min-width: 100%;
         max-width: 100%;
     }
+
+    .process-linepath-wrap {
+        display: none !important;
+    }
 }
 
 @media (min-width: 769px) and (max-width: 991.98px) {
@@ -1449,7 +1460,7 @@ body.modal-open {
    ============================================= */
 .why {
     background: #f0f0f5;
-    padding: calc(10vh + 64px) 0 80px;
+    padding: calc(var(--nav-height) + 40px) 0 80px;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -1869,7 +1880,7 @@ body.modal-open {
    ============================================= */
 .process {
     background: #f0f0f5;
-    padding: calc(10vh + 64px) 0 100px;
+    padding: calc(var(--nav-height) + 40px) 0 100px;
     font-family: var(--font-primary), sans-serif;
     display: flex;
     justify-content: center;
@@ -2252,7 +2263,7 @@ body.modal-open {
     background: radial-gradient(ellipse 55% 70% at 0% 35%, rgba(185, 155, 235, 0.48) 0%, transparent 100%),
         radial-gradient(ellipse 55% 70% at 100% 65%, rgba(185, 155, 235, 0.48) 0%, transparent 100%),
         #ffffff;
-    padding: calc(10vh + 40px) 0 100px;
+    padding: calc(var(--nav-height) + 40px) 0 100px;
     font-family: var(--font-primary), sans-serif;
     display: flex;
     justify-content: center;
@@ -2492,7 +2503,7 @@ body.modal-open {
     background: #0e0e0e;
     min-height: 100vh;
     min-height: 100dvh;
-    padding: calc(10vh + 40px) 0 60px;
+    padding: calc(var(--nav-height) + 30px) 0 60px;
     position: relative;
     overflow: hidden;
     display: flex;
@@ -2764,7 +2775,7 @@ body.modal-open {
 /* Tablet: stack video on top of content */
 @media (max-width: 850px) {
     .cta {
-        padding: calc(10vh + 24px) 0 40px;
+        padding: calc(var(--nav-height) + 20px) 0 40px;
     }
 
     .cta-outer {
@@ -2825,7 +2836,7 @@ body.modal-open {
 /* Phone: preserve floating terminal window card, ASCII animation scaled large on top */
 @media (max-width: 580px) {
     .cta {
-        padding: calc(10vh + 6px) 0 20px;
+        padding: calc(var(--nav-height) + 8px) 0 20px;
         justify-content: flex-start;
         min-height: 100dvh;
     }
@@ -2932,7 +2943,7 @@ body.modal-open {
 /* Compact screens (iPhone SE / short viewport heights) */
 @media (max-height: 680px) and (max-width: 580px) {
     .cta {
-        padding: calc(10vh + 2px) 0 14px;
+        padding: calc(var(--nav-height) + 4px) 0 14px;
     }
 
     .cta-terminal-body {
@@ -3256,7 +3267,7 @@ body.modal-open {
     }
 
     .process {
-        padding: calc(10vh + 32px) 0 50px;
+        padding: calc(var(--nav-height) + 24px) 0 50px;
     }
 
     .process-content-wrap {
@@ -3277,7 +3288,7 @@ body.modal-open {
     }
 
     .why {
-        padding: calc(10vh + 32px) 0 40px;
+        padding: calc(var(--nav-height) + 24px) 0 40px;
     }
 
     .why-center {
@@ -3411,18 +3422,24 @@ body.modal-open {
     }
 
     .services {
-        padding: 80px 0 40px;
+        padding: calc(clamp(64px, 8vh, 80px) + 16px) 0 40px;
+        justify-content: flex-start !important;
     }
 
     .services-cards {
-        margin-top: -10px;
-        margin-bottom: -20px;
-        padding-top: 25px;
-        padding-bottom: 40px;
+        margin-top: 8px;
+        margin-bottom: 16px;
+        padding-top: 15px;
+        padding-bottom: 25px;
+        width: 100%;
+        max-width: 100%;
     }
 
     .svc-card {
         flex: 0 0 240px;
+        width: 240px;
+        min-width: 240px;
+        flex-shrink: 0 !important;
         height: 240px;
         padding: 24px 18px 20px;
         border-radius: 22px;
@@ -3838,7 +3855,10 @@ body.modal-open {
     }
 
     .svc-card {
-        flex: 0 0 200px;
+        flex: 0 0 210px;
+        width: 210px;
+        min-width: 210px;
+        flex-shrink: 0 !important;
         height: 200px;
         padding: 20px 14px 16px;
         border-radius: 18px;
@@ -4026,6 +4046,35 @@ body.modal-open {
 
     .why-mobile-controls {
         margin-top: 8px;
+    }
+}
+
+@media (max-height: 800px) {
+    .services {
+        justify-content: flex-start !important;
+        padding-top: calc(clamp(64px, 8vh, 80px) + 16px) !important;
+        padding-bottom: 36px !important;
+        min-height: auto !important;
+    }
+    .services-header {
+        margin-bottom: 16px !important;
+    }
+    .services-cards {
+        margin-top: 6px !important;
+        margin-bottom: 14px !important;
+    }
+}
+
+@media (hover: none) {
+    .services-track:hover .svc-card {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+    .services-track:hover .svc-card:hover {
+        opacity: 1 !important;
+        transform: none !important;
+        border-color: rgba(226, 232, 240, 0.9) !important;
+        box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04) !important;
     }
 }
 

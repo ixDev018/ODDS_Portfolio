@@ -41,7 +41,7 @@
         background: radial-gradient(ellipse 55% 70% at 0% 40%, rgba(185, 155, 235, 0.45) 0%, transparent 100%),
                     radial-gradient(ellipse 55% 70% at 100% 40%, rgba(185, 155, 235, 0.45) 0%, transparent 100%),
                     #ffffff;
-        padding-top: calc(10vh + 32px);
+        padding-top: calc(var(--nav-height, 72px) + 32px);
         padding-bottom: 96px;
         font-family: var(--font-primary), sans-serif;
         overflow-x: hidden;
@@ -81,9 +81,9 @@
 
     .showcase-stage-slide {
         flex: 0 0 auto;
-        width: clamp(680px, 72vw, 1020px);
-        height: clamp(380px, 42vw, 550px);
-        margin-right: 36px;
+        width: clamp(320px, 72vw, 1020px);
+        height: clamp(320px, 42vw, 550px);
+        margin-right: clamp(16px, 2.5vw, 36px);
         position: relative;
         border-radius: 26px;
         background: radial-gradient(120% 120% at 50% 10%, #1a1a24 0%, #0c0c11 100%);
@@ -420,7 +420,7 @@
 
     /* ─── CONTROLS & CAPTION BAR BELOW STAGE ─── */
     .showcase-controls-bar {
-        max-width: clamp(680px, 72vw, 1020px);
+        max-width: clamp(320px, 72vw, 1020px);
         margin: 24px auto 0;
         padding: 0 6px;
         display: flex;

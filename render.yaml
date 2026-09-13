@@ -4,6 +4,8 @@ services:
     runtime: docker
     plan: free
     region: oregon
+    branch: MERGED
+    autoDeploy: true
     healthCheckPath: /
     envVars:
       - key: APP_NAME

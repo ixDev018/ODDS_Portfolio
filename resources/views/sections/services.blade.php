@@ -178,44 +178,6 @@ $serviceItems = isset($services) && count($services) > 0 ? $services : collect(a
                 </div>
                 @endforeach
             </div>
-            <!-- Duplicate group for infinite loop marquee -->
-            <div class="services-group" aria-hidden="true">
-                @foreach($serviceItems as $index => $svc)
-                @php
-                    $cleanName = trim(str_replace(["\r\n", "\r", "\n"], ' ', $svc->name));
-                    $itemConfig = $defaultMap[$cleanName] ?? null;
-                    $displayName = !empty($svc->name) ? $svc->name : ($itemConfig['name'] ?? $cleanName);
-                    $iconSvg = !empty($svc->icon_svg) ? $svc->icon_svg : ($itemConfig['icon'] ?? '');
-                    $tagline = $svc->tagline ?? ($itemConfig['tagline'] ?? 'Engineering Service');
-
-                    $lowerName = strtolower($cleanName);
-                    $matchedKey = 'software';
-                    if (str_contains($lowerName, 'web')) $matchedKey = 'web';
-                    elseif (str_contains($lowerName, 'mobile')) $matchedKey = 'mobile';
-                    elseif (str_contains($lowerName, 'backend') || str_contains($lowerName, 'devops')) $matchedKey = 'backend';
-                    elseif (str_contains($lowerName, 'game')) $matchedKey = 'game';
-                    elseif (str_contains($lowerName, 'hardware')) $matchedKey = 'hardware';
-                    else $matchedKey = $themeKeys[$index % count($themeKeys)];
-
-                    $theme = $serviceThemes[$matchedKey];
-                @endphp
-                <div class="svc-card service-card-trigger"
-                     data-service-index="{{ $index }}"
-                     data-service-id="{{ $svc->id ?? $index }}"
-                     data-service-name="{{ $displayName }}"
-                     data-service-tagline="{{ $tagline }}"
-                     data-service-desc="{{ $svc->description ?? '' }}"
-                     data-service-cover="{{ $svc->cover_image_url ?? ($svc->cover_image ?? '') }}"
-                     data-service-path="ODDS_Studio/Services/{{ \Illuminate\Support\Str::studly($cleanName) }}/Overview"
-                     style="--svc-color: {{ $theme['color'] }}; --svc-bg: {{ $theme['bg'] }}; --svc-border: {{ $theme['border'] }};">
-                    <div class="svc-card-bg-wire" aria-hidden="true">
-                        {!! $theme['svg'] !!}
-                    </div>
-                    <div class="svc-icon">{!! $iconSvg !!}</div>
-                    <h3 class="svc-card-name" style="white-space:pre-line;">{{ $displayName }}</h3>
-                </div>
-                @endforeach
-            </div>
         </div>
     </div>
 
