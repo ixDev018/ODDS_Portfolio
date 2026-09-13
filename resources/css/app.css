@@ -3497,37 +3497,40 @@ body:not(.hero-active) .hero-services-stage {
         z-index: 2;
     }
 
-    /* ─── Why Section Mobile 3D Deck (<=768px) ─── */
+    /* ─── Why Section Mobile Vertical Flow (<=768px) ─── */
     .why {
-        padding: 72px 0 24px !important;
-        min-height: 100vh;
-        justify-content: center;
+        padding: calc(var(--nav-height) + 32px) 0 64px !important;
+        min-height: auto !important;
+        height: auto !important;
+        justify-content: flex-start !important;
     }
 
     .why-center {
-        margin-bottom: 14px !important;
+        margin-bottom: 28px !important;
         padding: 0 16px;
     }
 
     .why-title {
-        font-size: clamp(22px, 6.2vw, 32px);
-        margin-bottom: 6px;
+        font-size: clamp(24px, 6.5vw, 34px);
+        margin-bottom: 8px;
     }
 
     .why-desc {
-        font-size: 13px;
-        line-height: 1.5;
-        max-width: 340px;
+        font-size: 13.5px;
+        line-height: 1.55;
+        max-width: 420px;
         padding: 0 8px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
-    /* ─── 3D Deck Wrapper & Stacking ─── */
+    /* ─── Vertical Cards Container ─── */
     .why-deck-wrap {
-        perspective: 1100px;
+        perspective: 1200px;
         width: 100%;
-        max-width: 350px;
+        max-width: 390px;
         margin: 0 auto;
-        padding: 0 12px;
+        padding: 0 16px;
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
@@ -3536,35 +3539,40 @@ body:not(.hero-active) .hero-services-stage {
     }
 
     .why-deck {
-        display: block !important;
-        position: relative;
-        width: 100%;
-        height: 350px;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 26px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
         margin: 0 auto;
         transform-style: preserve-3d;
-        touch-action: pan-y;
-        user-select: none;
+        touch-action: pan-y !important;
+        user-select: auto;
     }
 
-    /* 3D Stack Cards */
+    /* Mobile Vertical Card (Natural flow, no absolute positioning, no ghost borders) */
     .why-card {
-        position: absolute !important;
-        top: 0;
-        left: 0;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
         width: 100% !important;
         min-width: 0 !important;
         max-width: 100% !important;
-        height: 350px !important;
-        min-height: 0 !important;
+        height: 380px !important;
+        min-height: 380px !important;
         padding: 0 !important;
         border: none !important;
         background: transparent !important;
         border-radius: 20px;
         box-sizing: border-box;
-        transform-origin: center bottom;
-        will-change: transform, opacity, box-shadow;
-        touch-action: pan-y;
-        cursor: grab;
+        transform-origin: center center;
+        will-change: transform, opacity;
+        touch-action: pan-y !important;
+        cursor: pointer !important;
+        pointer-events: auto !important;
+        opacity: 1;
+        z-index: 2 !important;
     }
 
     .why-card-inner,
@@ -3572,39 +3580,51 @@ body:not(.hero-active) .hero-services-stage {
         border-radius: 20px !important;
     }
 
+    /* Completely eliminate the white ghost/invisible border on mobile */
+    .why-card-svg-border {
+        display: none !important;
+    }
+
+    .why-card-back {
+        transform: rotateY(0deg) translateZ(1px) !important;
+        background: #3C3C3C !important;
+        border-radius: 20px !important;
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16), 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+    }
+
+    .why-card-back-svg {
+        border-radius: 20px !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .why-card-hint {
+        opacity: 0.95 !important;
+        transform: translateX(-50%) translateY(0) !important;
+        bottom: 18px;
+    }
+
     .why-card-front {
-        padding: 24px 20px !important;
+        transform: rotateY(180deg) translateZ(1px) !important;
+        padding: 26px 22px !important;
+        border-radius: 20px !important;
     }
 
-    .why-card:active {
-        cursor: grabbing;
-    }
-
-    .why-card.is-active {
-        z-index: 10;
-        pointer-events: auto;
-        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.04);
-    }
-
-    .why-card.is-next {
-        z-index: 8;
-        pointer-events: auto;
-        cursor: pointer;
-    }
-
-    .why-card.is-back {
-        z-index: 6;
-        pointer-events: none;
-    }
-
+    /* Reset all swipe deck states so there are NO ghost borders, peeking cards, or stacking */
+    .why-card.is-active,
+    .why-card.is-next,
+    .why-card.is-back,
     .why-card.is-hidden {
-        z-index: 1;
-        opacity: 0 !important;
-        pointer-events: none;
+        position: relative !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        transform: none !important;
+        box-shadow: none !important;
+        z-index: 2 !important;
     }
 
     .why-card-title {
-        font-size: 18.5px;
+        font-size: 19px;
         font-weight: 750;
         line-height: 1.25;
         margin-bottom: 12px;
@@ -3631,111 +3651,10 @@ body:not(.hero-active) .hero-services-stage {
         opacity: 1 !important;
     }
 
-    /* ─── Mobile Bottom Controls ─── */
-    .why-mobile-controls {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 16px;
-        margin-top: 18px;
-        width: 100%;
-        z-index: 10;
-    }
-
-    .why-nav-arrow {
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        background: #ffffff;
-        border: 1px solid rgba(0, 0, 0, 0.08);
-        color: #222;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
-        transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
-        -webkit-tap-highlight-color: transparent;
-    }
-
-    .why-nav-arrow:active {
-        transform: scale(0.92);
-        background: #F4F4F8;
-    }
-
-    .why-progress-status {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 5px;
-    }
-
-    .why-counter {
-        font-family: var(--font-mono);
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 0.06em;
-        color: #222;
-        display: flex;
-        align-items: center;
-        gap: 3px;
-    }
-
-    .why-counter-divider {
-        color: #999;
-        font-weight: 400;
-    }
-
-    .why-total-idx {
-        color: #888;
-    }
-
-    .why-segmented-bar {
-        display: flex;
-        gap: 5px;
-    }
-
-    .why-bar-segment {
-        width: 16px;
-        height: 3.5px;
-        border-radius: 4px;
-        background: rgba(0, 0, 0, 0.12);
-        transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .why-bar-segment.active {
-        width: 32px;
-        background: #7B51F3;
-        box-shadow: 0 0 8px rgba(123, 81, 243, 0.4);
-    }
-
-    /* Swipe Hint */
+    /* Hide Mobile Deck Controls & Swipe Hint on mobile */
+    .why-mobile-controls,
     .why-swipe-hint {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-family: var(--font-mono);
-        font-size: 10px;
-        color: #777;
-        margin-top: 8px;
-        opacity: 0.85;
-        letter-spacing: 0.02em;
-    }
-
-    .why-swipe-hint svg {
-        animation: hint-nudge 2s infinite ease-in-out;
-    }
-
-    @keyframes hint-nudge {
-
-        0%,
-        100% {
-            transform: translateX(0);
-        }
-
-        50% {
-            transform: translateX(3px);
-        }
+        display: none !important;
     }
 
     .why-orb-1 {

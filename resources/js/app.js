@@ -1312,28 +1312,9 @@ if (ctaVideo && ctaCanvas) {
     if (!deck) return;
 
     const cards = Array.from(deck.querySelectorAll('.why-card'));
-    const segments = Array.from(document.querySelectorAll('.why-bar-segment'));
-    const currentIdxEl = document.getElementById('why-current-idx');
-    const prevBtn = document.getElementById('why-nav-prev');
-    const nextBtn = document.getElementById('why-nav-next');
     const total = cards.length;
 
     if (total === 0) return;
-
-    let activeIndex = 0;
-    let isMobile = window.innerWidth <= 768;
-    let isSwiping = false;
-    let hasDragged = false;
-    let startX = 0;
-    let startY = 0;
-    let currentX = 0;
-    let currentY = 0;
-    let deltaX = 0;
-    let deltaY = 0;
-
-    function isDeckMode() {
-        return window.innerWidth <= 768;
-    }
 
     function shouldRunPinnedDeal() {
         // Only run horizontal pinning sequence on wide desktop viewports (>= 992px)
@@ -1388,7 +1369,7 @@ if (ctaVideo && ctaCanvas) {
 
         // Subtle 3D tilt following mouse on desktop
         card.addEventListener('mousemove', (e) => {
-            if (isDeckMode()) return;
+            if (window.innerWidth < 992 || !window.matchMedia('(hover: hover)').matches) return;
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
@@ -1408,7 +1389,7 @@ if (ctaVideo && ctaCanvas) {
         });
 
         card.addEventListener('mouseleave', () => {
-            if (isDeckMode()) return;
+            if (window.innerWidth < 992 || !window.matchMedia('(hover: hover)').matches) return;
             gsap.to(card, {
                 rotationX: 0,
                 rotationY: 0,
@@ -1417,17 +1398,8 @@ if (ctaVideo && ctaCanvas) {
             });
         });
 
-        // Click to flip card
-        card.addEventListener('click', (e) => {
-            if (isDeckMode()) {
-                if (hasDragged) return;
-                if (card.classList.contains('is-active')) {
-                    flipCard(card);
-                } else if (card.classList.contains('is-next')) {
-                    goNext();
-                }
-                return;
-            }
+        // Click or tap to flip card
+        card.addEventListener('click', () => {
             flipCard(card);
         });
 
@@ -1552,6 +1524,7 @@ if (ctaVideo && ctaCanvas) {
         if (!shouldRunPinnedDeal()) {
             if (track) gsap.set(track, { clearProps: 'x,transform' });
             if (whyMain) gsap.set(whyMain, { clearProps: 'all' });
+            cards.forEach(card => gsap.set(card, { clearProps: 'all' }));
             calibratePathStartX();
             buildSampleTable();
             return;
@@ -1652,247 +1625,22 @@ if (ctaVideo && ctaCanvas) {
     window.__getDealScrollTrigger = () => dealScrollTrigger;
     window.__getPathMetrics = () => ({ pathLength, horizLen, getVerticalLengthForY });
 
-    function updateStack(animate = true) {
-        if (!isDeckMode()) {
-            // Non-mobile viewports (Tablet & Desktop):
-            // Remove mobile-specific deck classes and inline pointer/z-index styles
-            cards.forEach(card => {
-                card.classList.remove('is-active', 'is-next', 'is-back', 'is-hidden');
-                card.style.zIndex = '';
-                card.style.pointerEvents = '';
-            });
-
-            // On desktop (>= 992px), transforms and opacity are managed by dealTL ScrollTrigger.
-            // Do NOT wipe them out with clearProps!
-            if (shouldRunPinnedDeal()) {
-                return;
-            }
-
-            // On tablet (< 992px and > 768px), transforms and opacity are managed by initResponsiveReveal
-            return;
-        }
-
-        cards.forEach((card, i) => {
-            const offset = (i - activeIndex + total) % total;
-
+    function updateStack() {
+        cards.forEach(card => {
             card.classList.remove('is-active', 'is-next', 'is-back', 'is-hidden');
-
-            let targetX = 0;
-            let targetY = 0;
-            let targetScale = 1;
-            let targetRot = 0;
-            let targetOpacity = 1;
-            let zIndex = 10;
-            let pointerEvents = 'auto';
-
-            if (offset === 0) {
-                // Front Active Card
-                targetX = 0;
-                targetY = 0;
-                targetScale = 1;
-                targetRot = 0;
-                targetOpacity = 1;
-                zIndex = 10;
-                pointerEvents = 'auto';
-                card.classList.add('is-active');
-            } else if (offset === 1) {
-                // Second Card - Peek behind
-                targetX = 0;
-                targetY = 12;
-                targetScale = 0.94;
-                targetRot = 0;
-                targetOpacity = 0.72;
-                zIndex = 8;
-                pointerEvents = 'auto';
-                card.classList.add('is-next');
-            } else if (offset === 2) {
-                // Third Card - Deeper back
-                targetX = 0;
-                targetY = 24;
-                targetScale = 0.88;
-                targetRot = 0;
-                targetOpacity = 0.38;
-                zIndex = 6;
-                pointerEvents = 'none';
-                card.classList.add('is-back');
-            } else {
-                // Any extra cards (if > 3)
-                targetX = 0;
-                targetY = 32;
-                targetScale = 0.82;
-                targetRot = 0;
-                targetOpacity = 0;
-                zIndex = 1;
-                pointerEvents = 'none';
-                card.classList.add('is-hidden');
-            }
-
-            card.style.zIndex = zIndex;
-            card.style.pointerEvents = pointerEvents;
-
-            if (animate) {
-                gsap.to(card, {
-                    x: targetX,
-                    y: targetY,
-                    scale: targetScale,
-                    rotation: targetRot,
-                    opacity: targetOpacity,
-                    duration: 0.42,
-                    ease: 'power2.out',
-                    overwrite: 'auto'
-                });
-            } else {
-                gsap.set(card, {
-                    x: targetX,
-                    y: targetY,
-                    scale: targetScale,
-                    rotation: targetRot,
-                    opacity: targetOpacity
-                });
-            }
+            card.style.zIndex = '';
+            card.style.pointerEvents = '';
         });
-
-        // Update Progress Segments
-        segments.forEach((seg, idx) => {
-            seg.classList.toggle('active', idx === activeIndex);
-        });
-
-        // Update Index Counter
-        if (currentIdxEl) {
-            currentIdxEl.textContent = String(activeIndex + 1).padStart(2, '0');
-        }
     }
-
-    function goToIndex(idx) {
-        if (idx === activeIndex || idx < 0 || idx >= total) return;
-        activeIndex = idx;
-        updateStack(true);
-    }
-
-    function goNext() {
-        activeIndex = (activeIndex + 1) % total;
-        updateStack(true);
-    }
-
-    function goPrev() {
-        activeIndex = (activeIndex - 1 + total) % total;
-        updateStack(true);
-    }
-
-    // Arrow controls
-    if (prevBtn) prevBtn.addEventListener('click', goPrev);
-    if (nextBtn) nextBtn.addEventListener('click', goNext);
-
-    // Touch and Gesture Drag Physics
-    deck.addEventListener('touchstart', (e) => {
-        if (!isDeckMode() || e.touches.length > 1) return;
-        const touch = e.touches[0];
-        startX = touch.clientX;
-        startY = touch.clientY;
-        currentX = startX;
-        currentY = startY;
-        deltaX = 0;
-        deltaY = 0;
-        isSwiping = false;
-        hasDragged = false;
-    }, { passive: true });
-
-    deck.addEventListener('touchmove', (e) => {
-        if (!isDeckMode() || e.touches.length > 1) return;
-        const touch = e.touches[0];
-        currentX = touch.clientX;
-        currentY = touch.clientY;
-        deltaX = currentX - startX;
-        deltaY = currentY - startY;
-
-        const absX = Math.abs(deltaX);
-        const absY = Math.abs(deltaY);
-
-        if (!isSwiping && absX > 8 && absX > absY) {
-            isSwiping = true;
-            hasDragged = true;
-            window.whyIsDragging = true;
-        }
-
-        if (isSwiping) {
-            const activeCard = cards[activeIndex];
-            const nextIdx = (activeIndex + 1) % total;
-            const nextCard = cards[nextIdx];
-
-            if (activeCard) {
-                const rot = (deltaX / 220) * 12;
-                gsap.set(activeCard, {
-                    x: deltaX,
-                    y: Math.abs(deltaX) * 0.05,
-                    rotation: rot,
-                    scale: 1,
-                    opacity: Math.max(0.65, 1 - absX / 500)
-                });
-            }
-
-            if (nextCard) {
-                const peekRatio = Math.min(1, absX / 160);
-                gsap.set(nextCard, {
-                    y: 12 - (peekRatio * 12),
-                    scale: 0.94 + (peekRatio * 0.06),
-                    opacity: 0.72 + (peekRatio * 0.28)
-                });
-            }
-        }
-    }, { passive: true });
-
-    deck.addEventListener('touchend', () => {
-        if (!isDeckMode()) return;
-        window.whyIsDragging = false;
-
-        if (isSwiping) {
-            const absX = Math.abs(deltaX);
-            const activeCard = cards[activeIndex];
-
-            if (absX > 65) {
-                // Significant swipe: fling active card away and advance
-                const isForward = deltaX < 0;
-                const flingX = isForward ? -320 : 320;
-                const flingRot = isForward ? -16 : 16;
-
-                if (activeCard) {
-                    gsap.to(activeCard, {
-                        x: flingX,
-                        rotation: flingRot,
-                        opacity: 0,
-                        duration: 0.24,
-                        ease: 'power2.in',
-                        onComplete() {
-                            if (isForward) {
-                                activeIndex = (activeIndex + 1) % total;
-                            } else {
-                                activeIndex = (activeIndex - 1 + total) % total;
-                            }
-                            updateStack(true);
-                        }
-                    });
-                } else {
-                    if (isForward) goNext(); else goPrev();
-                }
-            } else {
-                // Snap back to neutral
-                updateStack(true);
-            }
-        }
-        isSwiping = false;
-        setTimeout(() => { hasDragged = false; }, 60);
-        deltaX = 0;
-        deltaY = 0;
-    }, { passive: true });
 
     // ── Responsive Scroll Reveal (Mobile & Tablet) ──
-    // Ensures cards only show upon scrolling down more into the section, NOT already sitting in place
-    let responsiveRevealTrigger = null;
+    // Ensures cards only show upon scrolling down into the section, NOT already sitting in place
+    let responsiveRevealTriggers = [];
 
     function initResponsiveReveal() {
-        if (responsiveRevealTrigger) {
-            responsiveRevealTrigger.kill();
-            responsiveRevealTrigger = null;
+        if (responsiveRevealTriggers && responsiveRevealTriggers.length) {
+            responsiveRevealTriggers.forEach(t => t.kill());
+            responsiveRevealTriggers = [];
         }
 
         if (shouldRunPinnedDeal()) {
@@ -1900,65 +1648,44 @@ if (ctaVideo && ctaCanvas) {
             return;
         }
 
-        const wrap = document.getElementById('why-deck-wrap') || document.querySelector('.why-deck-wrap');
-        if (!wrap) return;
-
         if (prefersReducedMotion) {
-            gsap.set(wrap, { opacity: 1, y: 0, scale: 1 });
             cards.forEach(card => gsap.set(card, { opacity: 1, y: 0, scale: 1 }));
             return;
         }
 
-        const isMobileDeck = isDeckMode();
+        const isMobile = window.innerWidth <= 768;
 
-        if (isMobileDeck) {
-            // Mobile (<= 768px): Stage deck wrap and controls hidden initially
-            const controls = document.getElementById('why-mobile-controls');
-            const swipeHint = wrap.querySelector('.why-swipe-hint');
+        if (isMobile) {
+            // Mobile (<= 768px): Each card is positioned vertically.
+            // As the user scrolls down, each card smoothly pulls into view individually.
+            cards.forEach((card) => {
+                gsap.set(card, { opacity: 0, y: 48, scale: 0.95 });
 
-            gsap.set(wrap, { opacity: 0, y: 48, scale: 0.94 });
-            if (controls) gsap.set(controls, { opacity: 0, y: 16 });
-            if (swipeHint) gsap.set(swipeHint, { opacity: 0 });
-
-            responsiveRevealTrigger = ScrollTrigger.create({
-                trigger: wrap,
-                start: 'top 78%',
-                once: true,
-                onEnter: () => {
-                    const tl = gsap.timeline();
-                    tl.to(wrap, {
-                        opacity: 1,
-                        y: 0,
-                        scale: 1,
-                        duration: 0.75,
-                        ease: 'power3.out',
-                        clearProps: 'transform,scale,y'
-                    });
-                    if (controls) {
-                        tl.to(controls, {
+                const st = ScrollTrigger.create({
+                    trigger: card,
+                    start: 'top 86%',
+                    once: true,
+                    onEnter: () => {
+                        gsap.to(card, {
                             opacity: 1,
                             y: 0,
-                            duration: 0.45,
-                            ease: 'power2.out',
-                            clearProps: 'transform,opacity,y'
-                        }, '-=0.35');
+                            scale: 1,
+                            duration: 0.75,
+                            ease: 'power3.out',
+                            clearProps: 'transform,scale,y,opacity'
+                        });
                     }
-                    if (swipeHint) {
-                        tl.to(swipeHint, {
-                            opacity: 1,
-                            duration: 0.45,
-                            ease: 'power2.out',
-                            clearProps: 'opacity'
-                        }, '-=0.25');
-                    }
-                }
+                });
+                responsiveRevealTriggers.push(st);
             });
         } else {
             // Tablet (769px - 991px): 3-column grid of cards
-            // Stage the cards hidden initially so they only reveal on scrolling down more
+            const wrap = document.getElementById('why-deck-wrap') || document.querySelector('.why-deck-wrap');
+            if (!wrap) return;
+
             gsap.set(cards, { opacity: 0, y: 56, scale: 0.94 });
 
-            responsiveRevealTrigger = ScrollTrigger.create({
+            const st = ScrollTrigger.create({
                 trigger: wrap,
                 start: 'top 76%',
                 once: true,
@@ -1970,10 +1697,11 @@ if (ctaVideo && ctaCanvas) {
                         duration: 0.8,
                         stagger: 0.14,
                         ease: 'power3.out',
-                        clearProps: 'transform,scale,y'
+                        clearProps: 'transform,scale,y,opacity'
                     });
                 }
             });
+            responsiveRevealTriggers.push(st);
         }
     }
 
@@ -1982,11 +1710,7 @@ if (ctaVideo && ctaCanvas) {
     function handleViewportChange() {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
-            const nowMobile = isDeckMode();
-            if (nowMobile !== isMobile) {
-                isMobile = nowMobile;
-            }
-            updateStack(false);
+            updateStack();
             initCardDealScrollTrigger();
             initResponsiveReveal();
             if (typeof ScrollTrigger !== 'undefined') {
@@ -1997,29 +1721,8 @@ if (ctaVideo && ctaCanvas) {
     window.addEventListener('resize', handleViewportChange);
     window.addEventListener('orientationchange', handleViewportChange);
 
-    // Keyboard navigation when Why section is in view
-    window.addEventListener('keydown', (e) => {
-        const targetTag = e.target.tagName;
-        if (targetTag === 'INPUT' || targetTag === 'TEXTAREA' || targetTag === 'SELECT' || e.target.isContentEditable) {
-            return;
-        }
-        if (document.body.classList.contains('modal-open')) return;
-        const whySec = document.getElementById('why');
-        if (whySec) {
-            const rect = whySec.getBoundingClientRect();
-            const isInView = rect.top < window.innerHeight * 0.75 && rect.bottom > window.innerHeight * 0.25;
-            if (isInView) {
-                if (e.key === 'ArrowLeft') {
-                    goPrev();
-                } else if (e.key === 'ArrowRight') {
-                    goNext();
-                }
-            }
-        }
-    });
-
     // Initialize initial view
-    updateStack(false);
+    updateStack();
     initResponsiveReveal();
 })();
 
