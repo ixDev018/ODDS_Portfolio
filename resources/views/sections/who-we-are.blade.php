@@ -7,7 +7,7 @@
                 <p class="who-we-are-label fade-up">— Who we are</p>
                 <h2 class="who-we-are-statement who-we-are-heading fade-up">
                     <span class="who-we-are-text-dark">The partners you bring in<br class="hidden lg:inline"> when getting it right isn't optional.<br class="hidden lg:inline"></span>
-                    <span class="who-we-are-text-muted">We strip away the noise and<br class="hidden lg:inline"> overcomplicated processes to build<br class="hidden lg:inline"> clean, intuitive products that<br class="hidden lg:inline"></span>
+                    <span class="who-we-are-text-muted">We strip away the noise and<br class="hidden lg:inline"> overcomplicated processes to build clean, intuitive products that<br class="hidden lg:inline"></span>
                     <strong class="who-we-are-text-bold">solve real-world problems.</strong>
                 </h2>
                 <div class="who-we-are-action fade-up">
