@@ -751,10 +751,12 @@ class OddsAdminController extends Controller
     {
         $validated = $request->validate([
             'question' => 'required|string',
+            'category' => 'nullable|string|max:100',
             'answer' => 'required|string',
             'is_active' => 'nullable|boolean',
         ]);
 
+        $validated['category'] = $validated['category'] ?: 'Getting Started';
         $validated['is_active'] = $request->has('is_active');
         $validated['sort_order'] = OddsFaq::max('sort_order') + 1;
 
@@ -768,10 +770,12 @@ class OddsAdminController extends Controller
 
         $validated = $request->validate([
             'question' => 'required|string',
+            'category' => 'nullable|string|max:100',
             'answer' => 'required|string',
             'is_active' => 'nullable|boolean',
         ]);
 
+        $validated['category'] = $validated['category'] ?: 'Getting Started';
         $validated['is_active'] = $request->has('is_active');
         $faq->update($validated);
 

@@ -21,6 +21,8 @@ $faqList = isset($faqs) && count($faqs) > 0 ? $faqs : collect([
         'answer'   => "Pricing varies depending on feature depth, third-party integrations, and platform complexity. Following an initial scoping discussion, we provide a detailed proposal tailored to your requirements and budget.",
     ],
 ]);
+
+$displayFaqs = $faqList->take(5);
 @endphp
 
 <section class="faq" id="faq">
@@ -34,7 +36,7 @@ $faqList = isset($faqs) && count($faqs) > 0 ? $faqs : collect([
         </div>
 
         <div class="faq-accordion-wrap fade-up" id="faq-accordion">
-            @foreach($faqList as $index => $item)
+            @foreach($displayFaqs as $index => $item)
             <div class="faq-item" data-faq-index="{{ $index }}">
                 <button type="button" 
                         class="faq-question-btn" 
@@ -63,5 +65,16 @@ $faqList = isset($faqs) && count($faqs) > 0 ? $faqs : collect([
             </div>
             @endforeach
         </div>
+
+        <div class="faq-footer-action fade-up">
+            <a href="{{ route('portfolio.faqs') }}" class="faq-more-btn">
+                <span>More FAQs</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </a>
+        </div>
     </div>
 </section>
+

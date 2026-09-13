@@ -15,6 +15,7 @@
                 <li><a href="{{ request()->is('/') ? '#services' : url('/#services') }}">Services</a></li>
                 <li><a href="{{ route('portfolio.our-work') }}" class="{{ request()->routeIs('portfolio.our-work') ? 'active' : '' }}">Our Work</a></li>
                 <li><a href="{{ route('portfolio.about') }}" class="{{ request()->routeIs('portfolio.about') ? 'active' : '' }}">About Us</a></li>
+                <li><a href="{{ route('portfolio.faqs') }}" class="{{ request()->routeIs('portfolio.faqs') ? 'active' : '' }}">FAQs</a></li>
             </ul>
             <a href="{{ request()->is('/') ? '#cta' : url('/#cta') }}" class="btn-nav">Let's Talk</a>
             <button class="nav-toggle" id="mobile-toggle" aria-label="Toggle Navigation" aria-expanded="false">
@@ -33,6 +34,7 @@
             <li><a href="{{ request()->is('/') ? '#services' : url('/#services') }}" class="mobile-nav-link">Services</a></li>
             <li><a href="{{ route('portfolio.our-work') }}" class="mobile-nav-link {{ request()->routeIs('portfolio.our-work') ? 'active' : '' }}">Our Work</a></li>
             <li><a href="{{ route('portfolio.about') }}" class="mobile-nav-link {{ request()->routeIs('portfolio.about') ? 'active' : '' }}">About Us</a></li>
+            <li><a href="{{ route('portfolio.faqs') }}" class="mobile-nav-link {{ request()->routeIs('portfolio.faqs') ? 'active' : '' }}">FAQs</a></li>
         </ul>
         <a href="{{ request()->is('/') ? '#cta' : url('/#cta') }}" class="mobile-btn-nav mobile-nav-link">Let's Talk</a>
     </div>

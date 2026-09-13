@@ -2860,6 +2860,62 @@ body:not(.hero-active) .hero-services-stage {
     }
 }
 
+/* ── FAQ Footer Action Button ── */
+.faq-footer-action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 48px;
+}
+
+.faq-more-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 32px;
+    background: #111111;
+    color: #ffffff;
+    border-radius: 9999px;
+    font-family: var(--font-mono), monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.faq-more-btn svg {
+    transition: transform 0.25s ease;
+}
+
+.faq-more-btn:hover {
+    background: #875af5;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(135, 90, 245, 0.3);
+}
+
+.faq-more-btn:hover svg {
+    transform: translateX(4px);
+}
+
+.faq-more-btn:active {
+    transform: scale(0.96);
+}
+
+@media (max-width: 640px) {
+    .faq-footer-action {
+        margin-top: 36px;
+    }
+    .faq-more-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 24px;
+    }
+}
+
 /* =============================================
    CTA — Terminal Style
    ============================================= */

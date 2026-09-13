@@ -72,6 +72,14 @@ Route::get('/our-work', function () {
     return view('our-work', compact('settings', 'works'));
 })->name('portfolio.our-work');
 
+// Public Dedicated FAQs Page
+Route::get('/faqs', function () {
+    $settings = OddsSetting::current();
+    $faqs = OddsFaq::where('is_active', true)->orderBy('sort_order')->get();
+    return view('faqs', compact('settings', 'faqs'));
+})->name('portfolio.faqs');
+Route::redirect('/faq', '/faqs');
+
 
 // Public Contact / Lead Form Submission
 Route::post('/contact', function (\Illuminate\Http\Request $request) {

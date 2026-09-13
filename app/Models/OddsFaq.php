@@ -10,6 +10,7 @@ class OddsFaq extends Model
 
     protected $fillable = [
         'question',
+        'category',
         'answer',
         'sort_order',
         'is_active',

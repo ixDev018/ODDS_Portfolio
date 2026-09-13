@@ -57,6 +57,7 @@
     editData: {
         id: null,
         question: '',
+        category: 'Getting Started',
         answer: '',
         is_active: true
     },
@@ -65,6 +66,7 @@
         this.editData = {
             id: item.id,
             question: item.question || '',
+            category: item.category || 'Getting Started',
             answer: item.answer || '',
             is_active: !!item.is_active
         };
@@ -89,9 +91,10 @@
                 <tr>
                     <th style="width: 40px;"></th>
                     <th style="width: 45px;">#</th>
-                    <th style="width: 32%;">QUESTION</th>
+                    <th style="width: 28%;">QUESTION</th>
+                    <th style="width: 140px;">CATEGORY</th>
                     <th>ANSWER</th>
-                    <th style="width: 100px;">STATUS</th>
+                    <th style="width: 90px;">STATUS</th>
                     <th class="text-right" style="width: 60px;">ACTION</th>
                 </tr>
             </thead>
@@ -106,6 +109,11 @@
                     </td>
                     <td>
                         <div class="font-bold text-white text-sm leading-snug">{{ $f->question }}</div>
+                    </td>
+                    <td>
+                        <span class="odds-badge bg-purple-900/30 text-purple-300 border border-purple-500/20 text-[10px]">
+                            {{ $f->category ?: 'Getting Started' }}
+                        </span>
                     </td>
                     <td>
                         <div class="text-xs text-gray-400 max-w-xl leading-relaxed line-clamp-2" title="{{ $f->answer }}">{{ $f->answer }}</div>
@@ -152,7 +160,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="py-12 text-center text-gray-500 font-mono text-xs">No FAQs created yet.</td>
+                    <td colspan="7" class="py-12 text-center text-gray-500 font-mono text-xs">No FAQs created yet.</td>
                 </tr>
                 @endforelse
             </tbody>
@@ -185,6 +193,18 @@
                 <div>
                     <label class="odds-label">Question *</label>
                     <input type="text" name="question" required placeholder="e.g. We don't have a technical spec yet — can you still help?" class="odds-input">
+                </div>
+
+                <div>
+                    <label class="odds-label">Category *</label>
+                    <input type="text" name="category" list="faq-category-suggestions" placeholder="e.g. Getting Started, Development & Stack, Scoping & Pricing" class="odds-input" value="Getting Started">
+                    <datalist id="faq-category-suggestions">
+                        <option value="Getting Started">
+                        <option value="Development & Stack">
+                        <option value="Scoping & Pricing">
+                        <option value="Security & Ownership">
+                        <option value="AI & Custom Systems">
+                    </datalist>
                 </div>
 
                 <div>
@@ -231,6 +251,11 @@
                 <div>
                     <label class="odds-label">Question *</label>
                     <input type="text" name="question" x-model="editData.question" required class="odds-input">
+                </div>
+
+                <div>
+                    <label class="odds-label">Category *</label>
+                    <input type="text" name="category" x-model="editData.category" list="faq-category-suggestions" class="odds-input">
                 </div>
 
                 <div>
