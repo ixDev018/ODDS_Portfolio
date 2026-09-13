@@ -2632,13 +2632,14 @@ body:not(.hero-active) .hero-services-stage {
 }
 
 /* =============================================
-   FAQ SECTION (Light / Contrast Treatment)
+/* =============================================
+   FAQ SECTION (Maximized Viewport Minimalist Layout)
    ============================================= */
 .faq {
-    background: radial-gradient(ellipse 55% 70% at 0% 35%, rgba(185, 155, 235, 0.48) 0%, transparent 100%),
-        radial-gradient(ellipse 55% 70% at 100% 65%, rgba(185, 155, 235, 0.48) 0%, transparent 100%),
+    background: radial-gradient(ellipse 55% 70% at 0% 35%, rgba(185, 155, 235, 0.42) 0%, transparent 100%),
+        radial-gradient(ellipse 55% 70% at 100% 65%, rgba(185, 155, 235, 0.42) 0%, transparent 100%),
         #ffffff;
-    padding: calc(var(--nav-height) + 40px) 0 100px;
+    padding: calc(var(--nav-height) + 50px) 0 120px;
     font-family: var(--font-primary), sans-serif;
     display: flex;
     justify-content: center;
@@ -2650,21 +2651,24 @@ body:not(.hero-active) .hero-services-stage {
 
 .faq-content-wrap {
     width: 100%;
-    max-width: 1280px;
+    max-width: 1560px;
     margin: 0 auto;
-    padding: 0 48px;
+    padding: 0 clamp(24px, 4.5vw, 88px);
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
+    box-sizing: border-box;
 }
 
 .faq-center {
     text-align: center;
-    margin-bottom: 44px;
+    margin-bottom: clamp(48px, 6vh, 72px);
     max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* "FAQS" label matching .works-section-label */
+/* "FAQS" label matching signature section style */
 .faq-label {
     font-size: 13px;
     font-weight: 500;
@@ -2674,9 +2678,9 @@ body:not(.hero-active) .hero-services-stage {
     margin-bottom: 16px;
 }
 
-/* Main heading matching .works-heading */
+/* Main heading */
 .faq-title {
-    font-size: clamp(36px, 4.5vw, 52px);
+    font-size: clamp(36px, 4.5vw, 54px);
     font-weight: 900;
     color: #111111;
     line-height: 1.15;
@@ -2684,50 +2688,33 @@ body:not(.hero-active) .hero-services-stage {
     margin-bottom: 16px;
 }
 
-/* Description matching .works-heading-lead / body */
+/* Description */
 .faq-desc {
-    font-size: 15.5px;
+    font-size: 16px;
     font-weight: 400;
     color: #4b5563;
     line-height: 1.7;
-    max-width: 600px;
+    max-width: 620px;
     margin: 0 auto;
 }
 
-/* ── FAQ Accordion Container ── */
+/* ── FAQ Accordion Container (Full Stretch) ── */
 .faq-accordion-wrap {
     width: 100%;
-    max-width: 900px;
+    max-width: 100%;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 /* Individual FAQ row item */
 .faq-item {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 16px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+    background: transparent;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
     overflow: hidden;
-    transition: border-color 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-        box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-        transform 0.2s ease,
-        background-color 0.22s ease;
-}
-
-.faq-item:hover {
-    border-color: #c4b5fd;
-    box-shadow: 0 6px 20px rgba(135, 90, 245, 0.07);
-    transform: translateY(-1px);
-}
-
-.faq-item.is-open {
-    border-color: #875af5;
-    background: #ffffff;
-    box-shadow: 0 10px 28px rgba(135, 90, 245, 0.1), 0 0 0 1px rgba(135, 90, 245, 0.18);
-    transform: translateY(-1px);
+    position: relative;
+    transition: background-color 0.25s ease;
 }
 
 /* Interactive Question button */
@@ -2736,115 +2723,118 @@ body:not(.hero-active) .hero-services-stage {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 18px;
-    padding: 22px 24px;
+    gap: clamp(20px, 3vw, 40px);
+    padding: clamp(28px, 3.4vh, 42px) 0;
     background: transparent;
     border: none;
-    color: #111111;
     cursor: pointer;
     text-align: left;
-    font-family: inherit;
-    font-size: 16.5px;
-    font-weight: 750;
-    line-height: 1.4;
-    letter-spacing: -0.01em;
     user-select: none;
-    transition: color 0.18s ease;
-}
-
-.faq-question-btn:hover {
-    color: #875af5;
-}
-
-.faq-item.is-open .faq-question-btn {
-    color: #111111;
-}
-
-.faq-q-left {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex: 1;
-}
-
-/* Monospace Numbering Badge (Light Treatment) */
-.faq-q-num {
-    font-family: var(--font-mono);
-    font-size: 12.5px;
-    font-weight: 700;
-    color: #6b7280;
-    background: #f3f4f6;
-    border: 1px solid #e5e7eb;
-    padding: 3px 8px;
-    border-radius: 6px;
-    flex-shrink: 0;
-    transition: color 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
-}
-
-.faq-item:hover .faq-q-num {
-    color: #875af5;
-    background: #ede9fe;
-    border-color: #c4b5fd;
-}
-
-.faq-item.is-open .faq-q-num {
-    color: #875af5;
-    background: #ede9fe;
-    border-color: #c4b5fd;
 }
 
 .faq-q-text {
-    flex: 1;
+    font-family: var(--font-primary), -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: clamp(20px, 2.2vw, 32px);
+    font-weight: 750;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    color: #111111;
+    transition: color 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Toggle Chevron Circle Icon */
+.faq-question-btn:hover .faq-q-text {
+    color: #875af5;
+}
+
+.faq-item.is-open .faq-q-text {
+    color: #111111;
+}
+
+/* Toggle Plus/Cross Icon */
 .faq-toggle-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: #f3f4f6;
-    border: 1px solid #e5e7eb;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    color: #4b5563;
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-        background-color 0.2s ease,
-        border-color 0.2s ease,
-        color 0.2s ease;
+    color: #111111;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), color 0.22s ease;
 }
 
-.faq-item:hover .faq-toggle-icon {
-    background: #ede9fe;
-    border-color: #c4b5fd;
+.faq-question-btn:hover .faq-toggle-icon {
     color: #875af5;
 }
 
 .faq-item.is-open .faq-toggle-icon {
-    transform: rotate(180deg);
-    background: #875af5;
-    border-color: #875af5;
-    color: #ffffff;
+    transform: rotate(45deg);
+    color: #111111;
 }
 
-/* Snappy Expand / Collapse Container (220ms) */
+/* Expand / Collapse Container */
 .faq-answer-collapse {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.faq-item.is-open .faq-answer-collapse {
+    opacity: 1;
+}
+
+.faq-answer-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(24px, 4vw, 60px);
+    padding-bottom: clamp(32px, 4vh, 48px);
+    box-sizing: border-box;
+}
+
+.faq-answer-spacer {
+    display: block;
 }
 
 .faq-answer-body {
-    padding: 0 24px 22px 64px;
-    font-size: 14.5px;
+    font-family: var(--font-primary), -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: clamp(15px, 1.15vw, 17.5px);
     color: #4b5563;
     line-height: 1.75;
+    font-weight: 400;
+    max-width: 620px;
+    margin-left: auto;
+    margin-right: 0;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
+    .faq-answer-inner {
+        grid-template-columns: 1fr;
+        padding-bottom: 28px;
+    }
+
+    .faq-answer-spacer {
+        display: none;
+    }
+
+    .faq-answer-body {
+        margin-left: 0;
+        max-width: 100%;
+    }
+
+    .faq-q-text {
+        font-size: clamp(18px, 4.5vw, 24px);
+    }
+
+    .faq-question-btn {
+        padding: 22px 0;
+        gap: 16px;
+    }
+}
+
+@media (max-width: 640px) {
     .faq {
-        padding: 80px 0 60px;
+        padding: 70px 0 60px;
     }
 
     .faq-content-wrap {
@@ -2852,22 +2842,21 @@ body:not(.hero-active) .hero-services-stage {
     }
 
     .faq-center {
-        margin-bottom: 32px;
+        margin-bottom: 36px;
     }
 
-    .faq-question-btn {
-        padding: 18px 16px;
-        font-size: 15px;
-        gap: 12px;
+    .faq-q-text {
+        font-size: 18px;
     }
 
-    .faq-q-left {
-        gap: 10px;
+    .faq-toggle-icon {
+        width: 28px;
+        height: 28px;
     }
 
     .faq-answer-body {
-        padding: 0 16px 18px 16px;
-        font-size: 13.5px;
+        font-size: 14.5px;
+        line-height: 1.65;
     }
 }
 

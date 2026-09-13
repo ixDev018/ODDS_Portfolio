@@ -1,20 +1,24 @@
 @php
 $faqList = isset($faqs) && count($faqs) > 0 ? $faqs : collect([
     (object)[
-        'question' => "We only have a rough idea, not a finished technical spec. Can you still help?",
-        'answer'   => "Yes. Most of our projects start with an operational bottleneck or concept, not a spec. We work directly with you during scoping to define the architecture, requirements, and roadmap before writing a line of code.",
+        'question' => "HOW LONG DOES A PROJECT TAKE?",
+        'answer'   => "Each project's timeline depends on the scope. A simple landing page can be completed within 2 weeks while a full e-commerce platform might take 3 – 6 weeks. Once we understand your needs, we'll give you a clear, realistic timeline.",
     ],
     (object)[
-        'question' => "Do I need to know what tech stack or framework I want?",
-        'answer'   => "No. We are strictly stack-agnostic. We evaluate your scalability, performance, and budget requirements to select the exact language and architecture that fits your problem—never forcing you into rigid templates.",
+        'question' => "CAN I MANAGE A SITE AFTER IT'S BUILT?",
+        'answer'   => "Absolutely. We build clean, intuitive management workflows and dashboards tailored to your team. We also provide complete documentation, recorded handoffs, and ongoing support so you're never left in the dark.",
     ],
     (object)[
-        'question' => "How does pricing and scoping work?",
-        'answer'   => "We default to milestone-based quotes so you know the exact deliverables and timeline upfront with zero surprise billing. For evolving product builds or R&D, flexible sprint retainers are also available.",
+        'question' => "HOW DOES PRICING WORK?",
+        'answer'   => "We default to transparent milestone-based quotes so you know the exact deliverables and timeline upfront with zero surprise billing. For evolving product builds or R&D, flexible sprint retainers are also available.",
     ],
     (object)[
-        'question' => "How fast can we kick off and ship?",
-        'answer'   => "Following initial scoping, we can typically kick off within 48 to 72 hours. Focused modules ship in days to a couple of weeks, while full platforms are delivered in rapid, testable sprint increments.",
+        'question' => "WHAT TOOLS ARE USED IN BUILDING?",
+        'answer'   => "We are stack-agnostic, choosing modern, robust, and scalable technologies best fitted to your product goals—from performant full-stack frameworks to custom cloud infrastructure and API integrations.",
+    ],
+    (object)[
+        'question' => "HOW MUCH DOES IT COST TO BUILD AN APP?",
+        'answer'   => "Pricing varies depending on feature depth, third-party integrations, and platform complexity. Following an initial scoping discussion, we provide a detailed proposal tailored to your requirements and budget.",
     ],
 ]);
 @endphp
@@ -37,13 +41,11 @@ $faqList = isset($faqs) && count($faqs) > 0 ? $faqs : collect([
                         aria-expanded="false" 
                         aria-controls="faq-answer-{{ $index }}"
                         id="faq-btn-{{ $index }}">
-                    <div class="faq-q-left">
-                        <span class="faq-q-num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                        <span class="faq-q-text">{{ $item->question }}</span>
-                    </div>
+                    <span class="faq-q-text">{{ $item->question }}</span>
                     <div class="faq-toggle-icon" aria-hidden="true">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M6 9l6 6 6-6"/>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
                         </svg>
                     </div>
                 </button>
@@ -51,8 +53,11 @@ $faqList = isset($faqs) && count($faqs) > 0 ? $faqs : collect([
                      id="faq-answer-{{ $index }}" 
                      role="region" 
                      aria-labelledby="faq-btn-{{ $index }}">
-                    <div class="faq-answer-body">
-                        {{ $item->answer }}
+                    <div class="faq-answer-inner">
+                        <div class="faq-answer-spacer"></div>
+                        <div class="faq-answer-body">
+                            {{ $item->answer }}
+                        </div>
                     </div>
                 </div>
             </div>
