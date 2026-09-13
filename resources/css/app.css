@@ -600,9 +600,9 @@ body:not(.hero-active) .hero-services-stage {
    ============================================= */
 .services {
     background: #f8fafc;
-    padding: 100px 0 80px;
+    padding-top: calc(var(--nav-height) + clamp(36px, 5vh, 60px));
+    padding-bottom: clamp(36px, 5vh, 60px);
     overflow: clip;
-    /* clip allows .services-cards full-bleed without scroll bars */
     position: relative;
     width: 100%;
     min-height: 100vh;
@@ -695,7 +695,6 @@ body:not(.hero-active) .hero-services-stage {
     animation: marquee 25s linear infinite;
 }
 
-.services-track:hover,
 .services-track.has-selected {
     animation-play-state: paused;
 }
@@ -714,35 +713,39 @@ body:not(.hero-active) .hero-services-stage {
     0% {
         transform: translateX(0);
     }
-
     100% {
         transform: translateX(-50%);
     }
 }
 
+@media (hover: hover) {
+    .services-track:hover {
+        animation-play-state: paused;
+    }
 
-/* Hover Selection States: subtle soft lift */
-.services-track:hover .svc-card {
-    opacity: 0.65;
-    transform: scale(0.97);
-}
+    /* Hover Selection States: subtle soft lift */
+    .services-track:hover .svc-card {
+        opacity: 0.65;
+        transform: scale(0.97);
+    }
 
-.services-track:hover .svc-card:hover {
-    opacity: 1;
-    transform: scale(1.02) translateY(-4px);
-    border-color: rgba(150, 107, 254, 0.45);
-    box-shadow: 0 12px 28px rgba(150, 107, 254, 0.08), 0 2px 8px rgba(0, 0, 0, 0.03);
-    background: #ffffff;
-}
+    .services-track:hover .svc-card:hover {
+        opacity: 1;
+        transform: scale(1.02) translateY(-4px);
+        border-color: rgba(150, 107, 254, 0.45);
+        box-shadow: 0 12px 28px rgba(150, 107, 254, 0.08), 0 2px 8px rgba(0, 0, 0, 0.03);
+        background: #ffffff;
+    }
 
-.services-track:hover .svc-card:hover .svc-icon {
-    background: rgba(150, 107, 254, 0.12);
-    border-color: rgba(150, 107, 254, 0.35);
-    transform: scale(1.04);
-}
+    .services-track:hover .svc-card:hover .svc-icon {
+        background: rgba(150, 107, 254, 0.12);
+        border-color: rgba(150, 107, 254, 0.35);
+        transform: scale(1.04);
+    }
 
-.services-track:hover .svc-card:hover .svc-icon svg {
-    stroke: #7B51F3;
+    .services-track:hover .svc-card:hover .svc-icon svg {
+        stroke: #7B51F3;
+    }
 }
 
 .services-track.has-selected .svc-card {
@@ -3422,43 +3425,76 @@ body:not(.hero-active) .hero-services-stage {
     }
 
     .services {
-        padding: calc(clamp(64px, 8vh, 80px) + 16px) 0 40px;
-        justify-content: flex-start !important;
+        padding-top: calc(var(--nav-height) + clamp(28px, 5vh, 48px)) !important;
+        padding-bottom: clamp(32px, 5vh, 48px) !important;
+        justify-content: space-between !important;
+        min-height: 100vh;
+        min-height: 100dvh;
+    }
+
+    .services-header {
+        margin-bottom: 16px !important;
+    }
+
+    .services-title {
+        font-size: clamp(24px, 5.5vw, 34px);
+        line-height: 1.15;
+    }
+
+    .services-subline {
+        font-size: 13.5px;
+        line-height: 1.5;
+        margin-top: 8px;
+        padding: 0 14px;
     }
 
     .services-cards {
-        margin-top: 8px;
-        margin-bottom: 16px;
-        padding-top: 15px;
-        padding-bottom: 25px;
+        margin: 10px 0 !important;
+        padding-top: 10px !important;
+        padding-bottom: 20px !important;
         width: 100%;
         max-width: 100%;
     }
 
+    .services-footer {
+        margin-top: 14px !important;
+    }
+
     .svc-card {
-        flex: 0 0 240px;
-        width: 240px;
-        min-width: 240px;
+        flex: 0 0 230px;
+        width: 230px;
+        min-width: 230px;
         flex-shrink: 0 !important;
-        height: 240px;
-        padding: 24px 18px 20px;
-        border-radius: 22px;
-        gap: 14px;
+        height: 225px;
+        padding: 24px 16px 20px;
+        border-radius: 20px;
+        gap: 12px;
+    }
+
+    .svc-card-bg-wire {
+        width: 110px !important;
+        height: 110px !important;
+        bottom: -8px !important;
+        right: -8px !important;
+        opacity: 0.28 !important;
     }
 
     .svc-icon {
-        width: 58px;
-        height: 58px;
-        border-radius: 16px;
+        width: 52px;
+        height: 52px;
+        border-radius: 15px;
     }
 
     .svc-icon svg {
-        width: 28px;
-        height: 28px;
+        width: 26px;
+        height: 26px;
     }
 
     .svc-card-name {
-        font-size: 17px;
+        font-size: 16px;
+        line-height: 1.25;
+        position: relative;
+        z-index: 2;
     }
 
     /* ─── Why Section Mobile 3D Deck (<=768px) ─── */
