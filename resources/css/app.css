@@ -1448,7 +1448,9 @@ body:not(.hero-active) .hero-services-stage {
     .why-card {
         position: relative !important;
         width: 100% !important;
-        height: 480px !important;
+        aspect-ratio: 394 / 502 !important;
+        height: auto !important;
+        border-radius: 26px !important;
         pointer-events: auto !important;
     }
 
@@ -3551,20 +3553,22 @@ body:not(.hero-active) .hero-services-stage {
         user-select: auto;
     }
 
-    /* Mobile Vertical Card (Natural flow, no absolute positioning, no ghost borders) */
+    /* Mobile Vertical Card (Exact playing card proportions as PC: 394 / 502) */
     .why-card {
         position: relative !important;
         top: auto !important;
         left: auto !important;
         width: 100% !important;
         min-width: 0 !important;
-        max-width: 100% !important;
-        height: 380px !important;
-        min-height: 380px !important;
+        max-width: 320px !important;
+        aspect-ratio: 394 / 502 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        margin: 0 auto;
         padding: 0 !important;
         border: none !important;
         background: transparent !important;
-        border-radius: 20px;
+        border-radius: 26px !important;
         box-sizing: border-box;
         transform-origin: center center;
         will-change: transform, opacity;
@@ -3577,37 +3581,49 @@ body:not(.hero-active) .hero-services-stage {
 
     .why-card-inner,
     .why-card-face {
-        border-radius: 20px !important;
+        border-radius: 26px !important;
+        width: 100% !important;
+        height: 100% !important;
+        box-sizing: border-box;
     }
 
-    /* Completely eliminate the white ghost/invisible border on mobile */
+    /* Place the proper thick white border cleanly on mobile just like PC */
     .why-card-svg-border {
-        display: none !important;
+        display: block !important;
+        stroke: #ffffff !important;
+        stroke-width: 16.6772 !important;
     }
 
     .why-card-back {
         transform: rotateY(0deg) translateZ(1px) !important;
-        background: #3C3C3C !important;
-        border-radius: 20px !important;
-        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16), 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+        background: #ffffff !important;
+        border-radius: 26px !important;
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+        overflow: hidden !important;
     }
 
     .why-card-back-svg {
-        border-radius: 20px !important;
+        border-radius: 26px !important;
         width: 100% !important;
         height: 100% !important;
+        display: block !important;
     }
 
     .why-card-hint {
         opacity: 0.95 !important;
         transform: translateX(-50%) translateY(0) !important;
-        bottom: 18px;
+        bottom: 20px;
     }
 
     .why-card-front {
         transform: rotateY(180deg) translateZ(1px) !important;
-        padding: 26px 22px !important;
-        border-radius: 20px !important;
+        background: #ffffff !important;
+        padding: 28px 24px !important;
+        border-radius: 26px !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        border-left: 4px solid #7B51F3 !important;
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.10), 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+        overflow: hidden !important;
     }
 
     /* Reset all swipe deck states so there are NO ghost borders, peeking cards, or stacking */
