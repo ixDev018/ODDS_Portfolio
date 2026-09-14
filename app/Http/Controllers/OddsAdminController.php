@@ -181,7 +181,16 @@ class OddsAdminController extends Controller
             'cta_terminal_prompt' => 'nullable|string|max:255',
             'cta_meta_line' => 'nullable|string|max:255',
             'lorenzo_system_prompt' => 'nullable|string',
+            'who_we_are_image' => 'nullable|string',
+            'who_we_are_image_file' => 'nullable|image|max:10240',
         ]);
+
+        if ($request->hasFile('who_we_are_image_file')) {
+            $file = $request->file('who_we_are_image_file');
+            $data = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            $validated['who_we_are_image'] = $data;
+        }
+        unset($validated['who_we_are_image_file']);
 
         $settings->update($validated);
 

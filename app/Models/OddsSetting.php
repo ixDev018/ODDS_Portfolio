@@ -35,6 +35,7 @@ class OddsSetting extends Model
         'cta_terminal_prompt',
         'cta_meta_line',
         'lorenzo_system_prompt',
+        'who_we_are_image',
     ];
 
     public static function current(): self

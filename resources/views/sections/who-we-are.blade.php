@@ -6,7 +6,7 @@
             <div class="who-we-are-content">
                 <p class="who-we-are-label fade-up">— Who we are</p>
                 <div class="who-we-are-mobile-media fade-up" aria-hidden="false">
-                    <img src="{{ asset('storage/odds/whoweare/ODDS_founder_grouppic_noframe.png') }}"
+                    <img src="{{ !empty($settings->who_we_are_image) ? $settings->who_we_are_image : asset('storage/odds/whoweare/ODDS_founder_grouppic_noframe.png') }}"
                          alt="ODDS Founders Team"
                          class="who-we-are-mobile-img"
                          loading="lazy"
@@ -28,14 +28,17 @@
             </div>
         </div>
 
-        {{-- Right Column with Edge-to-Edge Founders Group Photograph --}}
+        {{-- Right Column with Framed Founders Group Photograph --}}
         <div class="who-we-are-right">
-            <img src="{{ asset('storage/odds/whoweare/ODDS_founder_grouppic_noframe.png') }}"
-                 alt="ODDS Founders Team"
-                 class="who-we-are-img"
-                 loading="eager"
-                 fetchpriority="high"
-                 decoding="async">
+            <div class="who-we-are-ambient-bg" aria-hidden="true" style="background-image: url('{{ !empty($settings->who_we_are_image) ? $settings->who_we_are_image : asset('storage/odds/whoweare/ODDS_founder_grouppic_noframe.png') }}');"></div>
+            <div class="who-we-are-frame">
+                <img src="{{ !empty($settings->who_we_are_image) ? $settings->who_we_are_image : asset('storage/odds/whoweare/ODDS_founder_grouppic_noframe.png') }}"
+                     alt="ODDS Founders Team"
+                     class="who-we-are-img"
+                     loading="eager"
+                     fetchpriority="high"
+                     decoding="async">
+            </div>
         </div>
     </div>
 </section>

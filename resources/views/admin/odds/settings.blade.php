@@ -11,8 +11,35 @@
         </div>
     </div>
 
-    <form action="{{ route('odds.admin.settings.update') }}" method="POST" class="space-y-6">
+    <form action="{{ route('odds.admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
+
+        <!-- Who We Are Team Photograph -->
+        <div class="odds-card p-6 space-y-5">
+            <div class="border-b border-[#22222a] pb-3 flex items-center justify-between">
+                <h2 class="text-xs font-bold text-[#875af5] uppercase font-mono tracking-wider">Who We Are — Team Photograph</h2>
+                <span class="text-[10px] font-mono text-gray-500 uppercase">Database-Synced</span>
+            </div>
+
+            <div class="space-y-4">
+                @if(!empty($settings->who_we_are_image))
+                    <div class="space-y-2">
+                        <label class="odds-label">Current Photo</label>
+                        <div class="max-w-md rounded-xl overflow-hidden border border-[#22222a] bg-[#111116]">
+                            <img src="{{ $settings->who_we_are_image }}" alt="Team Preview" class="w-full h-48 object-cover">
+                        </div>
+                    </div>
+                @endif
+
+                <div>
+                    <label class="odds-label">
+                        <i class="fa-solid fa-image mr-1.5 text-[#875af5]"></i>Upload Replacement Photograph (Saved directly to database)
+                    </label>
+                    <input type="file" name="who_we_are_image_file" accept="image/*" class="odds-input file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-[#875af5]/20 file:text-[#875af5] hover:file:bg-[#875af5]/30">
+                    <p class="text-[11px] text-gray-500 mt-1">Image is converted and saved directly to the database so it never gets lost across deployments.</p>
+                </div>
+            </div>
+        </div>
 
         <!-- Terminal CTA Contact Channels -->
         <div class="odds-card p-6 space-y-5">
@@ -73,7 +100,7 @@
         <div class="flex items-center justify-end space-x-4 pt-2">
             <button type="submit" class="odds-btn-primary px-8">
                 <i class="fa-solid fa-floppy-disk text-xs"></i>
-                <span>Save Channels</span>
+                <span>Save Settings</span>
             </button>
         </div>
     </form>
