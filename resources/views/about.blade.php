@@ -1,6 +1,9 @@
 <x-layout>
 @push('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=Pirata+One&family=UnifrakturMaguntia&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
 @endpush
 
 <style>
@@ -901,6 +904,236 @@
         background: #ffffff;
     }
 
+    /* ─── COLOSSEUM-INSPIRED TEAM GALLERY (4-COLUMN GRID // 8 OPERATORS) ─── */
+    .odds-team-gallery-section {
+        position: relative;
+        z-index: 10;
+        max-width: 1200px;
+        margin: 0.5rem auto 5rem auto;
+        padding: 0 1.5rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* 4-Column Grid (8 Members across 2 rows of 4) */
+    .gallery-grid-container {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 2.75rem 1.85rem;
+        width: 100%;
+        align-items: stretch;
+    }
+
+    /* Individual Member Card */
+    .gallery-member-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        min-width: 0;
+        height: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Double-Beveled Picture Frame (Museum Inspo Match) */
+    .gallery-frame-outer {
+        width: 100%;
+        background: #fbfbfb;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        padding: 6px;
+        box-shadow: 
+            0 1px 3px rgba(0, 0, 0, 0.04),
+            0 4px 12px -2px rgba(0, 0, 0, 0.03);
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        box-sizing: border-box;
+    }
+
+    .gallery-frame-molding {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 5px;
+        padding: 6px;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+    }
+
+    .gallery-frame-matting {
+        background: #ffffff;
+        border: 1px solid #eceef1;
+        border-radius: 3px;
+        padding: 8px;
+    }
+
+    .gallery-frame-canvas {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        border-radius: 2px;
+        overflow: hidden;
+        border: 1px solid #d1d5db;
+        background: #111116;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15);
+    }
+
+    .gallery-pfp-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        image-rendering: pixelated;
+        display: block;
+        transition: transform 0.3s ease;
+    }
+
+    /* Hover Lift & Gallery Lighting */
+    .gallery-member-card:hover .gallery-frame-outer {
+        transform: translateY(-4px);
+        border-color: #cbd5e1;
+        box-shadow: 
+            0 12px 28px -4px rgba(15, 23, 42, 0.12),
+            0 4px 10px -2px rgba(15, 23, 42, 0.04);
+    }
+
+    .gallery-member-card:hover .gallery-pfp-img {
+        transform: scale(1.03);
+    }
+
+    /* Caption Underneath */
+    .gallery-card-caption {
+        width: 100%;
+        min-width: 0;
+        flex: 1;
+        margin-top: 0.85rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        justify-content: space-between;
+    }
+
+    .gallery-member-name {
+        font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #1e293b;
+        letter-spacing: -0.015em;
+        line-height: 1.25;
+        margin: 0 0 0.5rem 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.2rem;
+        min-height: 2.85rem;
+        width: 100%;
+        min-width: 0;
+        text-align: center;
+    }
+
+    .gallery-member-handle {
+        font-family: 'Newsreader', Georgia, serif;
+        font-style: italic;
+        font-size: 0.92rem;
+        font-weight: 400;
+        color: #64748b;
+    }
+
+    /* Two-Sided Split Metadata: Positions (Left) vs Awards (Right) */
+    .gallery-member-meta {
+        display: flex;
+        align-items: stretch;
+        justify-content: space-between;
+        gap: 0.65rem;
+        width: 100%;
+        min-width: 0;
+        padding-top: 0.5rem;
+        border-top: 1px solid #f1f5f9;
+        min-height: 68px;
+        box-sizing: border-box;
+    }
+
+    .gallery-meta-col {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .gallery-meta-col.meta-positions {
+        text-align: left;
+        align-items: flex-start;
+    }
+
+    .gallery-meta-col.meta-awards {
+        text-align: right;
+        align-items: flex-end;
+    }
+
+    .gallery-meta-kicker {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.58rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #991b1b;
+        line-height: 1;
+        margin-bottom: 0.35rem;
+    }
+
+    .gallery-meta-entries {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+        width: 100%;
+        min-width: 0;
+        min-height: 38px;
+        justify-content: flex-start;
+        overflow: hidden;
+    }
+
+    .gallery-meta-text {
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: #334155;
+        line-height: 1.3;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .gallery-meta-sep {
+        width: 1px;
+        background: #e2e8f0;
+        margin: 0.15rem 0;
+        flex-shrink: 0;
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 1024px) {
+        .gallery-grid-container {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 2.25rem 1.5rem;
+            max-width: 580px;
+        }
+    }
+    }
+
+    @media (max-width: 640px) {
+        .odds-team-gallery-section {
+            margin: 0.5rem auto 3.5rem auto;
+            padding: 0 1rem;
+        }
+
+        .gallery-grid-container {
+            grid-template-columns: 1fr;
+            gap: 1.85rem;
+            max-width: 260px;
+        }
+    }
 </style>
 
 <div class="odds-about-universe">
@@ -923,16 +1156,114 @@
         <h1 class="about-massive-headline">
             AGAINST ALL <span class="headline-outline-text draw-highlight-wrap">ODDS<svg class="draw-highlight-svg" viewBox="0 0 120 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M 2 10 C 30 2, 60 11, 118 4" stroke="#875af5" stroke-width="3" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></span><span class="headline-gradient-text">.</span>
         </h1>
-
-        <!-- {{-- Punchy Subtitle --}}
-        <p class="about-headline-subtext">
-            We engineer high-velocity software systems and deliver production realities when conventional methods fall short.
-        </p> -->
-
-</div>
-   
-       
     </header>
+</div>
+
+{{-- =========================================================================
+     THE ODDS TEAM GALLERY // INSPIRATION-MATCHED PYRAMID (8 OPERATORS)
+     ========================================================================= --}}
+@php
+$teamMembers = [
+    [
+        'name' => 'Jerico Sanchez',
+        'handle' => '3c0-exe',
+        'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=3c0-exe',
+        'positions' => ['Co-Founder', 'Software Developer'],
+        'awards' => ['Cum Laude', 'Best in Capstone (Lead Dev)'],
+    ],
+    [
+        'name' => 'Jherald Vibar',
+        'handle' => 'Rald Vibz',
+        'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=RaldVibz',
+        'positions' => ['Co-Founder', 'Software / Database Dev'],
+        'awards' => ['Magna Cum Laude'],
+    ],
+    [
+        'name' => 'Robert Santiago',
+        'handle' => 'Robert-1hash',
+        'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=Robert-1hash',
+        'positions' => ['Developer', 'Hardware Specialist'],
+        'awards' => ['Magna Cum Laude', 'Best in Capstone'],
+    ],
+    [
+        'name' => 'Brix Jorie Cura',
+        'handle' => 'ixDev018',
+        'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=ixDev018',
+        'positions' => ['Co-Founder, Lead Designer', 'CMO, Web Developer'],
+        'awards' => ['Magna Cum Laude', 'Best in Capstone (Dev)'],
+    ],
+    [
+        'name' => 'Jazam Laranio',
+        'handle' => '',
+        'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=JazamLaranio',
+        'positions' => ['Developer', 'Lead Gen Specialist'],
+        'awards' => ['Cum Laude'],
+    ],
+    [
+        'name' => 'Mark Paulo Franco',
+        'handle' => '',
+        'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=MarkPauloFranco',
+        'positions' => ['Developer', 'Field Logistics Coord.'],
+        'awards' => ['Best in Capstone'],
+    ],
+    [
+        'name' => 'John Cedric Abaloyan',
+        'handle' => '',
+        'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=CedricAbaloyan',
+        'positions' => ['Lead Developer'],
+        'awards' => ['Best in Capstone'],
+    ],
+    [
+        'name' => 'Sherwin Ramirez',
+        'handle' => '',
+        'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=SherwinRamirez',
+        'positions' => ['QA Specialist', 'Web Developer'],
+        'awards' => ['Top 1 (Rank 1)', 'Best in Capstone'],
+    ],
+];
+@endphp
+
+<section class="odds-team-gallery-section" aria-label="ODDS Team Gallery">
+    <div class="gallery-grid-container">
+        @foreach($teamMembers as $member)
+            <div class="gallery-member-card">
+                <div class="gallery-frame-outer">
+                    <div class="gallery-frame-molding">
+                        <div class="gallery-frame-matting">
+                            <div class="gallery-frame-canvas">
+                                <img src="{{ $member['pfp'] }}" alt="{{ $member['name'] }}" class="gallery-pfp-img" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="gallery-card-caption">
+                    <h3 class="gallery-member-name">
+                        {{ $member['name'] }}@if(!empty($member['handle']))<span class="gallery-member-handle">, {{ $member['handle'] }}</span>@endif
+                    </h3>
+                    <div class="gallery-member-meta">
+                        <div class="gallery-meta-col meta-positions">
+                            <span class="gallery-meta-kicker">POSITIONS</span>
+                            <div class="gallery-meta-entries">
+                                @foreach($member['positions'] as $pos)
+                                    <span class="gallery-meta-text" title="{{ $pos }}">{{ $pos }}</span>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="gallery-meta-sep" aria-hidden="true"></div>
+                        <div class="gallery-meta-col meta-awards">
+                            <span class="gallery-meta-kicker">AWARDS</span>
+                            <div class="gallery-meta-entries">
+                                @foreach($member['awards'] as $aw)
+                                    <span class="gallery-meta-text" title="{{ $aw }}">{{ $aw }}</span>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</section>
 
     {{-- MAIN EDITORIAL CONTENT LAYOUT --}}
     <div class="about-content-layout">
@@ -1308,6 +1639,68 @@ function execCopy(text) {
     document.body.removeChild(ta);
 }
 
+// Force initial scroll to top on about page & prevent accidental jumps to bottom
+(function resetAboutPageScroll() {
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    
+    // Clear any hash targeting sections that causes browser to jump to bottom on load
+    if (window.location.hash && window.location.hash.startsWith('#section-')) {
+        history.replaceState(null, document.title, window.location.pathname + window.location.search);
+    }
+
+    const resetTop = () => {
+        window.scrollTo(0, 0);
+        if (document.documentElement) document.documentElement.scrollTop = 0;
+        if (document.body) document.body.scrollTop = 0;
+        if (window.smoother) {
+            window.smoother.scrollTop(0);
+        }
+    };
+
+    resetTop();
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', resetTop);
+    }
+    window.addEventListener('load', () => {
+        resetTop();
+        setTimeout(resetTop, 60);
+    });
+})();
+
+// Intercept TOC chapter clicks so they scroll smoothly without updating URL hash or jarring jumps
+(function initTocSmoothScroll() {
+    function setupTocClicks() {
+        const tocLinks = document.querySelectorAll('#toc-nav a, #mobile-toc-nav a, a[href^="#section-"]');
+        tocLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const rawHref = link.getAttribute('href');
+                if (!rawHref || !rawHref.includes('#')) return;
+                const id = rawHref.substring(rawHref.indexOf('#') + 1);
+                const target = document.getElementById(id);
+                if (target) {
+                    e.preventDefault();
+                    const navbar = document.getElementById('navbar');
+                    const navH = navbar ? navbar.offsetHeight : 70;
+                    if (window.smoother) {
+                        window.smoother.scrollTo(target, true, `top ${navH + 24}px`);
+                    } else {
+                        const topPos = target.getBoundingClientRect().top + window.pageYOffset - (navH + 24);
+                        window.scrollTo({ top: topPos, behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupTocClicks);
+    } else {
+        setupTocClicks();
+    }
+})();
+
 // ScrollSpy Navigation Tracker
 (function initAboutScrollSpy() {
     function setupSpy() {
@@ -1360,12 +1753,13 @@ function execCopy(text) {
 })();
 
 // ScrollTrigger Pin — replaces CSS position:sticky for the sidebar
-// (sticky doesn't work inside ScrollSmoother's transform layer)
+// (pins the inner .about-sidebar-sticky to avoid flexing column jumps)
 (function initAboutSidebarPin() {
     function setupPin() {
         const sidebar = document.querySelector('.about-sidebar-column');
         const feed = document.querySelector('.about-articles-feed');
-        if (!sidebar || !feed) return;
+        const sticky = document.querySelector('.about-sidebar-sticky');
+        if (!sidebar || !feed || !sticky) return;
         if (window.innerWidth < 1024) return;
 
         // If ScrollTrigger is not yet ready, retry shortly
@@ -1376,7 +1770,7 @@ function execCopy(text) {
 
         // Kill existing triggers for this sidebar to prevent duplicates
         ScrollTrigger.getAll().forEach(st => {
-            if (st.pin === sidebar) st.kill();
+            if (st.pin === sticky || st.pin === sidebar) st.kill();
         });
 
         const navbar = document.getElementById('navbar');
@@ -1389,13 +1783,11 @@ function execCopy(text) {
         ScrollTrigger.create({
             trigger: feed,
             start: () => `top ${getTopOffset()}px`,
-            end: () => `bottom ${sidebar.offsetHeight + getTopOffset()}px`,
-            pin: sidebar,
+            end: () => `bottom ${sticky.offsetHeight + getTopOffset()}px`,
+            pin: sticky,
             pinSpacing: false,
-            invalidateOnRefresh: true,
+            anticipatePin: 1
         });
-
-        ScrollTrigger.refresh();
     }
 
     if (document.readyState === 'loading') {
