@@ -1860,29 +1860,35 @@ body:not(.hero-active) .hero-services-stage {
 
 @media (max-width: 991.98px) {
     .why-process-track-wrapper {
-        overflow: visible;
-        width: 100%;
+        overflow: hidden !important;
+        width: 100% !important;
+        max-width: 100vw !important;
     }
 
     .why-process-track {
-        display: block;
-        width: 100%;
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
         transform: none !important;
     }
 
     .why-process-track > .why {
         margin-right: 0 !important;
-        min-height: auto;
-        height: auto;
-        width: 100%;
-        max-width: 100%;
+        min-height: auto !important;
+        height: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
     }
 
     .why-process-track > .why,
     .why-process-track > .process {
-        width: 100%;
-        min-width: 100%;
-        max-width: 100%;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
     }
 
     .process-linepath-wrap {
@@ -4010,56 +4016,89 @@ body:not(.hero-active) .hero-services-stage {
 
     /* ─── Why Section Mobile: Horizontal Swipe Carousel (<=768px) ─── */
     .why {
-        padding: calc(var(--nav-height) + 32px) 0 56px !important;
+        padding: calc(var(--nav-height) + 24px) 0 48px !important;
         min-height: auto !important;
         height: auto !important;
         justify-content: flex-start !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+    }
+
+    .why .sec-inner {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        padding: 0 16px !important;
+        margin: 0 auto !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+    }
+
+    .why-main-stage {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
     }
 
     .why-center {
-        margin-bottom: 24px !important;
-        padding: 0 20px;
+        margin-bottom: 20px !important;
+        padding: 0 !important;
+        text-align: center !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
     }
 
     .why-title {
-        font-size: clamp(24px, 6.5vw, 34px);
-        margin-bottom: 8px;
+        font-size: clamp(24px, 6.5vw, 34px) !important;
+        margin-bottom: 8px !important;
+        text-align: center !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
     }
 
     .why-desc {
-        font-size: 13.5px;
-        line-height: 1.55;
-        max-width: 420px;
-        padding: 0 8px;
-        margin-left: auto;
-        margin-right: auto;
+        font-size: 13.5px !important;
+        line-height: 1.55 !important;
+        max-width: 420px !important;
+        padding: 0 4px !important;
+        margin: 0 auto !important;
+        text-align: center !important;
     }
 
     /* ─── Carousel Outer Wrapper ─── */
     .why-deck-wrap {
-        width: 100%;
-        max-width: 100%;
-        margin: 0 auto;
-        padding: 0;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        position: relative;
-        overflow: hidden;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        position: relative !important;
+        overflow: hidden !important;
     }
 
     /* ─── Horizontal Scroll Track ─── */
     .why-deck {
         display: flex !important;
         flex-direction: row !important;
+        justify-content: flex-start !important;
+        align-items: stretch !important;
         gap: 0 !important;
         width: 100% !important;
         max-width: 100% !important;
+        min-width: 0 !important;
         height: auto !important;
         margin: 0 !important;
         padding: 0 !important;
-        overflow-x: scroll !important;
+        overflow-x: auto !important;
         scroll-snap-type: x mandatory !important;
         -webkit-overflow-scrolling: touch !important;
         scrollbar-width: none !important;
@@ -4069,6 +4108,8 @@ body:not(.hero-active) .hero-services-stage {
         touch-action: pan-x !important;
         user-select: none;
         perspective: none !important;
+        position: relative !important;
+        box-sizing: border-box !important;
     }
 
     .why-deck::-webkit-scrollbar {
@@ -4108,7 +4149,7 @@ body:not(.hero-active) .hero-services-stage {
         border-radius: 20px !important;
         width: 100% !important;
         height: 100% !important;
-        box-sizing: border-box;
+        box-sizing: border-box !important;
         transform: none !important;
         transform-style: flat !important;
         backface-visibility: visible !important;
@@ -4125,16 +4166,18 @@ body:not(.hero-active) .hero-services-stage {
         transform: none !important;
         backface-visibility: visible !important;
         -webkit-backface-visibility: visible !important;
-        margin: 0 20px !important;
-        width: calc(100% - 40px) !important;
+        margin: 0 auto !important;
+        width: calc(100% - 16px) !important;
+        max-width: 390px !important;
         background: #ffffff !important;
-        padding: 32px 28px 28px !important;
+        padding: 28px 22px 24px !important;
         border-radius: 20px !important;
         border: 1px solid rgba(0, 0, 0, 0.07) !important;
         border-left: 4px solid #7B51F3 !important;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.09), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
         overflow: hidden !important;
         min-height: 240px;
+        box-sizing: border-box !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: flex-start !important;
@@ -4200,12 +4243,14 @@ body:not(.hero-active) .hero-services-stage {
     /* ─── Show Mobile Carousel Controls ─── */
     .why-mobile-controls {
         display: flex !important;
-        align-items: center;
-        justify-content: space-between;
-        width: calc(100% - 40px);
-        margin: 16px auto 0;
-        padding: 0;
-        gap: 12px;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        max-width: 390px !important;
+        margin: 16px auto 0 !important;
+        padding: 0 8px !important;
+        gap: 12px !important;
+        box-sizing: border-box !important;
     }
 
     /* Hide swipe hint since we have arrow controls */

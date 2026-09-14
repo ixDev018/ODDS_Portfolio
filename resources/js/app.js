@@ -126,21 +126,25 @@ if (prefersReducedMotion) {
         document.body.classList.remove('hero-active');
 
         const NAV = {
-            hero: { bg: 'rgba(14,14,14,0.65)', border: 'rgba(255,255,255,0.08)', light: false },
-            works: { bg: 'rgba(227,227,227,0.65)', border: 'rgba(0,0,0,0.06)', light: true },
-            services: { bg: 'rgba(32,32,32,0.85)', border: 'rgba(255,255,255,0.08)', light: false },
-            testimonials: { bg: 'rgba(243,89,176,0.65)', border: 'rgba(255,255,255,0.08)', light: false },
-            why: { bg: 'rgba(239,239,239,0.65)', border: 'rgba(0,0,0,0.06)', light: true },
-            process: { bg: 'rgba(240,240,245,0.65)', border: 'rgba(0,0,0,0.06)', light: true },
-            faq: { bg: 'rgba(255,255,255,0.65)', border: 'rgba(0,0,0,0.06)', light: true },
-            cta: { bg: 'rgba(0,0,0,0.65)', border: 'rgba(255,255,255,0.08)', light: false },
+            hero: { bg: 'rgba(14, 14, 14, 0.65)', border: 'rgba(255, 255, 255, 0.08)', light: false },
+            'who-we-are': { bg: 'rgba(255, 255, 255, 0.85)', border: 'rgba(0, 0, 0, 0.06)', light: true },
+            services: { bg: 'rgba(24, 24, 24, 0.85)', border: 'rgba(255, 255, 255, 0.08)', light: false },
+            works: { bg: 'rgba(255, 255, 255, 0.85)', border: 'rgba(0, 0, 0, 0.06)', light: true },
+            testimonials: { bg: 'rgba(243, 89, 176, 0.65)', border: 'rgba(255, 255, 255, 0.08)', light: false },
+            why: { bg: 'rgba(240, 240, 245, 0.85)', border: 'rgba(0, 0, 0, 0.06)', light: true },
+            process: { bg: 'rgba(240, 240, 245, 0.85)', border: 'rgba(0, 0, 0, 0.06)', light: true },
+            faq: { bg: 'rgba(255, 255, 255, 0.85)', border: 'rgba(0, 0, 0, 0.06)', light: true },
+            cta: { bg: 'rgba(14, 14, 14, 0.65)', border: 'rgba(255, 255, 255, 0.08)', light: false },
         };
 
+        let currentNavTheme = null;
         function applyNavTheme(key) {
             if (!navbar) return;
             const t = NAV[key] ?? NAV.hero;
-            gsap.to(navbar, { '--nav-bg': t.bg, '--nav-border': t.border, duration: 0.3, ease: 'none' });
-            navbar.classList.toggle('light-theme', t.light);
+            if (currentNavTheme === key) return;
+            currentNavTheme = key;
+            gsap.to(navbar, { '--nav-bg': t.bg, '--nav-border': t.border, duration: 0.3, ease: 'power2.out', overwrite: 'auto' });
+            navbar.classList.toggle('light-theme', !!t.light);
         }
 
         // Smooth scroll for anchor links
@@ -161,36 +165,70 @@ if (prefersReducedMotion) {
             });
         });
 
+        // Logo smooth scroll to top
+        const logoLink = document.getElementById('logo');
+        if (logoLink && (window.location.pathname === '/' || window.location.pathname === '')) {
+            logoLink.addEventListener('click', e => {
+                e.preventDefault();
+                if (smoother) {
+                    smoother.scrollTo(0, true);
+                } else {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+        }
+
         // Dynamic navbar theme on scroll
         const observedSections = [
             { id: 'hero', key: 'hero' },
-            { id: 'works', key: 'works' },
+            { id: 'who-we-are', key: 'who-we-are' },
             { id: 'services', key: 'services' },
-            { id: 'why', key: 'why' },
-            { id: 'process', key: 'process' },
+            { id: 'works', key: 'works' },
+            { id: 'why-process-wrapper', fallbackId: 'why', key: 'why' },
             { id: 'faq', key: 'faq' },
             { id: 'cta', key: 'cta' },
         ];
 
         function updateNavOnScroll() {
             const scrollY = smoother ? smoother.scrollTop() : (window.scrollY || window.pageYOffset || 0);
-            const vh = window.innerHeight;
-            const probe = scrollY + vh * 0.35;
 
-            let activeKey = 'hero';
+            // At or near the top: hero section theme
+            if (scrollY <= 20) {
+                applyNavTheme('hero');
+                return;
+            }
+
+            const navH = navbar ? navbar.offsetHeight : 70;
+            const probeY = Math.max(20, navH * 0.5);
+
+            let activeKey = null;
             for (const item of observedSections) {
-                const el = document.getElementById(item.id);
-                if (el) {
-                    const top = el.offsetTop;
-                    if (probe >= top) {
+                const el = document.getElementById(item.id) || (item.fallbackId ? document.getElementById(item.fallbackId) : null);
+                if (!el) continue;
+                const rect = el.getBoundingClientRect();
+                if (rect.top <= probeY && rect.bottom > probeY) {
+                    activeKey = item.key;
+                    break;
+                }
+            }
+
+            // Fallback: pick the last section whose top has passed the probe
+            if (!activeKey) {
+                for (let i = observedSections.length - 1; i >= 0; i--) {
+                    const item = observedSections[i];
+                    const el = document.getElementById(item.id) || (item.fallbackId ? document.getElementById(item.fallbackId) : null);
+                    if (el && el.getBoundingClientRect().top <= probeY) {
                         activeKey = item.key;
+                        break;
                     }
                 }
             }
-            applyNavTheme(activeKey);
+
+            applyNavTheme(activeKey || 'hero');
         }
 
         window.addEventListener('scroll', updateNavOnScroll, { passive: true });
+        window.addEventListener('resize', updateNavOnScroll, { passive: true });
         if (typeof ScrollTrigger !== 'undefined') {
             ScrollTrigger.addEventListener('scroll', updateNavOnScroll);
         }
@@ -1609,11 +1647,11 @@ if (ctaVideo && ctaCanvas) {
 
     function initCardDealScrollTrigger() {
         if (dealScrollTrigger) {
-            dealScrollTrigger.kill();
+            dealScrollTrigger.kill(true);
             dealScrollTrigger = null;
         }
         if (dealIntroTrigger) {
-            dealIntroTrigger.kill();
+            dealIntroTrigger.kill(true);
             dealIntroTrigger = null;
         }
 
@@ -1818,13 +1856,18 @@ if (ctaVideo && ctaCanvas) {
         let currentIdx = 0;
 
         function getCardLeft(idx) {
-            return cards[idx] ? cards[idx].offsetLeft : idx * deckEl.offsetWidth;
+            return idx * (deckEl.clientWidth || deckEl.offsetWidth || 1);
         }
 
-        function scrollToCard(idx) {
+        function scrollToCard(idx, smooth = true) {
             idx = Math.max(0, Math.min(cards.length - 1, idx));
             currentIdx = idx;
-            deckEl.scrollTo({ left: getCardLeft(idx), behavior: 'smooth' });
+            const targetLeft = getCardLeft(idx);
+            if (smooth) {
+                deckEl.scrollTo({ left: targetLeft, behavior: 'smooth' });
+            } else {
+                deckEl.scrollLeft = targetLeft;
+            }
             updateControls();
         }
 
@@ -1842,17 +1885,13 @@ if (ctaVideo && ctaCanvas) {
             clearTimeout(scrollTimer);
             scrollTimer = setTimeout(() => {
                 const scrollLeft = deckEl.scrollLeft;
-                let closest = 0;
-                let minDist = Infinity;
-                cards.forEach((card, i) => {
-                    const dist = Math.abs(getCardLeft(i) - scrollLeft);
-                    if (dist < minDist) { minDist = dist; closest = i; }
-                });
+                const cardWidth = deckEl.clientWidth || deckEl.offsetWidth || 1;
+                const closest = Math.max(0, Math.min(cards.length - 1, Math.round(scrollLeft / cardWidth)));
                 if (closest !== currentIdx) {
                     currentIdx = closest;
                     updateControls();
                 }
-            }, 80);
+            }, 50);
         }
 
         const onPrev = () => scrollToCard(currentIdx - 1);
@@ -1865,12 +1904,16 @@ if (ctaVideo && ctaCanvas) {
         // Segment dot clicks
         segments.forEach((seg, i) => seg.addEventListener('click', () => scrollToCard(i)));
 
-        // Reset to first card after two paint frames so layout is fully settled
+        // Reset to first card immediately and after layout settles
         currentIdx = 0;
         updateControls();
-        requestAnimationFrame(() => requestAnimationFrame(() => {
+        deckEl.scrollLeft = 0;
+        requestAnimationFrame(() => {
             deckEl.scrollLeft = 0;
-        }));
+            requestAnimationFrame(() => {
+                deckEl.scrollLeft = 0;
+            });
+        });
 
         carouselCleanup = () => {
             prevBtn.removeEventListener('click', onPrev);
