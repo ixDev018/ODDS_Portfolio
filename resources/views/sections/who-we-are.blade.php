@@ -18,7 +18,7 @@
                     <strong class="who-we-are-text-bold">solve real-world problems.</strong>
                 </h2>
                 <div class="who-we-are-action fade-up">
-                    <a href="#why-process-wrapper" class="who-we-are-btn" id="who-we-are-btn" aria-label="Learn how we work">
+                    <a href="{{ route('portfolio.about') }}" class="who-we-are-btn" id="who-we-are-btn" aria-label="Learn how we work in About Us">
                         <span>How we work</span>
                         <svg class="who-we-are-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                             <path d="M2.5 8H13.5M13.5 8L8.5 3M13.5 8L8.5 13" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>

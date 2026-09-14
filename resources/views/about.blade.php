@@ -987,6 +987,14 @@
     }
 
     /* Hover Lift & Gallery Lighting */
+    .gallery-frame-link {
+        display: block;
+        width: 100%;
+        text-decoration: none;
+        color: inherit;
+        cursor: pointer;
+    }
+
     .gallery-member-card:hover .gallery-frame-outer {
         transform: translateY(-4px);
         border-color: #cbd5e1;
@@ -1029,6 +1037,21 @@
         width: 100%;
         min-width: 0;
         text-align: center;
+    }
+
+    .gallery-name-link {
+        color: inherit;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.2rem;
+        transition: color 0.2s ease;
+    }
+
+    .gallery-name-link:hover {
+        color: #875af5;
     }
 
     .gallery-member-handle {
@@ -1167,20 +1190,23 @@ $teamMembers = [
     [
         'name' => 'Jerico Sanchez',
         'handle' => '3c0-exe',
+        'github' => 'https://github.com/3c0-exe',
         'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=3c0-exe',
         'positions' => ['Co-Founder', 'Software Developer'],
         'awards' => ['Cum Laude', 'Best in Capstone (Lead Dev)'],
     ],
     [
         'name' => 'Jherald Vibar',
-        'handle' => 'Rald Vibz',
-        'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=RaldVibz',
+        'handle' => 'Jherald-Vibar',
+        'github' => 'https://github.com/Jherald-Vibar',
+        'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=Jherald-Vibar',
         'positions' => ['Co-Founder', 'Software / Database Dev'],
         'awards' => ['Magna Cum Laude'],
     ],
     [
         'name' => 'Robert Santiago',
         'handle' => 'Robert-1hash',
+        'github' => 'https://github.com/Robert-1hash',
         'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=Robert-1hash',
         'positions' => ['Developer', 'Hardware Specialist'],
         'awards' => ['Magna Cum Laude', 'Best in Capstone'],
@@ -1188,6 +1214,7 @@ $teamMembers = [
     [
         'name' => 'Brix Jorie Cura',
         'handle' => 'ixDev018',
+        'github' => 'https://github.com/ixDev018',
         'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=ixDev018',
         'positions' => ['Co-Founder, Lead Designer', 'CMO, Web Developer'],
         'awards' => ['Magna Cum Laude', 'Best in Capstone (Dev)'],
@@ -1195,28 +1222,32 @@ $teamMembers = [
     [
         'name' => 'Jazam Laranio',
         'handle' => '',
+        'github' => null,
         'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=JazamLaranio',
         'positions' => ['Developer', 'Lead Gen Specialist'],
         'awards' => ['Cum Laude'],
     ],
     [
         'name' => 'Mark Paulo Franco',
-        'handle' => '',
-        'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=MarkPauloFranco',
+        'handle' => 'itsFrancss619',
+        'github' => 'https://github.com/itsFrancss619',
+        'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=itsFrancss619',
         'positions' => ['Developer', 'Field Logistics Coord.'],
         'awards' => ['Best in Capstone'],
     ],
     [
         'name' => 'John Cedric Abaloyan',
-        'handle' => '',
-        'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=CedricAbaloyan',
+        'handle' => 'Ggwepq',
+        'github' => 'https://github.com/Ggwepq',
+        'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=Ggwepq',
         'positions' => ['Lead Developer'],
         'awards' => ['Best in Capstone'],
     ],
     [
         'name' => 'Sherwin Ramirez',
-        'handle' => '',
-        'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=SherwinRamirez',
+        'handle' => 'sheerwiiin',
+        'github' => 'https://github.com/sheerwiiin',
+        'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=sheerwiiin',
         'positions' => ['QA Specialist', 'Web Developer'],
         'awards' => ['Top 1 (Rank 1)', 'Best in Capstone'],
     ],
@@ -1227,6 +1258,9 @@ $teamMembers = [
     <div class="gallery-grid-container">
         @foreach($teamMembers as $member)
             <div class="gallery-member-card">
+                @if(!empty($member['github']))
+                    <a href="{{ $member['github'] }}" target="_blank" rel="noopener noreferrer" class="gallery-frame-link" aria-label="{{ $member['name'] }} GitHub Profile">
+                @endif
                 <div class="gallery-frame-outer">
                     <div class="gallery-frame-molding">
                         <div class="gallery-frame-matting">
@@ -1236,9 +1270,18 @@ $teamMembers = [
                         </div>
                     </div>
                 </div>
+                @if(!empty($member['github']))
+                    </a>
+                @endif
                 <div class="gallery-card-caption">
                     <h3 class="gallery-member-name">
-                        {{ $member['name'] }}@if(!empty($member['handle']))<span class="gallery-member-handle">, {{ $member['handle'] }}</span>@endif
+                        @if(!empty($member['github']))
+                            <a href="{{ $member['github'] }}" target="_blank" rel="noopener noreferrer" class="gallery-name-link">
+                                {{ $member['name'] }}@if(!empty($member['handle']))<span class="gallery-member-handle">, {{ $member['handle'] }}</span>@endif
+                            </a>
+                        @else
+                            {{ $member['name'] }}@if(!empty($member['handle']))<span class="gallery-member-handle">, {{ $member['handle'] }}</span>@endif
+                        @endif
                     </h3>
                     <div class="gallery-member-meta">
                         <div class="gallery-meta-col meta-positions">
