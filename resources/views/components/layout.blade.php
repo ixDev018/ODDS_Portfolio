@@ -31,6 +31,7 @@
         </div>
     </div>
     @stack('modals')
+    <x-contact-modal />
     @stack('scripts')
 </body>
 </html>

@@ -89,7 +89,7 @@
                     </a>
                 </div>
 
-                <a href="{{ url('/#cta') }}" class="footer-cta-action-btn">
+                <a href="#contact" class="footer-cta-action-btn js-open-contact-modal" data-open-contact>
                     <span>Start a Project</span>
                     <i class="fa-solid fa-arrow-right text-xs"></i>
                 </a>

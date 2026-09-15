@@ -17,7 +17,7 @@
                 <li><a href="{{ route('portfolio.about') }}" class="{{ request()->routeIs('portfolio.about') ? 'active' : '' }}">About Us</a></li>
                 <li><a href="{{ route('portfolio.faqs') }}" class="{{ request()->routeIs('portfolio.faqs') ? 'active' : '' }}">FAQs</a></li>
             </ul>
-            <a href="{{ request()->is('/') ? '#cta' : url('/#cta') }}" class="btn-nav">Let's Talk</a>
+            <a href="#contact" class="btn-nav js-open-contact-modal" data-open-contact>Let's Talk</a>
             <button class="nav-toggle" id="mobile-toggle" aria-label="Toggle Navigation" aria-expanded="false">
                 <span class="hamburger-bar"></span>
                 <span class="hamburger-bar"></span>
@@ -36,7 +36,7 @@
             <li><a href="{{ route('portfolio.about') }}" class="mobile-nav-link {{ request()->routeIs('portfolio.about') ? 'active' : '' }}">About Us</a></li>
             <li><a href="{{ route('portfolio.faqs') }}" class="mobile-nav-link {{ request()->routeIs('portfolio.faqs') ? 'active' : '' }}">FAQs</a></li>
         </ul>
-        <a href="{{ request()->is('/') ? '#cta' : url('/#cta') }}" class="mobile-btn-nav mobile-nav-link">Let's Talk</a>
+        <a href="#contact" class="mobile-btn-nav mobile-nav-link js-open-contact-modal" data-open-contact>Let's Talk</a>
     </div>
 </div>
 

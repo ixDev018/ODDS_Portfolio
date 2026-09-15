@@ -897,7 +897,7 @@ $startingItem = $workItems->get($startIndex) ?: $workItems->first();
             <p class="our-work-closing-desc">
                 Tell us what you're facing. Whether you need a focused module or a full end-to-end architecture, our engineering team executes with velocity.
             </p>
-            <a href="{{ url('/#cta') }}" class="works-see-more">
+            <a href="#contact" class="works-see-more js-open-contact-modal" data-open-contact>
                 Let's Build
             </a>
         </div>

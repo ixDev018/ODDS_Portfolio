@@ -1358,7 +1358,7 @@ $teamMembers = [
                     <p class="deploy-card-p">
                         Deploy our engineering core to build your complete system or eliminate architectural bottlenecks.
                     </p>
-                    <a href="{{ url('/#cta') }}" class="deploy-card-btn">
+                    <a href="#contact" class="deploy-card-btn js-open-contact-modal" data-open-contact>
                         <span>Start a Conversation</span>
                         <i class="fa-solid fa-arrow-right text-xs"></i>
                     </a>
