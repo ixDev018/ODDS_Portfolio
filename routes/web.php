@@ -83,12 +83,59 @@ Route::redirect('/faq', '/faqs');
 
 // Public Contact / Lead Form Submission
 Route::post('/contact', function (\Illuminate\Http\Request $request) {
+    $disposableDomains = [
+        'mailinator.com', 'tempmail.com', 'temp-mail.org', 'guerrillamail.com',
+        '10minutemail.com', 'throwawaymail.com', 'yopmail.com', 'trashmail.com',
+        'sharklasers.com', 'dispostable.com', 'getnada.com', 'fakemailgenerator.com',
+        'generator.email', 'tempail.com', 'burnermail.io', 'crazymailing.com',
+        'maildrop.cc', 'getairmail.com', 'mohmal.com', 'inboxkitten.com',
+        'emailondeck.com', 'mytemp.email', 'temp-mail.io', 'zillamail.com',
+        'trashmail.net', 'disposablemail.com', 'guerrillamailblock.com',
+        'guerrillamail.net', 'guerrillamail.biz', 'guerrillamail.org',
+        'spam4.me', 'grr.la', 'pokemail.net', 'mytempemail.com', 'nada.ltd'
+    ];
+
     $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|max:255',
-        'message' => 'required|string|max:5000',
+        'name' => 'bail|required|string|max:255',
+        'email' => [
+            'bail',
+            'required',
+            'string',
+            'max:255',
+            'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+            'email:rfc,dns',
+            function ($attribute, $value, $fail) use ($disposableDomains) {
+                $parts = explode('@', $value);
+                if (count($parts) !== 2 || empty($parts[1])) {
+                    return;
+                }
+
+                $domain = strtolower($parts[1]);
+                if (empty($domain) || !str_contains($domain, '.')) {
+                    return;
+                }
+
+                // Check disposable / burner domains
+                if (in_array($domain, $disposableDomains, true)) {
+                    $fail('Temporary or disposable email domains are not accepted. Please provide an active work or personal email address.');
+                    return;
+                }
+
+                // Double-check active mail server records (MX or A fallback)
+                if (!@checkdnsrr($domain, 'MX') && !@checkdnsrr($domain, 'A')) {
+                    $fail('The email domain "' . $domain . '" does not appear to have an active mail server.');
+                }
+            },
+        ],
+        'message' => 'bail|required|string|max:5000',
         'company' => 'nullable|string|max:255',
         'service_needed' => 'nullable|string|max:255',
+    ], [
+        'name.required' => 'Please enter your name.',
+        'email.required' => 'Please enter your email address.',
+        'email.regex' => 'Please enter a valid email format (e.g. alex@company.com).',
+        'email.email' => 'The email domain provided does not exist or has no active mail server.',
+        'message.required' => 'Please include a project brief or requirements.',
     ]);
 
     $validated['ip_address'] = $request->ip();

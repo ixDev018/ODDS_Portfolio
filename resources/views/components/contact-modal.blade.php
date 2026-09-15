@@ -63,7 +63,8 @@
                                 <label for="contact-email" class="odds-form-label">
                                     Email Address <span class="text-purple-400">*</span>
                                 </label>
-                                <input type="email" id="contact-email" name="email" required class="odds-form-input" placeholder="alex@company.com">
+                                <input type="email" id="contact-email" name="email" required class="odds-form-input" placeholder="alex@company.com" autocomplete="email">
+                                <span id="contact-email-hint" class="odds-form-hint" style="display: none;"></span>
                             </div>
                         </div>
 
@@ -352,6 +353,24 @@
     border-color: #875af5;
     background: rgba(15, 23, 42, 0.9);
     box-shadow: 0 0 0 3px rgba(135, 90, 245, 0.2);
+}
+
+.odds-form-input.is-invalid,
+.odds-form-textarea.is-invalid {
+    border-color: #ef4444 !important;
+    background: rgba(239, 68, 68, 0.08) !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.22) !important;
+}
+
+.odds-form-hint {
+    display: block;
+    font-size: 0.72rem;
+    margin-top: 0.35rem;
+    color: #94a3b8;
+}
+
+.odds-form-hint.is-error {
+    color: #f87171;
 }
 
 .odds-form-input::placeholder,
@@ -649,27 +668,149 @@
 
         // AJAX Form Submission
         if (form) {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
+            const nameInput = document.getElementById('contact-name');
+            const emailInput = document.getElementById('contact-email');
+            const messageInput = document.getElementById('contact-message');
+            const emailHint = document.getElementById('contact-email-hint');
+
+            const disposableList = [
+                'mailinator.com', 'tempmail.com', 'temp-mail.org', 'guerrillamail.com',
+                '10minutemail.com', 'throwawaymail.com', 'yopmail.com', 'trashmail.com',
+                'sharklasers.com', 'dispostable.com', 'getnada.com', 'fakemailgenerator.com',
+                'generator.email', 'tempail.com', 'burnermail.io', 'crazymailing.com',
+                'maildrop.cc', 'getairmail.com', 'mohmal.com', 'inboxkitten.com',
+                'emailondeck.com', 'mytemp.email', 'temp-mail.io', 'zillamail.com',
+                'trashmail.net', 'disposablemail.com', 'spam4.me', 'grr.la', 'pokemail.net'
+            ];
+
+            const clearErrors = () => {
                 if (errorAlert) {
                     errorAlert.style.display = 'none';
                     errorAlert.textContent = '';
                 }
+                [nameInput, emailInput, messageInput].forEach(el => el && el.classList.remove('is-invalid'));
+                if (emailHint) {
+                    emailHint.style.display = 'none';
+                    emailHint.textContent = '';
+                    emailHint.classList.remove('is-error');
+                }
+            };
 
-                const name = document.getElementById('contact-name').value.trim();
-                const email = document.getElementById('contact-email').value.trim();
-                const message = document.getElementById('contact-message').value.trim();
+            [nameInput, emailInput, messageInput].forEach(input => {
+                if (input) {
+                    input.addEventListener('input', () => {
+                        input.classList.remove('is-invalid');
+                        if (input === emailInput && emailHint) {
+                            emailHint.style.display = 'none';
+                        }
+                    });
+                }
+            });
 
-                if (!name || !email || !message) {
+            // Pre-submit validation feedback on blur
+            if (emailInput) {
+                emailInput.addEventListener('blur', function() {
+                    const val = this.value.trim();
+                    if (!val) return;
+                    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                    if (!emailRegex.test(val)) {
+                        this.classList.add('is-invalid');
+                        if (emailHint) {
+                            emailHint.textContent = 'Please enter a valid email format (e.g. name@company.com)';
+                            emailHint.classList.add('is-error');
+                            emailHint.style.display = 'block';
+                        }
+                    } else {
+                        const domain = val.split('@')[1]?.toLowerCase() || '';
+                        if (disposableList.includes(domain)) {
+                            this.classList.add('is-invalid');
+                            if (emailHint) {
+                                emailHint.textContent = 'Temporary or disposable email domains are not accepted.';
+                                emailHint.classList.add('is-error');
+                                emailHint.style.display = 'block';
+                            }
+                        } else {
+                            this.classList.remove('is-invalid');
+                            if (emailHint) emailHint.style.display = 'none';
+                        }
+                    }
+                });
+            }
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                clearErrors();
+
+                const name = nameInput ? nameInput.value.trim() : '';
+                const email = emailInput ? emailInput.value.trim() : '';
+                const message = messageInput ? messageInput.value.trim() : '';
+
+                if (!name) {
+                    if (nameInput) {
+                        nameInput.classList.add('is-invalid');
+                        nameInput.focus();
+                    }
                     if (errorAlert) {
-                        errorAlert.textContent = 'Please fill out all required fields (Name, Email, Message).';
+                        errorAlert.textContent = 'Please enter your name.';
+                        errorAlert.style.display = 'block';
+                    }
+                    return;
+                }
+
+                if (!email) {
+                    if (emailInput) {
+                        emailInput.classList.add('is-invalid');
+                        emailInput.focus();
+                    }
+                    if (errorAlert) {
+                        errorAlert.textContent = 'Please enter your email address.';
+                        errorAlert.style.display = 'block';
+                    }
+                    return;
+                }
+
+                // Strict email format check
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!emailRegex.test(email)) {
+                    if (emailInput) {
+                        emailInput.classList.add('is-invalid');
+                        emailInput.focus();
+                    }
+                    if (errorAlert) {
+                        errorAlert.textContent = 'Please provide a valid, active email address (e.g. name@company.com).';
+                        errorAlert.style.display = 'block';
+                    }
+                    return;
+                }
+
+                // Check disposable domains
+                const emailDomain = email.split('@')[1]?.toLowerCase() || '';
+                if (disposableList.includes(emailDomain)) {
+                    if (emailInput) {
+                        emailInput.classList.add('is-invalid');
+                        emailInput.focus();
+                    }
+                    if (errorAlert) {
+                        errorAlert.textContent = 'Temporary or disposable email domains are not accepted. Please use an active personal or business email.';
+                        errorAlert.style.display = 'block';
+                    }
+                    return;
+                }
+
+                if (!message) {
+                    if (messageInput) {
+                        messageInput.classList.add('is-invalid');
+                        messageInput.focus();
+                    }
+                    if (errorAlert) {
+                        errorAlert.textContent = 'Please include a project brief or requirements.';
                         errorAlert.style.display = 'block';
                     }
                     return;
                 }
 
                 if (submitBtn) submitBtn.disabled = true;
-                if (btnText) btnText.textContent = 'Transmitting...';
+                if (btnText) btnText.textContent = 'Verifying & Transmitting...';
                 if (btnSpinner) btnSpinner.style.display = 'inline-block';
 
                 const formData = new FormData(form);
@@ -685,7 +826,19 @@
                 .then(response => {
                     if (!response.ok) {
                         return response.json().then(data => {
-                            throw new Error(data.message || (data.errors ? Object.values(data.errors).flat().join(' ') : 'Server error occurred'));
+                            let msg = '';
+                            if (data.errors) {
+                                if (data.errors.email && emailInput) {
+                                    emailInput.classList.add('is-invalid');
+                                    emailInput.focus();
+                                }
+                                msg = Object.values(data.errors).flat().join(' ');
+                            } else if (data.message) {
+                                msg = data.message;
+                            } else {
+                                msg = 'Server verification failed. Please check your email or contact us directly.';
+                            }
+                            throw new Error(msg);
                         });
                     }
                     return response.json();
