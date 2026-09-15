@@ -2227,7 +2227,6 @@ body:not(.hero-active) .hero-services-stage {
     padding: 38px 32px;
     box-sizing: border-box;
     border: 1px solid rgba(0, 0, 0, 0.08);
-    border-left: 4px solid #7B51F3;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -2271,16 +2270,27 @@ body:not(.hero-active) .hero-services-stage {
     background: rgba(0, 0, 0, 0.07);
 }
 
-.why-card-front.theme-purple {
-    border-left-color: #7B51F3;
+.why-card-front::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #7B51F3;
+    z-index: 3;
 }
 
-.why-card-front.theme-pink {
-    border-left-color: #F359B0;
+.why-card-front.theme-purple::before {
+    background: #7B51F3;
 }
 
-.why-card-front.theme-cyan {
-    border-left-color: #00B4D8;
+.why-card-front.theme-pink::before {
+    background: #F359B0;
+}
+
+.why-card-front.theme-cyan::before {
+    background: #00B4D8;
 }
 
 .why-card-glow {
@@ -4216,7 +4226,6 @@ body:not(.hero-active) .hero-services-stage {
         padding: 28px 22px 24px !important;
         border-radius: 20px !important;
         border: 1px solid rgba(0, 0, 0, 0.07) !important;
-        border-left: 4px solid #7B51F3 !important;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.09), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
         overflow: hidden !important;
         min-height: 240px;
@@ -4225,11 +4234,6 @@ body:not(.hero-active) .hero-services-stage {
         flex-direction: column !important;
         justify-content: flex-start !important;
     }
-
-    /* Theme accent border-left color per theme */
-    .why-card-front.theme-purple { border-left-color: #7B51F3 !important; }
-    .why-card-front.theme-pink   { border-left-color: #F359B0 !important; }
-    .why-card-front.theme-cyan   { border-left-color: #00B4D8 !important; }
 
     /* ─── Hide card hint & flip prompt on mobile (not needed) ─── */
     .why-card-hint,
