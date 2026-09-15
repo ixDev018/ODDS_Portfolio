@@ -477,11 +477,11 @@ const slashMenu = document.getElementById('slash-menu');
 let activeSlashBlock = null;
 
 const initialBlocks = [
-    { type: 'heading2', content: 'The Challenge & Context' },
-    { type: 'paragraph', content: 'Describe the core business problem, bottlenecks, or architectural requirements this project was built to address.' },
-    { type: 'heading2', content: 'The ODDS Engineering Solution' },
-    { type: 'paragraph', content: 'Detail how our engineering team developed and deployed the system with velocity and stack-agnostic precision.' },
-    { type: 'callout', content: 'Key Outcome: Rapid deployment with measurable performance and zero downtime.' }
+    { type: 'heading2', content: 'Project Scope & Problem Space' },
+    { type: 'paragraph', content: 'Describe the core business problem, operational bottlenecks, or technical requirements this system was engineered to solve.' },
+    { type: 'heading2', content: 'System Architecture & Implementation' },
+    { type: 'paragraph', content: 'Detail how the technical stack, infrastructure, or hardware-software integration was engineered and deployed.' },
+    { type: 'callout', content: 'Key Outcome: Measurable operational performance, efficiency gains, and business impact.' }
 ];
 
 document.addEventListener('DOMContentLoaded', () => {

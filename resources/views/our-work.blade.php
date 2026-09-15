@@ -653,15 +653,15 @@
 
 @php
 $workItems = isset($works) && count($works) > 0 ? $works : collect([
-    (object)['id' => 1, 'title' => 'Liberty',      'category' => 'Web & CMS',          'year' => '2023', 'description' => 'Corporate security agency website for Liberty Investigation & Security Agency Inc.',               'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 2, 'title' => 'SPCC Website', 'category' => 'Web Development',    'year' => '2023', 'description' => 'Modern institutional web portal for Systems Plus Computer College.',                               'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 3, 'title' => 'AVONIC',       'category' => 'Hardware & IoT',     'year' => '2023', 'description' => 'IoT vermicompost monitor with soil moisture, gas, temperature, and humidity sensors.',             'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 4, 'title' => 'MoneySense',   'category' => 'Mobile App',         'year' => '2022', 'description' => 'Philippine currency recognition app with bill scanning and denomination tracking.',                'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 5, 'title' => 'SIBOL',        'category' => 'IoT & AgriTech',     'year' => '2023', 'description' => 'Smart farming IoT platform with real-time crop and environmental monitoring.',                     'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 6, 'title' => 'THEODORE',     'category' => 'Security & Vision',  'year' => '2024', 'description' => 'AI-powered CCTV fire detection and remote camera control system.',                               'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 7, 'title' => 'HALLET',       'category' => 'Mobile App',         'year' => '2023', 'description' => 'Personal finance mobile app with multi-wallet, transaction tracking, and spending analytics.',    'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 8, 'title' => 'LITIKS',       'category' => 'Analytics Platform', 'year' => '2024', 'description' => 'Multi-branch sales analytics, forecasting, and customer segmentation SaaS.',                      'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
-    (object)['id' => 9, 'title' => 'TRYSEN',       'category' => 'Security & Systems', 'year' => '2024', 'description' => 'Facial recognition attendance system with secure campus access control.',                          'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'client' => '', 'role' => '', 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 1, 'title' => 'Liberty',      'category' => 'Web & CMS',          'year' => '2023', 'client' => 'Liberty Investigation & Security Agency Inc.', 'role' => 'Full-Stack Web & Client Portal',          'description' => 'High-trust corporate portal and guard dispatch management platform for a licensed corporate security and private investigation firm.',             'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 2, 'title' => 'SPCC Website', 'category' => 'Web Development',    'year' => '2023', 'client' => 'Systems Plus Computer College',               'role' => 'Institutional Web & Admissions Architecture', 'description' => 'High-throughput institutional web portal and academic admissions gateway for multi-campus enrollment and student services.',            'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 3, 'title' => 'AVONIC',       'category' => 'Hardware & IoT',     'year' => '2023', 'client' => 'Agricultural R&D',                            'role' => 'Embedded Firmware & IoT Telemetry',          'description' => 'Embedded IoT telemetry station monitoring vermicompost ecology through real-time soil moisture, gas emissions, and microclimate telemetry.',   'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 4, 'title' => 'MoneySense',   'category' => 'Mobile App',         'year' => '2022', 'client' => 'Accessibility & Assistive Tech',              'role' => 'Mobile App & Edge Neural Vision',            'description' => 'Offline-first assistive mobile app leveraging edge computer vision to scan, identify, and audibly announce Philippine banknotes and coins.',      'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 5, 'title' => 'SIBOL',        'category' => 'IoT & AgriTech',     'year' => '2023', 'client' => 'Smart Agriculture Initiative',               'role' => 'IoT Platform & Automated Irrigation',        'description' => 'Solar-powered smart farming platform delivering soil hydrology analytics, ambient weather tracking, and automated irrigation control.',           'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 6, 'title' => 'THEODORE',     'category' => 'Security & Vision',  'year' => '2024', 'client' => 'Industrial Safety & Facilities',              'role' => 'Computer Vision & Edge AI Surveillance',     'description' => 'Intelligent CCTV surveillance layer with edge-accelerated smoke and flame detection, automated PTZ tracking, and emergency broadcast dispatch.',     'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 7, 'title' => 'HALLET',       'category' => 'Mobile App',         'year' => '2023', 'client' => 'Personal FinTech',                           'role' => 'Mobile App Architecture & Data Security',    'description' => 'Sovereign personal finance companion featuring encrypted multi-wallet balances, categorised cash-flow analytics, and offline-first budget forecasting.', 'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 8, 'title' => 'LITIKS',       'category' => 'Analytics Platform', 'year' => '2024', 'client' => 'Retail Enterprise SaaS',                     'role' => 'Cloud Analytics & Ingestion Pipeline',        'description' => 'Enterprise SaaS platform unifying POS transaction streams across multi-branch retail chains into predictive sales forecasts and cohort heatmaps.',            'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
+    (object)['id' => 9, 'title' => 'TRYSEN',       'category' => 'Security & Systems', 'year' => '2024', 'client' => 'Campus & Corporate Security',                 'role' => 'Biometric Firmware & Access Systems',         'description' => 'Contactless facial recognition turnstile and attendance gate terminal featuring anti-spoofing liveness detection and tamper-evident audit logs.',        'cover_image' => null, 'cover_image_url' => null, 'showcase_video' => null, 'showcase_video_url' => null, 'gallery_images' => null, 'demo_url' => '', 'github_url' => '', 'story_content' => '', 'body_content' => []],
 ]);
 
 $accomplishedCount = isset($works) && $works->count() > 0 ? $works->count() : count($workItems);
@@ -715,32 +715,25 @@ $startingItem = $workItems->get($startIndex) ?: $workItems->first();
                     }
                     $itemId = data_get($item, 'id', $index + 1);
 
-                    // Fix 1: Extract meaningful paragraph excerpt from body_content or story_content
-                    $rawBlocks = data_get($item, 'body_content', []);
-                    if (is_string($rawBlocks)) {
-                        $decoded = json_decode($rawBlocks, true);
-                        $rawBlocks = is_array($decoded) ? $decoded : [];
-                    }
-
-                    $itemExcerpt = null;
-                    if (is_array($rawBlocks) && count($rawBlocks) > 0) {
-                        foreach ($rawBlocks as $block) {
-                            if (($block['type'] ?? '') === 'paragraph') {
-                                $rawText = trim(html_entity_decode(strip_tags($block['content'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
-                                $rawText = trim(str_replace("\xc2\xa0", ' ', $rawText));
-                                if (!empty($rawText)) {
-                                    $itemExcerpt = \Illuminate\Support\Str::words($rawText, 35, '...');
-                                    break;
+                    // Project context excerpt for stage cards: prioritize distinct description
+                    $itemExcerpt = data_get($item, 'description', '');
+                    if (empty($itemExcerpt)) {
+                        $rawBlocks = data_get($item, 'body_content', []);
+                        if (is_string($rawBlocks)) {
+                            $decoded = json_decode($rawBlocks, true);
+                            $rawBlocks = is_array($decoded) ? $decoded : [];
+                        }
+                        if (is_array($rawBlocks) && count($rawBlocks) > 0) {
+                            foreach ($rawBlocks as $block) {
+                                if (($block['type'] ?? '') === 'paragraph') {
+                                    $rawText = trim(html_entity_decode(strip_tags($block['content'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                                    $rawText = trim(str_replace("\xc2\xa0", ' ', $rawText));
+                                    if (!empty($rawText)) {
+                                        $itemExcerpt = \Illuminate\Support\Str::words($rawText, 35, '...');
+                                        break;
+                                    }
                                 }
                             }
-                        }
-                    }
-
-                    if (empty($itemExcerpt) && !empty(data_get($item, 'story_content'))) {
-                        $rawStory = trim(html_entity_decode(strip_tags(data_get($item, 'story_content')), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
-                        $rawStory = trim(str_replace("\xc2\xa0", ' ', $rawStory));
-                        if (!empty($rawStory)) {
-                            $itemExcerpt = \Illuminate\Support\Str::words($rawStory, 35, '...');
                         }
                     }
 

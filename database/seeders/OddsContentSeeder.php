@@ -191,28 +191,177 @@ class OddsContentSeeder extends Seeder
             return '/storage/odds/works/' . $filename;
         };
 
+        $lazyQuote = "We built the design but our designer got lazy writing the proper documentation of what these projects were supposed to be.. so coming soon, (hopefully?)";
+
         $works = [
-            ['title' => 'Liberty',      'slug' => 'liberty-1',      'year' => '2023', 'category' => 'Web & CMS',            'desc' => 'Corporate security agency website for Liberty Investigation & Security Agency Inc.',                     'image' => 'Liberty_thumbnail.png', 'sort' => 1],
-            ['title' => 'SPCC Website', 'slug' => 'spcc-website-2', 'year' => '2023', 'category' => 'Web Development',      'desc' => 'Modern institutional web portal for Systems Plus Computer College.',                                    'image' => 'SPCC WEBSITE.png',      'sort' => 2],
-            ['title' => 'AVONIC',       'slug' => 'avonic-3',       'year' => '2023', 'category' => 'Hardware & IoT',       'desc' => 'IoT vermicompost monitor with soil moisture, gas, temperature, and humidity sensors.',                  'image' => 'Avonic_thumbnail.png',  'sort' => 3],
-            ['title' => 'MoneySense',   'slug' => 'moneysense-4',   'year' => '2022', 'category' => 'Mobile App',           'desc' => 'Philippine currency recognition app with bill scanning and denomination tracking.',                      'image' => 'MoneySense.png',        'sort' => 4],
-            ['title' => 'SIBOL',        'slug' => 'sibol-5',        'year' => '2023', 'category' => 'IoT & AgriTech',       'desc' => 'Smart farming IoT platform with real-time crop and environmental monitoring.',                          'image' => 'sibol.png',             'sort' => 5],
-            ['title' => 'THEODORE',     'slug' => 'theodore-6',     'year' => '2024', 'category' => 'Security & Vision',    'desc' => 'AI-powered CCTV fire detection and remote camera control system.',                                        'image' => 'THEODORE PREVIEW.png',  'sort' => 6],
-            ['title' => 'HALLET',       'slug' => 'hallet-7',       'year' => '2023', 'category' => 'Mobile App',           'desc' => 'Personal finance mobile app with multi-wallet, transaction tracking, and spending analytics.',          'image' => 'HALLET.png',            'sort' => 7],
-            ['title' => 'LITIKS',       'slug' => 'litiks-8',       'year' => '2024', 'category' => 'Analytics Platform',   'desc' => 'Multi-branch sales analytics, forecasting, and customer segmentation SaaS.',                           'image' => 'LITIKS_THUMBNA.png',    'sort' => 8],
-            ['title' => 'TRYSEN',       'slug' => 'trysen-9',       'year' => '2024', 'category' => 'Security & Systems',   'desc' => 'Facial recognition attendance system with secure campus access control.',                               'image' => 'TRYSEN_Thumbnail.png',  'sort' => 9],
+            [
+                'title' => 'Liberty',
+                'slug' => 'liberty-1',
+                'year' => '2023',
+                'category' => 'Web & CMS',
+                'client' => 'Liberty Investigation & Security Agency Inc.',
+                'role' => 'Full-Stack Web & Client Portal',
+                'desc' => 'High-trust corporate portal and guard dispatch management platform for a licensed corporate security and private investigation firm.',
+                'image' => 'Liberty_thumbnail.png',
+                'sort' => 1,
+                'body_content' => [
+                    ['type' => 'heading2', 'content' => 'Project Documentation'],
+                    ['type' => 'paragraph', 'content' => $lazyQuote],
+                    ['type' => 'callout', 'content' => 'Status: Production system live & active. Full case study coming soon.']
+                ],
+                'story_content' => "<h2>Project Documentation</h2><p>{$lazyQuote}</p>"
+            ],
+            [
+                'title' => 'SPCC Website',
+                'slug' => 'spcc-website-2',
+                'year' => '2023',
+                'category' => 'Web Development',
+                'client' => 'Systems Plus Computer College',
+                'role' => 'Institutional Web & Admissions Architecture',
+                'desc' => 'High-throughput institutional web portal and academic admissions gateway for multi-campus enrollment and student services.',
+                'image' => 'SPCC WEBSITE.png',
+                'sort' => 2,
+                'body_content' => [
+                    ['type' => 'heading2', 'content' => 'Project Documentation'],
+                    ['type' => 'paragraph', 'content' => $lazyQuote],
+                    ['type' => 'callout', 'content' => 'Status: Production system live & active. Full case study coming soon.']
+                ],
+                'story_content' => "<h2>Project Documentation</h2><p>{$lazyQuote}</p>"
+            ],
+            [
+                'title' => 'AVONIC',
+                'slug' => 'avonic-3',
+                'year' => '2023',
+                'category' => 'Hardware & IoT',
+                'client' => 'Agricultural R&D',
+                'role' => 'Embedded Firmware & IoT Telemetry',
+                'desc' => 'Embedded IoT telemetry station monitoring vermicompost ecology through real-time soil moisture, gas emissions, and microclimate telemetry.',
+                'image' => 'Avonic_thumbnail.png',
+                'sort' => 3,
+                'body_content' => [
+                    ['type' => 'heading2', 'content' => 'Project Documentation'],
+                    ['type' => 'paragraph', 'content' => $lazyQuote],
+                    ['type' => 'callout', 'content' => 'Status: Production system live & active. Full case study coming soon.']
+                ],
+                'story_content' => "<h2>Project Documentation</h2><p>{$lazyQuote}</p>"
+            ],
+            [
+                'title' => 'MoneySense',
+                'slug' => 'moneysense-4',
+                'year' => '2022',
+                'category' => 'Mobile App',
+                'client' => 'Accessibility & Assistive Tech',
+                'role' => 'Mobile App & Edge Neural Vision',
+                'desc' => 'Offline-first assistive mobile app leveraging edge computer vision to scan, identify, and audibly announce Philippine banknotes and coins.',
+                'image' => 'MoneySense.png',
+                'sort' => 4,
+                'body_content' => [
+                    ['type' => 'heading2', 'content' => 'Project Documentation'],
+                    ['type' => 'paragraph', 'content' => $lazyQuote],
+                    ['type' => 'callout', 'content' => 'Status: Production system live & active. Full case study coming soon.']
+                ],
+                'story_content' => "<h2>Project Documentation</h2><p>{$lazyQuote}</p>"
+            ],
+            [
+                'title' => 'SIBOL',
+                'slug' => 'sibol-5',
+                'year' => '2023',
+                'category' => 'IoT & AgriTech',
+                'client' => 'Smart Agriculture Initiative',
+                'role' => 'IoT Platform & Automated Irrigation',
+                'desc' => 'Solar-powered smart farming platform delivering soil hydrology analytics, ambient weather tracking, and automated irrigation control.',
+                'image' => 'sibol.png',
+                'sort' => 5,
+                'body_content' => [
+                    ['type' => 'heading2', 'content' => 'Project Documentation'],
+                    ['type' => 'paragraph', 'content' => $lazyQuote],
+                    ['type' => 'callout', 'content' => 'Status: Production system live & active. Full case study coming soon.']
+                ],
+                'story_content' => "<h2>Project Documentation</h2><p>{$lazyQuote}</p>"
+            ],
+            [
+                'title' => 'THEODORE',
+                'slug' => 'theodore-6',
+                'year' => '2024',
+                'category' => 'Security & Vision',
+                'client' => 'Industrial Safety & Facilities',
+                'role' => 'Computer Vision & Edge AI Surveillance',
+                'desc' => 'Intelligent CCTV surveillance layer with edge-accelerated smoke and flame detection, automated PTZ tracking, and emergency broadcast dispatch.',
+                'image' => 'THEODORE PREVIEW.png',
+                'sort' => 6,
+                'body_content' => [
+                    ['type' => 'heading2', 'content' => 'Project Documentation'],
+                    ['type' => 'paragraph', 'content' => $lazyQuote],
+                    ['type' => 'callout', 'content' => 'Status: Production system live & active. Full case study coming soon.']
+                ],
+                'story_content' => "<h2>Project Documentation</h2><p>{$lazyQuote}</p>"
+            ],
+            [
+                'title' => 'HALLET',
+                'slug' => 'hallet-7',
+                'year' => '2023',
+                'category' => 'Mobile App',
+                'client' => 'Personal FinTech',
+                'role' => 'Mobile App Architecture & Data Security',
+                'desc' => 'Sovereign personal finance companion featuring encrypted multi-wallet balances, categorised cash-flow analytics, and offline-first budget forecasting.',
+                'image' => 'HALLET.png',
+                'sort' => 7,
+                'body_content' => [
+                    ['type' => 'heading2', 'content' => 'Project Documentation'],
+                    ['type' => 'paragraph', 'content' => $lazyQuote],
+                    ['type' => 'callout', 'content' => 'Status: Production system live & active. Full case study coming soon.']
+                ],
+                'story_content' => "<h2>Project Documentation</h2><p>{$lazyQuote}</p>"
+            ],
+            [
+                'title' => 'LITIKS',
+                'slug' => 'litiks-8',
+                'year' => '2024',
+                'category' => 'Analytics Platform',
+                'client' => 'Retail Enterprise SaaS',
+                'role' => 'Cloud Analytics & Ingestion Pipeline',
+                'desc' => 'Enterprise SaaS platform unifying POS transaction streams across multi-branch retail chains into predictive sales forecasts and cohort heatmaps.',
+                'image' => 'LITIKS_THUMBNA.png',
+                'sort' => 8,
+                'body_content' => [
+                    ['type' => 'heading2', 'content' => 'Project Documentation'],
+                    ['type' => 'paragraph', 'content' => $lazyQuote],
+                    ['type' => 'callout', 'content' => 'Status: Production system live & active. Full case study coming soon.']
+                ],
+                'story_content' => "<h2>Project Documentation</h2><p>{$lazyQuote}</p>"
+            ],
+            [
+                'title' => 'TRYSEN',
+                'slug' => 'trysen-9',
+                'year' => '2024',
+                'category' => 'Security & Systems',
+                'client' => 'Campus & Corporate Security',
+                'role' => 'Biometric Firmware & Access Systems',
+                'desc' => 'Contactless facial recognition turnstile and attendance gate terminal featuring anti-spoofing liveness detection and tamper-evident audit logs.',
+                'image' => 'TRYSEN_Thumbnail.png',
+                'sort' => 9,
+                'body_content' => [
+                    ['type' => 'heading2', 'content' => 'Project Documentation'],
+                    ['type' => 'paragraph', 'content' => $lazyQuote],
+                    ['type' => 'callout', 'content' => 'Status: Production system live & active. Full case study coming soon.']
+                ],
+                'story_content' => "<h2>Project Documentation</h2><p>{$lazyQuote}</p>"
+            ],
         ];
 
-        // Always truncate + re-seed works so names and images stay in sync
+        // Always truncate + re-seed works so names, descriptions and images stay in sync
         OddsWork::truncate();
         foreach ($works as $w) {
             OddsWork::create([
                 'title'         => $w['title'],
                 'slug'          => $w['slug'],
                 'category'      => $w['category'],
+                'client'        => $w['client'] ?? '',
+                'role'          => $w['role'] ?? '',
                 'year'          => $w['year'],
                 'description'   => $w['desc'],
-                'story_content' => "<h3>The Challenge</h3><p>{$w['desc']}</p><h3>The ODDS Solution</h3><p>Engineered using stack-agnostic principles for high stability and immediate deployment.</p>",
+                'body_content'  => $w['body_content'] ?? [],
+                'story_content' => $w['story_content'] ?? '',
                 'cover_image'   => $copyImage($w['image']),
                 'sort_order'    => $w['sort'],
                 'is_featured'   => true,

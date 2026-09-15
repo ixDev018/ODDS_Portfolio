@@ -488,11 +488,11 @@ document.addEventListener('DOMContentLoaded', () => {
         rawBlocks.forEach(b => createBlockElement(b));
     } else {
         const initialBlocks = [
-            { type: 'heading2', content: 'The Challenge & Context' },
+            { type: 'heading2', content: 'Project Scope & Problem Space' },
             { type: 'paragraph', content: {!! json_encode($work->description ?? 'Describe the business challenge and requirements.') !!} },
-            { type: 'heading2', content: 'The ODDS Engineering Solution' },
-            { type: 'paragraph', content: 'Engineered with stack-agnostic precision for rapid deployment.' },
-            { type: 'callout', content: 'Production Ready: Shipped with full monitoring and telemetry.' }
+            { type: 'heading2', content: 'System Architecture & Implementation' },
+            { type: 'paragraph', content: 'Detail how the technical stack, infrastructure, or hardware-software integration was engineered and deployed.' },
+            { type: 'callout', content: 'Key Outcome: Measurable operational performance, efficiency gains, and business impact.' }
         ];
         initialBlocks.forEach(b => createBlockElement(b));
     }
