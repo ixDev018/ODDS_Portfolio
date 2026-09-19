@@ -47,6 +47,30 @@ $accentThemes = ['purple', 'pink', 'cyan'];
             </p>
         </div>
 
+        {{-- Casino Dealer Control Capsule (Shuffle & Flip All) --}}
+        <div class="why-dealer-wrap fade-up">
+            <div class="why-dealer-bar" id="why-dealer-bar" role="toolbar" aria-label="Deck dealer controls">
+                <button type="button" class="why-dealer-btn" id="why-shuffle-btn" title="Shuffle playing card deck">
+                    <svg class="why-dealer-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="16 3 21 3 21 8"></polyline>
+                        <line x1="4" y1="20" x2="21" y2="3"></line>
+                        <polyline points="21 16 21 21 16 21"></polyline>
+                        <line x1="15" y1="15" x2="21" y2="21"></line>
+                        <line x1="4" y1="4" x2="9" y2="9"></line>
+                    </svg>
+                    <span>Shuffle Deck</span>
+                </button>
+                <div class="why-dealer-divider" aria-hidden="true"></div>
+                <button type="button" class="why-dealer-btn" id="why-reveal-btn" title="Reveal or hide all cards">
+                    <svg class="why-dealer-icon why-reveal-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <span id="why-reveal-label">Flip All</span>
+                </button>
+            </div>
+        </div>
+
         <div class="why-deck-wrap" id="why-deck-wrap">
             <div class="why-deck" id="why-deck">
                 @foreach($reasonsList as $index => $r)

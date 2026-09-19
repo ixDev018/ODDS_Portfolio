@@ -1539,6 +1539,7 @@ if (ctaVideo && ctaCanvas) {
         // Click or tap to flip card
         card.addEventListener('click', () => {
             flipCard(card);
+            syncRevealButtonState();
         });
 
         // Keyboard accessibility
@@ -1546,9 +1547,152 @@ if (ctaVideo && ctaCanvas) {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 flipCard(card);
+                syncRevealButtonState();
             }
         });
     });
+
+    // ── Dealer Controls: Shuffle Deck & Flip All ──
+    const shuffleBtn = document.getElementById('why-shuffle-btn');
+    const revealBtn = document.getElementById('why-reveal-btn');
+    const revealLabel = document.getElementById('why-reveal-label');
+    let isShuffling = false;
+
+    function syncRevealButtonState() {
+        if (!revealBtn || !revealLabel) return;
+        const allFlipped = cards.every(c => c.classList.contains('is-flipped'));
+        if (allFlipped) {
+            revealBtn.classList.add('is-active');
+            revealLabel.textContent = 'Flip Back';
+        } else {
+            revealBtn.classList.remove('is-active');
+            revealLabel.textContent = 'Flip All';
+        }
+    }
+
+    function shuffleDeck() {
+        if (isShuffling) return;
+        isShuffling = true;
+        hasDealtOnce = true;
+
+        if (shuffleBtn) {
+            shuffleBtn.disabled = true;
+            shuffleBtn.classList.add('is-active');
+            const icon = shuffleBtn.querySelector('.why-dealer-icon');
+            if (icon) gsap.to(icon, { rotation: '+=360', duration: 0.7, ease: 'power2.inOut' });
+        }
+
+        // 1. Flip any face-up cards face-down first
+        cards.forEach(card => {
+            if (card.classList.contains('is-flipped')) {
+                flipCard(card, false);
+            }
+        });
+        syncRevealButtonState();
+
+        const isDesktop = window.innerWidth >= 992;
+
+        if (isDesktop && cards.length >= 3) {
+            const card0 = cards[0];
+            const card1 = cards[1];
+            const card2 = cards[2];
+
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    isShuffling = false;
+                    if (shuffleBtn) {
+                        shuffleBtn.disabled = false;
+                        shuffleBtn.classList.remove('is-active');
+                    }
+                    cards.forEach(card => {
+                        card.style.zIndex = '';
+                    });
+                }
+            });
+
+            // Phase 1: Pull inward from 3 columns into 1 central stacked deck
+            tl.to(card0, { x: 405, y: -6, rotation: -4, zIndex: 10, duration: 0.32, ease: 'power2.inOut' }, 0)
+              .to(card1, { x: 0, y: 0, rotation: 0, zIndex: 11, duration: 0.32, ease: 'power2.inOut' }, 0)
+              .to(card2, { x: -405, y: 6, rotation: 4, zIndex: 12, duration: 0.32, ease: 'power2.inOut' }, 0);
+
+            // Phase 2: 3D Riffle / Cut split
+            tl.to(card0, { x: 330, y: -45, rotationZ: -9, rotationX: 12, duration: 0.22, ease: 'power1.out' }, '+=0.04')
+              .to(card2, { x: -330, y: 40, rotationZ: 8, rotationX: -8, duration: 0.22, ease: 'power1.out' }, '<')
+              .to(card1, { scale: 1.05, duration: 0.22, ease: 'power1.out' }, '<');
+
+            // Phase 3: Interleave snap back to center stack with new layer order
+            tl.to(card0, { x: 405, y: 0, rotationZ: 2, rotationX: 0, zIndex: 13, duration: 0.24, ease: 'back.out(1.4)' }, '+=0.02')
+              .to(card2, { x: -405, y: 0, rotationZ: -2, rotationX: 0, zIndex: 11, duration: 0.24, ease: 'back.out(1.4)' }, '<')
+              .to(card1, { scale: 1, zIndex: 12, duration: 0.24, ease: 'back.out(1.4)' }, '<');
+
+            // Phase 4: Fan back out into respective columns with crisp landing
+            tl.to(card0, { x: 0, y: 0, rotation: 0, duration: 0.46, ease: 'power3.out' }, '+=0.06')
+              .to(card1, { x: 0, y: 0, rotation: 0, duration: 0.46, ease: 'power3.out' }, '<+=0.04')
+              .to(card2, { x: 0, y: 0, rotation: 0, duration: 0.46, ease: 'power3.out' }, '<+=0.06');
+
+        } else {
+            // Mobile: spring lift & card ripple
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    isShuffling = false;
+                    if (shuffleBtn) {
+                        shuffleBtn.disabled = false;
+                        shuffleBtn.classList.remove('is-active');
+                    }
+                }
+            });
+
+            tl.to(cards, {
+                y: -18,
+                scale: 1.03,
+                stagger: 0.08,
+                duration: 0.22,
+                ease: 'power2.out'
+            })
+            .to(cards, {
+                rotation: (i) => (i % 2 === 0 ? -3 : 3),
+                duration: 0.16,
+                ease: 'power1.inOut'
+            })
+            .to(cards, {
+                y: 0,
+                scale: 1,
+                rotation: 0,
+                stagger: 0.06,
+                duration: 0.32,
+                ease: 'elastic.out(1, 0.5)'
+            });
+        }
+    }
+
+    function toggleRevealAll() {
+        if (isShuffling) return;
+        const allFlipped = cards.every(c => c.classList.contains('is-flipped'));
+        const targetState = !allFlipped;
+
+        cards.forEach((card, idx) => {
+            setTimeout(() => {
+                flipCard(card, targetState);
+                if (idx === cards.length - 1) {
+                    setTimeout(syncRevealButtonState, 150);
+                }
+            }, idx * 110);
+        });
+    }
+
+    if (shuffleBtn) {
+        shuffleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            shuffleDeck();
+        });
+    }
+
+    if (revealBtn) {
+        revealBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleRevealAll();
+        });
+    }
 
     // ─── ScrollTrigger 4-Frame Playing Card Deal & Horizontal Transition to Process ───
     let dealScrollTrigger = null;
