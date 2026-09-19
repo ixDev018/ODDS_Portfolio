@@ -101,13 +101,18 @@ if (mobileToggle && mobileDrawer) {
 //  FULL-PAGE ENGINE — mirrors GSAP branch trans-col logic
 // ─── Hero entrance ───────────────────────────────────
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const heroP = document.getElementById('hero-p');
+const heroBtn = document.getElementById('hero-btn');
 
-if (prefersReducedMotion) {
-    gsap.set(['#hero-h1', '#hero-p', '#hero-btn'], { opacity: 1, y: 0 });
-} else {
-    gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.85 } })
-        .to('#hero-p', { opacity: 1, y: 0, delay: 0.28 })
-        .to('#hero-btn', { opacity: 1, y: 0 }, '-=0.45');
+if (heroP || heroBtn) {
+    if (prefersReducedMotion) {
+        const targets = ['#hero-h1', '#hero-p', '#hero-btn'].filter(id => document.querySelector(id));
+        if (targets.length) gsap.set(targets, { opacity: 1, y: 0 });
+    } else {
+        const tl = gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.85 } });
+        if (heroP) tl.to('#hero-p', { opacity: 1, y: 0, delay: 0.28 });
+        if (heroBtn) tl.to('#hero-btn', { opacity: 1, y: 0 }, heroP ? '-=0.45' : 0);
+    }
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2280,11 +2285,101 @@ if (document.readyState === 'loading') {
         initHeadingReveals();
         initScrambleCounters();
         initDrawHighlights();
+        initConsoleEasterEgg();
     });
 } else {
     initHeadingReveals();
     initScrambleCounters();
     initDrawHighlights();
+    initConsoleEasterEgg();
+}
+
+// ─── DevTools Console Easter Egg ──────────────────────
+function initConsoleEasterEgg() {
+    const ascii = [
+        "  ██████╗  ██████╗  ██████╗  ███████╗",
+        " ██╔═══██╗ ██╔══██╗ ██╔══██╗ ██╔════╝",
+        " ██║   ██║ ██║  ██║ ██║  ██║ ███████╗",
+        " ██║   ██║ ██║  ██║ ██║  ██║ ╚════██║",
+        " ╚██████╔╝ ██████╔╝ ██████╔╝ ███████║",
+        "  ╚═════╝  ╚═════╝  ╚═════╝  ╚══════╝"
+    ].join('\n');
+
+    const purpleStyle = 'color: #a855f7; font-family: monospace; font-size: 13px; font-weight: 800; line-height: 1.15; white-space: pre;';
+    const bodyStyle = 'color: #94a3b8; font-family: sans-serif; font-size: 12px; line-height: 1.6; margin-top: 6px;';
+    const cmdStyle = 'color: #38bdf8; font-family: monospace; font-weight: 700; font-size: 12px;';
+    const descStyle = 'color: #cbd5e1; font-family: sans-serif; font-size: 12px;';
+
+    console.log(`%c\n${ascii}\n`, purpleStyle);
+    console.log(
+        '%cInspecting our code? We like you already.\nWe build what your business actually runs on — no jargon, pure velocity.\n\nType any command below:',
+        bodyStyle
+    );
+    console.log('%codds.roster()%c  -> Inspect the 8 operators & dossiers', cmdStyle, descStyle);
+    console.log('%codds.quote()%c   -> Open direct scoping channel', cmdStyle, descStyle);
+    console.log('%codds.secret()%c  -> Why does Jherald have no photos?', cmdStyle, descStyle);
+    console.log('%codds.coffee()%c  -> Fuel the dev team with espresso', cmdStyle, descStyle);
+    console.log('%codds.stack()%c   -> View our core engineering stack', cmdStyle, descStyle);
+    console.log('%codds.help()%c    -> Show this command manual again\n', cmdStyle, descStyle);
+
+    let coffeeCount = 142;
+
+    window.odds = {
+        roster: () => {
+            console.log('%cTHE ODDS ROSTER (8 OPERATORS):', 'color: #a855f7; font-weight: 800; font-size: 13px;');
+            console.table([
+                { Name: 'Jerico Sanchez', Role: 'Co-Founder / Software Dev', Handle: '3c0-exe', Quip: 'asleep or yearning.. probably both' },
+                { Name: 'Jherald Vibar', Role: 'Co-Founder / Database Dev', Handle: 'Jherald-Vibar', Quip: 'the most technical person really has no photos' },
+                { Name: 'Robert Santiago', Role: 'Developer / Hardware Specialist', Handle: 'Robert-1hash', Quip: 'might break a couple of PCBs, but gets the job done' },
+                { Name: 'Brix Jorie Cura', Role: 'Co-Founder, Lead Designer / CMO', Handle: 'ixDev018', Quip: "i-jira natin 'to" },
+                { Name: 'Jazam Laranio', Role: 'Developer / Lead Gen Specialist', Handle: '—', Quip: 'hates commuting' },
+                { Name: 'Mark Paulo Franco', Role: 'Developer / Field Logistics', Handle: 'itsFrancss619', Quip: 'cocoooo!' },
+                { Name: 'John Cedric Abaloyan', Role: 'Lead Developer', Handle: 'Ggwepq', Quip: 'performative (based on the matcha pic)' },
+                { Name: 'Sherwin Ramirez', Role: 'QA Specialist / Web Developer', Handle: 'sheerwiiin', Quip: 'wanted to have the same shirt as jerico' }
+            ]);
+            return '8 operators stand ready to build your systems.';
+        },
+        quote: () => {
+            const btn = document.querySelector('.js-open-contact-modal, [data-open-contact]');
+            if (btn) {
+                btn.click();
+                return "Direct studio channel opened. Let's talk scope.";
+            } else {
+                window.location.href = '#contact';
+                return 'Redirecting to contact...';
+            }
+        },
+        secret: () => {
+            console.log(
+                '%c[CLASSIFIED DOSSIER: JHERALD VIBAR]\n%cStatus: ENCRYPTED // 404 FACE NOT FOUND\nReason: "the most technical person really has no photos."\nLegend says camera lenses shatter when aimed in his direction.\nHis true avatar exists only in compiled binary.',
+                'color: #f43f5e; font-weight: 800; font-size: 13px; font-family: monospace;',
+                'color: #cbd5e1; font-size: 12px; font-family: monospace;'
+            );
+            return 'Dossier sealed by ODDS Security.';
+        },
+        coffee: () => {
+            coffeeCount++;
+            console.log(`%cCoffee Count: ${coffeeCount} cups served`, 'color: #f59e0b; font-weight: 800; font-size: 13px;');
+            console.log('%cBrix is currently designing at 400 WPM. Jerico just refactored another backend microservice.', 'color: #94a3b8; font-size: 12px;');
+            return 'Caffeine level: MAXIMUM.';
+        },
+        stack: () => {
+            console.log('%cTHE ODDS CORE STACK:', 'color: #a855f7; font-weight: 800; font-size: 13px;');
+            console.log('  * Frontend: Modern Vanilla JS, GSAP ScrollSmoother, Tailwind, Blade');
+            console.log('  * Backend: Laravel 11, PHP 8.3, RESTful APIs, Queues');
+            console.log('  * Systems: Embedded C++, IoT Hardware, Custom Cloud Infra');
+            console.log('  * Rule: If it breaks in production, it was never finished.');
+            return 'Battle-tested stack loaded.';
+        },
+        help: () => {
+            console.log('%codds.roster()%c  -> Inspect the 8 operators & dossiers', cmdStyle, descStyle);
+            console.log('%codds.quote()%c   -> Open direct scoping channel', cmdStyle, descStyle);
+            console.log('%codds.secret()%c  -> Why does Jherald have no photos?', cmdStyle, descStyle);
+            console.log('%codds.coffee()%c  -> Fuel the dev team with espresso', cmdStyle, descStyle);
+            console.log('%codds.stack()%c   -> View our core engineering stack', cmdStyle, descStyle);
+            return 'Available commands listed above.';
+        }
+    };
 }
 
 
