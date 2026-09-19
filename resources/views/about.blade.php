@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=Pirata+One&family=UnifrakturMaguntia&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=Pirata+One&family=UnifrakturMaguntia&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
 @endpush
 
 <style>
@@ -943,6 +943,7 @@
         min-width: 0;
         height: 100%;
         box-sizing: border-box;
+        position: relative;
     }
 
     /* Double-Beveled Picture Frame (Museum Inspo Match) */
@@ -1076,6 +1077,92 @@
     .gallery-member-card:hover .pixel-question-svg {
         transform: scale(1.08);
     }
+
+    /* ─── HANDWRITTEN HOVER QUIP DOODLE ─── */
+    .gallery-quip-wrap {
+        position: absolute;
+        bottom: calc(100% - 14px);
+        left: 50%;
+        transform: translateX(-50%) translateY(10px) scale(0.9);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                    visibility 0.28s;
+        z-index: 45;
+        width: max-content;
+        max-width: 235px;
+    }
+
+    .gallery-quip-bubble {
+        background: #ffffff;
+        border: 1.5px solid #d8b4fe;
+        border-radius: 12px;
+        padding: 0.35rem 0.8rem;
+        box-shadow: 
+            0 8px 24px -4px rgba(112, 57, 236, 0.22),
+            0 2px 6px rgba(0, 0, 0, 0.04);
+        position: relative;
+        text-align: center;
+    }
+
+    .gallery-quip-text {
+        font-family: 'Caveat', 'Newsreader', cursive, serif;
+        font-size: 1.08rem;
+        font-weight: 700;
+        line-height: 1.22;
+        color: #1e1b4b;
+        text-align: center;
+        display: block;
+        letter-spacing: -0.01em;
+    }
+
+    .gallery-quip-arrow {
+        width: 28px;
+        height: 20px;
+        margin-top: -2px;
+        filter: drop-shadow(0 2px 4px rgba(135, 90, 245, 0.25));
+        transition: transform 0.28s ease;
+    }
+
+    .gallery-member-card:hover .gallery-quip-wrap {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0) scale(1);
+    }
+
+    /* Natural Alternating Tilt on Quips */
+    .gallery-member-card:nth-child(1) .gallery-quip-wrap { transform: translateX(-50%) translateY(10px) scale(0.9) rotate(-2deg); }
+    .gallery-member-card:nth-child(1):hover .gallery-quip-wrap { transform: translateX(-50%) translateY(0) scale(1) rotate(-2deg); }
+
+    .gallery-member-card:nth-child(2) .gallery-quip-wrap { transform: translateX(-50%) translateY(10px) scale(0.9) rotate(2deg); }
+    .gallery-member-card:nth-child(2):hover .gallery-quip-wrap { transform: translateX(-50%) translateY(0) scale(1) rotate(2deg); }
+    .gallery-member-card:nth-child(2) .gallery-quip-arrow { transform: scaleX(-1); }
+
+    .gallery-member-card:nth-child(3) .gallery-quip-wrap { transform: translateX(-50%) translateY(10px) scale(0.9) rotate(-1.5deg); }
+    .gallery-member-card:nth-child(3):hover .gallery-quip-wrap { transform: translateX(-50%) translateY(0) scale(1) rotate(-1.5deg); }
+
+    .gallery-member-card:nth-child(4) .gallery-quip-wrap { transform: translateX(-50%) translateY(10px) scale(0.9) rotate(2deg); }
+    .gallery-member-card:nth-child(4):hover .gallery-quip-wrap { transform: translateX(-50%) translateY(0) scale(1) rotate(2deg); }
+    .gallery-member-card:nth-child(4) .gallery-quip-arrow { transform: scaleX(-1); }
+
+    .gallery-member-card:nth-child(5) .gallery-quip-wrap { transform: translateX(-50%) translateY(10px) scale(0.9) rotate(-2deg); }
+    .gallery-member-card:nth-child(5):hover .gallery-quip-wrap { transform: translateX(-50%) translateY(0) scale(1) rotate(-2deg); }
+
+    .gallery-member-card:nth-child(6) .gallery-quip-wrap { transform: translateX(-50%) translateY(10px) scale(0.9) rotate(1.5deg); }
+    .gallery-member-card:nth-child(6):hover .gallery-quip-wrap { transform: translateX(-50%) translateY(0) scale(1) rotate(1.5deg); }
+    .gallery-member-card:nth-child(6) .gallery-quip-arrow { transform: scaleX(-1); }
+
+    .gallery-member-card:nth-child(7) .gallery-quip-wrap { transform: translateX(-50%) translateY(10px) scale(0.9) rotate(-2deg); }
+    .gallery-member-card:nth-child(7):hover .gallery-quip-wrap { transform: translateX(-50%) translateY(0) scale(1) rotate(-2deg); }
+
+    .gallery-member-card:nth-child(8) .gallery-quip-wrap { transform: translateX(-50%) translateY(10px) scale(0.9) rotate(2deg); }
+    .gallery-member-card:nth-child(8):hover .gallery-quip-wrap { transform: translateX(-50%) translateY(0) scale(1) rotate(2deg); }
+    .gallery-member-card:nth-child(8) .gallery-quip-arrow { transform: scaleX(-1); }
 
     /* Caption Underneath */
     .gallery-card-caption {
@@ -1218,13 +1305,13 @@
     @media (max-width: 640px) {
         .odds-team-gallery-section {
             margin: 0.5rem auto 3rem auto;
-            padding: 0 0.85rem;
-            overflow: hidden;
+            padding: 1.25rem 0.85rem 0 0.85rem;
+            overflow: visible;
         }
 
         .gallery-grid-container {
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 1.5rem 0.75rem;
+            gap: 1.75rem 0.75rem;
             max-width: 100%;
             width: 100%;
             margin: 0 auto;
@@ -1270,6 +1357,26 @@
 
         .gallery-meta-text {
             font-size: 0.64rem;
+        }
+
+        .gallery-quip-wrap {
+            max-width: 160px;
+            bottom: calc(100% - 8px);
+        }
+
+        .gallery-quip-bubble {
+            padding: 0.22rem 0.5rem;
+            border-radius: 9px;
+        }
+
+        .gallery-quip-text {
+            font-size: 0.85rem;
+            line-height: 1.18;
+        }
+
+        .gallery-quip-arrow {
+            width: 22px;
+            height: 16px;
         }
     }
 
@@ -1432,6 +1539,7 @@ $teamMembers = [
         'github' => 'https://github.com/3c0-exe',
         'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=3c0-exe',
         'real_photo' => asset('storage/odds/team/Jerico_Sanchez.jpg'),
+        'quip' => "asleep or yearning.. probably both",
         'positions' => ['Co-Founder', 'Software Developer'],
         'awards' => ['Cum Laude', 'Best in Capstone (Lead Dev)'],
     ],
@@ -1441,6 +1549,7 @@ $teamMembers = [
         'github' => 'https://github.com/Jherald-Vibar',
         'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=Jherald-Vibar',
         'is_mystery' => true,
+        'quip' => "the most technical person really has no photos",
         'positions' => ['Co-Founder', 'Software / Database Dev'],
         'awards' => ['Magna Cum Laude'],
     ],
@@ -1450,6 +1559,7 @@ $teamMembers = [
         'github' => 'https://github.com/Robert-1hash',
         'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=Robert-1hash',
         'real_photo' => asset('storage/odds/team/Robert_Santiago.jpeg'),
+        'quip' => "might break a couple of PCBs, but gets the job done",
         'positions' => ['Developer', 'Hardware Specialist'],
         'awards' => ['Magna Cum Laude', 'Best in Capstone'],
     ],
@@ -1459,6 +1569,7 @@ $teamMembers = [
         'github' => 'https://github.com/ixDev018',
         'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=ixDev018',
         'real_photo' => asset('storage/odds/team/Brix_Cura.jpeg'),
+        'quip' => "i-jira natin 'to",
         'positions' => ['Co-Founder, Lead Designer', 'CMO, Web Developer'],
         'awards' => ['Magna Cum Laude', 'Best in Capstone (Dev)'],
     ],
@@ -1468,6 +1579,7 @@ $teamMembers = [
         'github' => null,
         'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=JazamLaranio',
         'real_photo' => asset('storage/odds/team/Jazam_Laranio.jpeg'),
+        'quip' => "hates commuting",
         'positions' => ['Developer', 'Lead Gen Specialist'],
         'awards' => ['Cum Laude'],
     ],
@@ -1477,6 +1589,7 @@ $teamMembers = [
         'github' => 'https://github.com/itsFrancss619',
         'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=itsFrancss619',
         'real_photo' => asset('storage/odds/team/Mark_Paulo_Franco.jpeg'),
+        'quip' => "cocoooo!",
         'positions' => ['Developer', 'Field Logistics Coord.'],
         'awards' => ['Best in Capstone'],
     ],
@@ -1486,6 +1599,7 @@ $teamMembers = [
         'github' => 'https://github.com/Ggwepq',
         'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=Ggwepq',
         'real_photo' => asset('storage/odds/team/John_Cedric_Abaloyan.jpeg'),
+        'quip' => "performative (based on the matcha pic)",
         'positions' => ['Lead Developer'],
         'awards' => ['Best in Capstone'],
     ],
@@ -1496,6 +1610,7 @@ $teamMembers = [
         'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=sheerwiiin',
         'real_photo' => asset('storage/odds/team/Sherwin_Ramirez.jpeg'),
         'photo_position' => 'center 40%',
+        'quip' => "wanted to have the same shirt as jerico",
         'positions' => ['QA Specialist', 'Web Developer'],
         'awards' => ['Top 1 (Rank 1)', 'Best in Capstone'],
     ],
@@ -1506,6 +1621,17 @@ $teamMembers = [
     <div class="gallery-grid-container">
         @foreach($teamMembers as $member)
             <div class="gallery-member-card">
+                @if(!empty($member['quip']))
+                    <div class="gallery-quip-wrap" aria-hidden="true">
+                        <div class="gallery-quip-bubble">
+                            <span class="gallery-quip-text">“{{ $member['quip'] }}”</span>
+                        </div>
+                        <svg class="gallery-quip-arrow" viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M 6 2 C 16 2, 24 8, 22 18" stroke="#875af5" stroke-width="2.2" stroke-linecap="round"/>
+                            <path d="M 16 14 L 22 18 L 26 12" stroke="#875af5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                @endif
                 @if(!empty($member['github']))
                     <a href="{{ $member['github'] }}" target="_blank" rel="noopener noreferrer" class="gallery-frame-link" aria-label="{{ $member['name'] }} GitHub Profile">
                 @endif
