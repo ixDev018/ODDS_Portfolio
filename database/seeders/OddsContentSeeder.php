@@ -493,5 +493,39 @@ class OddsContentSeeder extends Seeder
                 ]);
             }
         }
+
+        // 7. Team Member Photos
+        $teamSrcDirs = [
+            database_path('seeders/images/team'),
+            'C:/Users/sanch/Downloads',
+            '/app/odds-team-images',
+        ];
+        $teamSrcDir = null;
+        foreach ($teamSrcDirs as $dir) {
+            if (is_dir($dir)) { $teamSrcDir = rtrim($dir, '/\\'); break; }
+        }
+
+        $teamStorageDir = storage_path('app/public/odds/team');
+        if (!is_dir($teamStorageDir)) { mkdir($teamStorageDir, 0775, true); }
+
+        $teamImages = [
+            'Jerico_Sanchez.jpg',
+            'Robert_Santiago.jpeg',
+            'Brix_Cura.jpeg',
+            'Jazam_Laranio.jpeg',
+            'Mark_Paulo_Franco.jpeg',
+            'John_Cedric_Abaloyan.jpeg',
+            'Sherwin_Ramirez.jpeg',
+        ];
+
+        if ($teamSrcDir !== null) {
+            foreach ($teamImages as $imgName) {
+                $src = $teamSrcDir . DIRECTORY_SEPARATOR . $imgName;
+                $dest = $teamStorageDir . DIRECTORY_SEPARATOR . $imgName;
+                if (file_exists($src) && (!file_exists($dest) || filesize($src) !== filesize($dest))) {
+                    copy($src, $dest);
+                }
+            }
+        }
     }
 }

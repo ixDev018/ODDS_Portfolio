@@ -71,7 +71,8 @@
         padding-top: 6.5rem;
         padding-bottom: 5rem;
         width: 100%;
-        overflow: visible !important;
+        max-width: 100vw;
+        overflow-x: clip !important;
         box-sizing: border-box;
     }
 
@@ -79,6 +80,11 @@
         .odds-about-universe {
             padding-top: 5.5rem;
             padding-bottom: 3.5rem;
+        }
+        .about-massive-headline {
+            font-size: clamp(1.85rem, 8.5vw, 2.5rem);
+            word-break: break-word;
+            overflow-wrap: break-word;
         }
     }
 
@@ -131,8 +137,12 @@
         box-sizing: border-box;
     }
 
-    .header-cont{
-     margin:45px 0;   
+    .header-cont {
+        margin: 45px 0;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
     }
 
     .about-eyebrow-nav {
@@ -975,6 +985,7 @@
         align-items: center;
         justify-content: center;
         box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15);
+        position: relative;
     }
 
     .gallery-pfp-img {
@@ -983,6 +994,50 @@
         object-fit: cover;
         image-rendering: pixelated;
         display: block;
+        transition: opacity 0.35s ease, transform 0.35s ease;
+        position: relative;
+        z-index: 1;
+    }
+
+    .gallery-hover-photo {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 20%;
+        opacity: 0;
+        transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        transform: scale(1.06);
+        display: block;
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    .gallery-hover-mystery {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 50% 40%, #1f1638 0%, #0d0c14 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        transform: scale(0.95);
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    .pixel-question-svg {
+        width: 62%;
+        height: 62%;
+        max-width: 95px;
+        max-height: 95px;
+        shape-rendering: crispEdges;
+        color: #a855f7;
+        filter: drop-shadow(0 0 14px rgba(168, 85, 247, 0.75));
         transition: transform 0.3s ease;
     }
 
@@ -1004,7 +1059,22 @@
     }
 
     .gallery-member-card:hover .gallery-pfp-img {
-        transform: scale(1.03);
+        opacity: 0;
+        transform: scale(0.94);
+    }
+
+    .gallery-member-card:hover .gallery-hover-photo {
+        opacity: 1;
+        transform: scale(1.01);
+    }
+
+    .gallery-member-card:hover .gallery-hover-mystery {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .gallery-member-card:hover .pixel-question-svg {
+        transform: scale(1.08);
     }
 
     /* Caption Underneath */
@@ -1141,34 +1211,84 @@
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 2.25rem 1.5rem;
             max-width: 580px;
+            margin: 0 auto;
         }
     }
 
     @media (max-width: 640px) {
         .odds-team-gallery-section {
-            margin: 0.5rem auto 3.5rem auto;
-            padding: 0 1rem;
+            margin: 0.5rem auto 3rem auto;
+            padding: 0 0.85rem;
+            overflow: hidden;
         }
 
         .gallery-grid-container {
-            grid-template-columns: 1fr;
-            gap: 1.85rem;
-            max-width: 260px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.5rem 0.75rem;
+            max-width: 100%;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .gallery-frame-outer {
+            padding: 4px;
+        }
+
+        .gallery-frame-molding {
+            padding: 4px;
+        }
+
+        .gallery-frame-matting {
+            padding: 5px;
+        }
+
+        .gallery-member-name {
+            font-size: 0.875rem;
+            min-height: 2.35rem;
+            line-height: 1.22;
+            margin-bottom: 0.35rem;
+        }
+
+        .gallery-member-handle {
+            font-size: 0.78rem;
+        }
+
+        .gallery-member-meta {
+            gap: 0.35rem;
+            padding-top: 0.4rem;
+            min-height: 54px;
+        }
+
+        .gallery-meta-kicker {
+            font-size: 0.52rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .gallery-meta-entries {
+            min-height: 30px;
+        }
+
+        .gallery-meta-text {
+            font-size: 0.64rem;
         }
     }
 
     /* ─── ODDS & EVEN (EXPANSION / COMING SOON SECTION) ─── */
     .odds-even-section {
         margin-top: -1rem;
-        margin-bottom: 5.5rem;
+        margin-bottom: 5rem;
+        overflow: hidden;
+        box-sizing: border-box;
     }
 
     .odds-even-wrapper {
         position: relative;
         width: 100%;
+        max-width: 100%;
         border-radius: 1.25rem;
         overflow: hidden;
         padding: 0.5rem 0;
+        box-sizing: border-box;
     }
 
     .odds-even-blurred-grid {
@@ -1177,6 +1297,9 @@
         pointer-events: none;
         user-select: none;
         transition: all 0.3s ease;
+        max-width: 100%;
+        transform: translateZ(0);
+        will-change: transform;
     }
 
     .odds-even-overlay {
@@ -1185,17 +1308,20 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 1.5rem;
+        padding: 1.25rem;
         z-index: 15;
+        box-sizing: border-box;
+        max-width: 100%;
+        overflow: hidden;
     }
 
     .coming-soon-glass-card {
-        background: rgba(255, 255, 255, 0.88);
+        background: rgba(255, 255, 255, 0.92);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         border: 1px solid rgba(226, 232, 240, 0.95);
         border-radius: 1.5rem;
-        padding: 2.25rem 3rem;
+        padding: 2.25rem 2.5rem;
         text-align: center;
         box-shadow: 
             0 10px 30px -5px rgba(15, 23, 42, 0.08),
@@ -1205,6 +1331,9 @@
         align-items: center;
         max-width: 440px;
         width: 100%;
+        box-sizing: border-box;
+        transform: translateZ(0);
+        will-change: transform;
         animation: floatGlassCard 4s ease-in-out infinite alternate;
     }
 
@@ -1225,6 +1354,8 @@
         color: #0f172a;
         line-height: 1.1;
         margin: 0 0 0.5rem 0;
+        word-break: break-word;
+        max-width: 100%;
     }
 
     .coming-soon-dot {
@@ -1232,20 +1363,37 @@
     }
 
     .coming-soon-desc {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         color: #64748b;
         margin: 0;
         line-height: 1.6;
         font-weight: 500;
+        word-break: break-word;
+        max-width: 100%;
     }
 
     @media (max-width: 640px) {
+        .odds-even-blurred-grid {
+            filter: blur(5px) saturate(0.85);
+        }
+        .odds-even-overlay {
+            padding: 0.75rem;
+        }
         .coming-soon-glass-card {
-            padding: 1.75rem 1.25rem;
+            animation: none;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 4px 18px rgba(15, 23, 42, 0.08);
+            padding: 1.6rem 1.15rem;
             border-radius: 1.25rem;
+            max-width: calc(100% - 0.5rem);
         }
         .coming-soon-title {
-            font-size: 1.65rem;
+            font-size: clamp(1.35rem, 6.5vw, 1.75rem);
+            letter-spacing: 0.03em;
+        }
+        .coming-soon-desc {
+            font-size: 0.85rem;
         }
     }
 </style>
@@ -1283,6 +1431,7 @@ $teamMembers = [
         'handle' => '3c0-exe',
         'github' => 'https://github.com/3c0-exe',
         'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=3c0-exe',
+        'real_photo' => asset('storage/odds/team/Jerico_Sanchez.jpg'),
         'positions' => ['Co-Founder', 'Software Developer'],
         'awards' => ['Cum Laude', 'Best in Capstone (Lead Dev)'],
     ],
@@ -1291,6 +1440,7 @@ $teamMembers = [
         'handle' => 'Jherald-Vibar',
         'github' => 'https://github.com/Jherald-Vibar',
         'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=Jherald-Vibar',
+        'is_mystery' => true,
         'positions' => ['Co-Founder', 'Software / Database Dev'],
         'awards' => ['Magna Cum Laude'],
     ],
@@ -1299,6 +1449,7 @@ $teamMembers = [
         'handle' => 'Robert-1hash',
         'github' => 'https://github.com/Robert-1hash',
         'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=Robert-1hash',
+        'real_photo' => asset('storage/odds/team/Robert_Santiago.jpeg'),
         'positions' => ['Developer', 'Hardware Specialist'],
         'awards' => ['Magna Cum Laude', 'Best in Capstone'],
     ],
@@ -1307,6 +1458,7 @@ $teamMembers = [
         'handle' => 'ixDev018',
         'github' => 'https://github.com/ixDev018',
         'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=ixDev018',
+        'real_photo' => asset('storage/odds/team/Brix_Cura.jpeg'),
         'positions' => ['Co-Founder, Lead Designer', 'CMO, Web Developer'],
         'awards' => ['Magna Cum Laude', 'Best in Capstone (Dev)'],
     ],
@@ -1315,6 +1467,7 @@ $teamMembers = [
         'handle' => '',
         'github' => null,
         'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=JazamLaranio',
+        'real_photo' => asset('storage/odds/team/Jazam_Laranio.jpeg'),
         'positions' => ['Developer', 'Lead Gen Specialist'],
         'awards' => ['Cum Laude'],
     ],
@@ -1323,6 +1476,7 @@ $teamMembers = [
         'handle' => 'itsFrancss619',
         'github' => 'https://github.com/itsFrancss619',
         'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=itsFrancss619',
+        'real_photo' => asset('storage/odds/team/Mark_Paulo_Franco.jpeg'),
         'positions' => ['Developer', 'Field Logistics Coord.'],
         'awards' => ['Best in Capstone'],
     ],
@@ -1331,6 +1485,7 @@ $teamMembers = [
         'handle' => 'Ggwepq',
         'github' => 'https://github.com/Ggwepq',
         'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=Ggwepq',
+        'real_photo' => asset('storage/odds/team/John_Cedric_Abaloyan.jpeg'),
         'positions' => ['Lead Developer'],
         'awards' => ['Best in Capstone'],
     ],
@@ -1339,6 +1494,8 @@ $teamMembers = [
         'handle' => 'sheerwiiin',
         'github' => 'https://github.com/sheerwiiin',
         'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=sheerwiiin',
+        'real_photo' => asset('storage/odds/team/Sherwin_Ramirez.jpeg'),
+        'photo_position' => 'center 40%',
         'positions' => ['QA Specialist', 'Web Developer'],
         'awards' => ['Top 1 (Rank 1)', 'Best in Capstone'],
     ],
@@ -1357,6 +1514,19 @@ $teamMembers = [
                         <div class="gallery-frame-matting">
                             <div class="gallery-frame-canvas">
                                 <img src="{{ $member['pfp'] }}" alt="{{ $member['name'] }}" class="gallery-pfp-img" loading="lazy">
+                                @if(!empty($member['real_photo']))
+                                    <img src="{{ $member['real_photo'] }}" alt="{{ $member['name'] }}" class="gallery-hover-photo" style="{{ !empty($member['photo_position']) ? 'object-position: ' . $member['photo_position'] . ';' : '' }}" loading="lazy">
+                                @elseif(!empty($member['is_mystery']))
+                                    <div class="gallery-hover-mystery" aria-hidden="true">
+                                        <svg viewBox="0 0 16 16" class="pixel-question-svg" fill="currentColor">
+                                            <rect x="4" y="2" width="8" height="2"/>
+                                            <rect x="10" y="4" width="2" height="3"/>
+                                            <rect x="6" y="7" width="6" height="2"/>
+                                            <rect x="6" y="9" width="2" height="2"/>
+                                            <rect x="6" y="12" width="2" height="2"/>
+                                        </svg>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>

@@ -30,7 +30,7 @@ if (document.getElementById('smooth-wrapper') && document.getElementById('smooth
         wrapper: '#smooth-wrapper',
         content: '#smooth-content',
         smooth: 1.4,          // inertia duration in seconds
-        smoothTouch: 0.1,      // responsive near-instant touch response on mobile & tablet
+        smoothTouch: false,    // native 60/120fps touch momentum on mobile/touchscreens (eliminates lag)
         paused: !!document.getElementById('fp-overlay'), // only pause if legacy cyber blade overlay is present
     });
     if (smoother) {
