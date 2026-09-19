@@ -1143,7 +1143,6 @@
             max-width: 580px;
         }
     }
-    }
 
     @media (max-width: 640px) {
         .odds-team-gallery-section {
@@ -1155,6 +1154,98 @@
             grid-template-columns: 1fr;
             gap: 1.85rem;
             max-width: 260px;
+        }
+    }
+
+    /* ─── ODDS & EVEN (EXPANSION / COMING SOON SECTION) ─── */
+    .odds-even-section {
+        margin-top: -1rem;
+        margin-bottom: 5.5rem;
+    }
+
+    .odds-even-wrapper {
+        position: relative;
+        width: 100%;
+        border-radius: 1.25rem;
+        overflow: hidden;
+        padding: 0.5rem 0;
+    }
+
+    .odds-even-blurred-grid {
+        filter: blur(8px) saturate(0.8);
+        opacity: 0.45;
+        pointer-events: none;
+        user-select: none;
+        transition: all 0.3s ease;
+    }
+
+    .odds-even-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        z-index: 15;
+    }
+
+    .coming-soon-glass-card {
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(226, 232, 240, 0.95);
+        border-radius: 1.5rem;
+        padding: 2.25rem 3rem;
+        text-align: center;
+        box-shadow: 
+            0 10px 30px -5px rgba(15, 23, 42, 0.08),
+            0 20px 48px -12px rgba(112, 57, 236, 0.15);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 440px;
+        width: 100%;
+        animation: floatGlassCard 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatGlassCard {
+        0% {
+            transform: translateY(0px);
+        }
+        100% {
+            transform: translateY(-5px);
+        }
+    }
+
+    .coming-soon-title {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: clamp(1.85rem, 3.5vw, 2.5rem);
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        color: #0f172a;
+        line-height: 1.1;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .coming-soon-dot {
+        color: #7039ec;
+    }
+
+    .coming-soon-desc {
+        font-size: 0.9rem;
+        color: #64748b;
+        margin: 0;
+        line-height: 1.6;
+        font-weight: 500;
+    }
+
+    @media (max-width: 640px) {
+        .coming-soon-glass-card {
+            padding: 1.75rem 1.25rem;
+            border-radius: 1.25rem;
+        }
+        .coming-soon-title {
+            font-size: 1.65rem;
         }
     }
 </style>
@@ -1305,6 +1396,112 @@ $teamMembers = [
                 </div>
             </div>
         @endforeach
+    </div>
+</section>
+
+{{-- =========================================================================
+     ODDS & EVEN // EXPANSION COHORT (4 OPERATORS - COMING SOON)
+     ========================================================================= --}}
+<div class="header-cont" style="margin: 65px 0 35px 0;">
+    {{-- TYPOGRAPHIC ONE-LINER: ODDS & EVEN --}}
+    <div class="about-headline-hero">
+        {{-- Eyebrow Breadcrumb --}}
+        <div class="about-eyebrow-nav">
+            <span class="eyebrow-accent">Cohort II</span>
+            <span class="eyebrow-divider">/</span>
+            <span>the next chapter</span>
+        </div>
+
+        {{-- Monumental Headline --}}
+        <h2 class="about-massive-headline">
+            ODDS & <span class="headline-outline-text draw-highlight-wrap">EVEN<svg class="draw-highlight-svg" viewBox="0 0 120 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M 118 4 C 60 11, 30 2, 2 10" stroke="#875af5" stroke-width="3" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></span><span class="headline-gradient-text">.</span>
+        </h2>
+    </div>
+</div>
+
+@php
+$evenMembers = [
+    [
+        'name' => 'Operator IX',
+        'handle' => 'stealth',
+        'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=EvenMember01',
+        'positions' => ['Full-Stack', 'Systems Engineer'],
+        'awards' => ['Classified', 'Incoming'],
+    ],
+    [
+        'name' => 'Operator X',
+        'handle' => 'stealth',
+        'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=EvenMember02',
+        'positions' => ['Hardware / IoT', 'Firmware Lead'],
+        'awards' => ['Classified', 'Incoming'],
+    ],
+    [
+        'name' => 'Operator XI',
+        'handle' => 'stealth',
+        'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=EvenMember03',
+        'positions' => ['UI/UX Architect', 'Product Design'],
+        'awards' => ['Classified', 'Incoming'],
+    ],
+    [
+        'name' => 'Operator XII',
+        'handle' => 'stealth',
+        'pfp' => 'https://api.dicebear.com/10.x/pixelbot/svg?seed=EvenMember04',
+        'positions' => ['Security & Vision', 'AI Researcher'],
+        'awards' => ['Classified', 'Incoming'],
+    ],
+];
+@endphp
+
+<section class="odds-team-gallery-section odds-even-section" aria-label="ODDS & EVEN Team Gallery">
+    <div class="odds-even-wrapper">
+        {{-- 4-Column Grid with 4 Blurred Cards --}}
+        <div class="gallery-grid-container odds-even-blurred-grid" aria-hidden="true">
+            @foreach($evenMembers as $member)
+                <div class="gallery-member-card">
+                    <div class="gallery-frame-outer">
+                        <div class="gallery-frame-molding">
+                            <div class="gallery-frame-matting">
+                                <div class="gallery-frame-canvas">
+                                    <img src="{{ $member['pfp'] }}" alt="{{ $member['name'] }}" class="gallery-pfp-img" loading="lazy">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-card-caption">
+                        <h3 class="gallery-member-name">
+                            {{ $member['name'] }}@if(!empty($member['handle']))<span class="gallery-member-handle">, {{ $member['handle'] }}</span>@endif
+                        </h3>
+                        <div class="gallery-member-meta">
+                            <div class="gallery-meta-col meta-positions">
+                                <span class="gallery-meta-kicker">POSITIONS</span>
+                                <div class="gallery-meta-entries">
+                                    @foreach($member['positions'] as $pos)
+                                        <span class="gallery-meta-text" title="{{ $pos }}">{{ $pos }}</span>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="gallery-meta-sep" aria-hidden="true"></div>
+                            <div class="gallery-meta-col meta-awards">
+                                <span class="gallery-meta-kicker">AWARDS</span>
+                                <div class="gallery-meta-entries">
+                                    @foreach($member['awards'] as $aw)
+                                        <span class="gallery-meta-text" title="{{ $aw }}">{{ $aw }}</span>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        {{-- Centered Coming Soon Overlay --}}
+        <div class="odds-even-overlay">
+            <div class="coming-soon-glass-card">
+                <h3 class="coming-soon-title">COMING SOON<span class="coming-soon-dot">.</span></h3>
+                <p class="coming-soon-desc">Even numbers take a little longer to add up.</p>
+            </div>
+        </div>
     </div>
 </section>
 

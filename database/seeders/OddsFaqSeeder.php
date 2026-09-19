@@ -13,91 +13,69 @@ class OddsFaqSeeder extends Seeder
             // Getting Started
             [
                 'category' => 'Getting Started',
-                'question' => "We don't have a technical spec yet — can you still help?",
-                'answer'   => "Yes. Most of what we take on starts as a rough idea or an operational bottleneck, not a finished technical spec. We work directly with you during scoping to define the architecture, requirements, and roadmap before writing a line of code.",
+                'question' => "Do I need a finished spec to start?",
+                'answer'   => "No — we scope with you first. Bring a rough idea or an operational problem, and we'll work through it together to define what actually needs to get built before anything is quoted.",
             ],
             [
                 'category' => 'Getting Started',
-                'question' => "How fast can we kick off and ship the first milestone?",
-                'answer'   => "Following an initial scoping discussion, we can typically kick off within 48 to 72 hours. Focused modules ship in days to a couple of weeks, while full platforms are delivered in rapid, testable sprint increments.",
+                'question' => "How long from first contact to kickoff?",
+                'answer'   => "A few days. Once we've scoped the work, we can move fast into actually starting.",
             ],
             [
                 'category' => 'Getting Started',
-                'question' => "Do I need technical experience to work with ODDS?",
-                'answer'   => "Not at all. We handle the complex engineering, cloud infrastructure, and technical architecture while translating everything into clear, actionable business milestones.",
+                'question' => "Do I need a technical co-founder or team to work with you?",
+                'answer'   => "No. We work directly with non-technical founders and teams — we handle the engineering and translate it into plain terms as we go.",
             ],
             [
                 'category' => 'Getting Started',
-                'question' => "What's the smallest project or engagement you'll take on?",
-                'answer'   => "There is no rigid minimum. We have shipped standalone custom modules, high-throughput microservices, and full end-to-end multi-platform applications. Scope decides the timeline and budget, not whether we take the work.",
+                'question' => "Is there a minimum project size?",
+                'answer'   => "No. We take on small projects as well as larger ones — scope is scope, there's no size cutoff.",
             ],
 
             // Development & Stack
             [
                 'category' => 'Development & Stack',
-                'question' => "Do I need to know what tech stack or framework I want?",
-                'answer'   => "No. We are strictly stack-agnostic. We evaluate your scalability, performance, security, and budget requirements to select the exact language and architecture that fits your problem—never forcing you into rigid templates.",
+                'question' => "Do I need to know what tech stack I want?",
+                'answer'   => "No. We lean on a few go-to stacks we trust for speed and reliability, but we're not locked into them — the right tools get picked based on what your project actually needs, decided together during scoping.",
             ],
             [
                 'category' => 'Development & Stack',
-                'question' => "Can I manage and update the site or application after it's built?",
-                'answer'   => "Absolutely. We build clean, intuitive management workflows and dashboards tailored to your team. We also provide complete documentation, recorded handoffs, and ongoing support so you're never left in the dark.",
+                'question' => "Can you manage/update the site or app after it's built?",
+                'answer'   => "If it's part of the engagement, yes — we build management tools, dashboards, and documentation for your team when that's scoped in from the start.",
             ],
             [
                 'category' => 'Development & Stack',
-                'question' => "Can you integrate with our existing APIs, legacy databases, or hardware systems?",
-                'answer'   => "Yes. We specialize in custom API integrations, legacy database migrations, IoT firmware connectivity, and multi-tenant webhook architectures.",
-            ],
-            [
-                'category' => 'Development & Stack',
-                'question' => "What tools and technologies are used in building?",
-                'answer'   => "We choose modern, robust, and scalable technologies best fitted to your product goals—from performant full-stack frameworks (Laravel, Node.js, Next.js, Flutter) to custom cloud infrastructure, Docker containers, and high-velocity database engines.",
+                'question' => "Do you work with legacy systems or old databases/APIs?",
+                'answer'   => "Yes, this is common work for us — legacy integration and migration is something we handle regularly, not a special case.",
             ],
 
             // Scoping & Pricing
             [
                 'category' => 'Scoping & Pricing',
-                'question' => "How does pricing and project scoping work?",
-                'answer'   => "We default to milestone-based quotes so you know the exact deliverables and timeline upfront with zero surprise billing. For evolving product builds or R&D, flexible sprint retainers are also available.",
+                'question' => "How does pricing work?",
+                'answer'   => "Pricing is based on the scope and depth of involvement your project needs — full end-to-end work (planning, execution, and deployment) sits at a different level than a focused build that we hand off for your team to take from there. We don't quote off a rough idea; pricing is set after we've scoped the actual work together.",
             ],
             [
                 'category' => 'Scoping & Pricing',
-                'question' => "How much does it cost to build a custom application?",
-                'answer'   => "Pricing varies depending on feature depth, third-party integrations, and platform complexity. Following an initial scoping discussion, we provide a detailed proposal tailored to your exact requirements and budget.",
-            ],
-            [
-                'category' => 'Scoping & Pricing',
-                'question' => "Are there any hidden costs, vendor lock-ins, or monthly license fees?",
-                'answer'   => "Never. We believe in total financial transparency. All hosting accounts, domain registrations, and third-party API keys belong directly to your organization.",
+                'question' => "Are there any hidden costs?",
+                'answer'   => "No. We're fully transparent about what you're paying for and why — no surprise fees once we're underway.",
             ],
 
             // Security & Ownership
             [
                 'category' => 'Security & Ownership',
-                'question' => "Who owns the source code and intellectual property (IP)?",
-                'answer'   => "You do. 100% full ownership of all source code, design assets, database schemas, and intellectual property transfers to your company upon project completion.",
+                'question' => "Who owns the code/IP?",
+                'answer'   => "Ownership terms are set per contract, but typically full ownership of the final product transfers to you. Note: ODDS may showcase completed work in our portfolio (rebranded/renamed to protect client identity), and may build on patterns from past projects for future clients — always rebuilt and rebranded, never handed over as-is, unless it's one of our own in-house products.",
             ],
             [
                 'category' => 'Security & Ownership',
-                'question' => "Do you provide post-launch support, monitoring, and maintenance?",
-                'answer'   => "Yes. We provide complimentary post-launch warranty support on all shipped deliverables. For ongoing scaling, feature iterations, and security monitoring, dedicated retainer plans are available.",
+                'question' => "Is there a warranty period after launch?",
+                'answer'   => "Yes, projects include a free post-launch warranty period.",
             ],
             [
                 'category' => 'Security & Ownership',
-                'question' => "What happens if something breaks or needs an urgent fix after launch?",
-                'answer'   => "You contact us and we fix it immediately. We stand firmly behind every system and line of code we ship.",
-            ],
-
-            // AI & Custom Systems
-            [
-                'category' => 'AI & Custom Systems',
-                'question' => "Can you build custom AI workflows, computer vision, or embedded IoT systems?",
-                'answer'   => "Yes. We have built real-world AI CCTV surveillance systems, IoT sensor telemetry pipelines, automated OCR document extractors, and custom LLM agent workflows.",
-            ],
-            [
-                'category' => 'AI & Custom Systems',
-                'question' => "Will our proprietary business data be secure when using AI integrations?",
-                'answer'   => "Yes. We enforce enterprise-grade data isolation, private VPC endpoints, and strict zero-retention policies so your business data is never exposed or used to train public models.",
+                'question' => "What if something breaks or needs an urgent fix?",
+                'answer'   => "We commit to fast turnaround on urgent fixes — you're not left waiting when something critical goes down.",
             ],
         ];
 

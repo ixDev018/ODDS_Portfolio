@@ -1,24 +1,24 @@
 @php
 $faqList = isset($faqs) && count($faqs) > 0 ? $faqs : collect([
     (object)[
-        'question' => "HOW LONG DOES A PROJECT TAKE?",
-        'answer'   => "Each project's timeline depends on the scope. A simple landing page can be completed within 2 weeks while a full e-commerce platform might take 3 – 6 weeks. Once we understand your needs, we'll give you a clear, realistic timeline.",
+        'question' => "Do I need a finished spec to start?",
+        'answer'   => "No — we scope with you first, starting from a rough idea or a problem you need solved.",
     ],
     (object)[
-        'question' => "CAN I MANAGE A SITE AFTER IT'S BUILT?",
-        'answer'   => "Absolutely. We build clean, intuitive management workflows and dashboards tailored to your team. We also provide complete documentation, recorded handoffs, and ongoing support so you're never left in the dark.",
+        'question' => "How long from first contact to kickoff?",
+        'answer'   => "A few days once we've scoped the work.",
     ],
     (object)[
-        'question' => "HOW DOES PRICING WORK?",
-        'answer'   => "We default to transparent milestone-based quotes so you know the exact deliverables and timeline upfront with zero surprise billing. For evolving product builds or R&D, flexible sprint retainers are also available.",
+        'question' => "Do I need a technical co-founder to work with you?",
+        'answer'   => "No — we work directly with non-technical founders and teams.",
     ],
     (object)[
-        'question' => "WHAT TOOLS ARE USED IN BUILDING?",
-        'answer'   => "We are stack-agnostic, choosing modern, robust, and scalable technologies best fitted to your product goals—from performant full-stack frameworks to custom cloud infrastructure and API integrations.",
+        'question' => "How does pricing work?",
+        'answer'   => "Based on scope and depth of involvement — quoted only after we've scoped the work together, no hidden costs.",
     ],
     (object)[
-        'question' => "HOW MUCH DOES IT COST TO BUILD AN APP?",
-        'answer'   => "Pricing varies depending on feature depth, third-party integrations, and platform complexity. Following an initial scoping discussion, we provide a detailed proposal tailored to your requirements and budget.",
+        'question' => "Who owns the code once it's done?",
+        'answer'   => "Full ownership typically transfers to you.",
     ],
 ]);
 

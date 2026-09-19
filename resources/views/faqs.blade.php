@@ -609,46 +609,77 @@
         (object)[
             'id' => 1,
             'category' => 'Getting Started',
-            'question' => "We don't have a technical spec yet — can you still help?",
-            'answer'   => "Yes. Most of what we take on starts as a rough idea or an operational bottleneck, not a finished technical spec. We work directly with you during scoping to define the architecture, requirements, and roadmap before writing a line of code.",
+            'question' => "Do I need a finished spec to start?",
+            'answer'   => "No — we scope with you first. Bring a rough idea or an operational problem, and we'll work through it together to define what actually needs to get built before anything is quoted.",
         ],
         (object)[
             'id' => 2,
             'category' => 'Getting Started',
-            'question' => "How fast can we kick off and ship the first milestone?",
-            'answer'   => "Following an initial scoping discussion, we can typically kick off within 48 to 72 hours. Focused modules ship in days to a couple of weeks, while full platforms are delivered in rapid, testable sprint increments.",
+            'question' => "How long from first contact to kickoff?",
+            'answer'   => "A few days. Once we've scoped the work, we can move fast into actually starting.",
         ],
         (object)[
             'id' => 3,
             'category' => 'Getting Started',
-            'question' => "Do I need technical experience to work with ODDS?",
-            'answer'   => "Not at all. We handle the complex engineering, cloud infrastructure, and technical architecture while translating everything into clear, actionable business milestones.",
+            'question' => "Do I need a technical co-founder or team to work with you?",
+            'answer'   => "No. We work directly with non-technical founders and teams — we handle the engineering and translate it into plain terms as we go.",
         ],
         (object)[
             'id' => 4,
-            'category' => 'Development & Stack',
-            'question' => "Do I need to know what tech stack or framework I want?",
-            'answer'   => "No. We are strictly stack-agnostic. We evaluate your scalability, performance, security, and budget requirements to select the exact language and architecture that fits your problem—never forcing you into rigid templates.",
+            'category' => 'Getting Started',
+            'question' => "Is there a minimum project size?",
+            'answer'   => "No. We take on small projects as well as larger ones — scope is scope, there's no size cutoff.",
         ],
         (object)[
             'id' => 5,
             'category' => 'Development & Stack',
-            'question' => "Can I manage and update the site or application after it's built?",
-            'answer'   => "Absolutely. We build clean, intuitive management workflows and dashboards tailored to your team. We also provide complete documentation, recorded handoffs, and ongoing support so you're never left in the dark.",
+            'question' => "Do I need to know what tech stack I want?",
+            'answer'   => "No. We lean on a few go-to stacks we trust for speed and reliability, but we're not locked into them — the right tools get picked based on what your project actually needs, decided together during scoping.",
         ],
         (object)[
             'id' => 6,
-            'category' => 'Scoping & Pricing',
-            'question' => "How does pricing and project scoping work?",
-            'answer'   => "We default to milestone-based quotes so you know the exact deliverables and timeline upfront with zero surprise billing. For evolving product builds or R&D, flexible sprint retainers are also available.",
+            'category' => 'Development & Stack',
+            'question' => "Can you manage/update the site or app after it's built?",
+            'answer'   => "If it's part of the engagement, yes — we build management tools, dashboards, and documentation for your team when that's scoped in from the start.",
         ],
         (object)[
             'id' => 7,
+            'category' => 'Development & Stack',
+            'question' => "Do you work with legacy systems or old databases/APIs?",
+            'answer'   => "Yes, this is common work for us — legacy integration and migration is something we handle regularly, not a special case.",
+        ],
+        (object)[
+            'id' => 8,
+            'category' => 'Scoping & Pricing',
+            'question' => "How does pricing work?",
+            'answer'   => "Pricing is based on the scope and depth of involvement your project needs — full end-to-end work (planning, execution, and deployment) sits at a different level than a focused build that we hand off for your team to take from there. We don't quote off a rough idea; pricing is set after we've scoped the actual work together.",
+        ],
+        (object)[
+            'id' => 9,
+            'category' => 'Scoping & Pricing',
+            'question' => "Are there any hidden costs?",
+            'answer'   => "No. We're fully transparent about what you're paying for and why — no surprise fees once we're underway.",
+        ],
+        (object)[
+            'id' => 10,
             'category' => 'Security & Ownership',
-            'question' => "Who owns the source code and intellectual property (IP)?",
-            'answer'   => "You do. 100% full ownership of all source code, design assets, database schemas, and intellectual property transfers to your company upon project completion.",
+            'question' => "Who owns the code/IP?",
+            'answer'   => "Ownership terms are set per contract, but typically full ownership of the final product transfers to you. Note: ODDS may showcase completed work in our portfolio (rebranded/renamed to protect client identity), and may build on patterns from past projects for future clients — always rebuilt and rebranded, never handed over as-is, unless it's one of our own in-house products.",
+        ],
+        (object)[
+            'id' => 11,
+            'category' => 'Security & Ownership',
+            'question' => "Is there a warranty period after launch?",
+            'answer'   => "Yes, projects include a free post-launch warranty period.",
+        ],
+        (object)[
+            'id' => 12,
+            'category' => 'Security & Ownership',
+            'question' => "What if something breaks or needs an urgent fix?",
+            'answer'   => "We commit to fast turnaround on urgent fixes — you're not left waiting when something critical goes down.",
         ],
     ]);
+
 
     $groupedFaqs = $faqItems->groupBy(function($item) {
         return !empty($item->category) ? $item->category : 'General';
