@@ -1042,6 +1042,67 @@
         transition: transform 0.3s ease;
     }
 
+    /* ─── PHOTO REVEAL HINT BADGE ─── */
+    .gallery-reveal-hint {
+        position: absolute;
+        bottom: 7px;
+        right: 7px;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(15, 23, 42, 0.72);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 9999px;
+        padding: 4px 9px 4px 6px;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+        animation: hint-pulse 2.4s ease-in-out infinite;
+    }
+
+    .gallery-reveal-hint svg {
+        width: 13px;
+        height: 13px;
+        fill: #fff;
+        flex-shrink: 0;
+    }
+
+    .gallery-reveal-hint span {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.58rem;
+        font-weight: 700;
+        color: rgba(255,255,255,0.88);
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+    }
+
+    /* Hide the mouse icon / show finger on touch, and vice versa */
+    .hint-icon-mouse  { display: block; }
+    .hint-icon-touch  { display: none;  }
+    .hint-label-mouse { display: inline; }
+    .hint-label-touch { display: none;  }
+
+    @media (hover: none) and (pointer: coarse) {
+        .hint-icon-mouse  { display: none;   }
+        .hint-icon-touch  { display: block;  }
+        .hint-label-mouse { display: none;   }
+        .hint-label-touch { display: inline; }
+    }
+
+    @keyframes hint-pulse {
+        0%, 100% { opacity: 0.9; transform: scale(1);    }
+        50%       { opacity: 0.6; transform: scale(0.96); }
+    }
+
+    /* Hide permanently once JS marks hints as dismissed */
+    .gallery-hints-seen .gallery-reveal-hint {
+        opacity: 0;
+        pointer-events: none;
+        animation: none;
+    }
+
     /* Hover Lift & Gallery Lighting */
     .gallery-frame-link {
         display: block;
@@ -1642,6 +1703,15 @@ $teamMembers = [
                                 <img src="{{ $member['pfp'] }}" alt="{{ $member['name'] }}" class="gallery-pfp-img" loading="lazy">
                                 @if(!empty($member['real_photo']))
                                     <img src="{{ $member['real_photo'] }}" alt="{{ $member['name'] }}" class="gallery-hover-photo" style="{{ !empty($member['photo_position']) ? 'object-position: ' . $member['photo_position'] . ';' : '' }}" loading="lazy">
+                                    {{-- Hint badge: tells users how to see the real photo --}}
+                                    <div class="gallery-reveal-hint" aria-hidden="true">
+                                        {{-- Mouse icon (desktop) --}}
+                                        <svg class="hint-icon-mouse" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2a7 7 0 0 0-7 7v6a7 7 0 0 0 14 0V9a7 7 0 0 0-7-7zm0 2a5 5 0 0 1 5 5v1h-4V4zm-2 0v6H5V9a5 5 0 0 1 5-5z"/></svg>
+                                        {{-- Finger / long-press icon (touch) --}}
+                                        <svg class="hint-icon-touch" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 1a4 4 0 0 1 4 4v1.07A4 4 0 0 1 17 14l-.001.126A5 5 0 0 1 12 19a5 5 0 0 1-5-5V9a2 2 0 0 1 3.45-1.382A4 4 0 0 1 13 5V1zm0 2a2 2 0 0 0-2 2v4a1 1 0 0 0-2 0v4a3 3 0 0 0 6 0V9a2 2 0 0 0-4 0V5a2 2 0 0 0 2-2z"/></svg>
+                                        <span class="hint-label-mouse">hover</span>
+                                        <span class="hint-label-touch">hold</span>
+                                    </div>
                                 @elseif(!empty($member['is_mystery']))
                                     <div class="gallery-hover-mystery" aria-hidden="true">
                                         <svg viewBox="0 0 16 16" class="pixel-question-svg" fill="currentColor">
@@ -2341,6 +2411,47 @@ function execCopy(text) {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(setupPin, 150);
     });
+})();
+// ─── GALLERY REVEAL HINT: auto-dismiss once user actually sees the reveal ─────
+(function initGalleryRevealHints() {
+    function setup() {
+        const sections = document.querySelectorAll('.odds-team-gallery-section');
+        if (!sections.length) return;
+
+        let dismissed = false;
+
+        function dismiss() {
+            if (dismissed) return;
+            dismissed = true;
+            sections.forEach(s => s.classList.add('gallery-hints-seen'));
+        }
+
+        // Desktop: only dismiss after the user has hovered on a card for ≥1.5s
+        // (meaning they actually saw the revealed photo, not just moused over)
+        document.querySelectorAll('.gallery-member-card').forEach(card => {
+            let hoverTimer = null;
+            card.addEventListener('mouseenter', () => {
+                hoverTimer = setTimeout(dismiss, 1500);
+            });
+            card.addEventListener('mouseleave', () => {
+                clearTimeout(hoverTimer);
+            });
+        });
+
+        // Mobile: dismiss on first touchstart (they're actively interacting)
+        document.querySelectorAll('.gallery-frame-canvas, .gallery-frame-link').forEach(el => {
+            el.addEventListener('touchstart', dismiss, { passive: true, once: true });
+        });
+
+        // Auto-dismiss after 8 seconds — don't nag indefinitely
+        setTimeout(dismiss, 8000);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setup);
+    } else {
+        setup();
+    }
 })();
 </script>
 </x-layout>
