@@ -769,7 +769,79 @@ body:not(.hero-active) .hero-services-stage {
     transform: translateX(4px);
 }
 
-/* Right Framed Image Column (45% Photo Stage - Complete Full Bleed) */
+/* ---------------------------------------------------------------------------
+   [FRAMING STYLES: Who We Are — Jerico's Framed Studio Photo Stage (11e130c)]
+   If someone wants Brix's full-bleed borderless image layout back:
+   Refer to commit 02d9c65 ("initial responsiveness for why bet").
+   To switch back to Brix's version:
+     1) Comment out this framed section below.
+     2) Uncomment the "BRIX'S FULL-BLEED VERSION (commit 02d9c65)" block below it.
+   --------------------------------------------------------------------------- */
+
+/* Right Framed Image Column (42% Photo Stage - Jerico's version) */
+.who-we-are-right {
+    flex: 0 0 42%;
+    width: 42%;
+    max-width: 42%;
+    height: 100%;
+    min-height: 100%;
+    position: relative;
+    overflow: hidden;
+    background-color: #0b0c10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(24px, 3.5vw, 48px);
+    box-sizing: border-box;
+}
+
+.who-we-are-ambient-bg {
+    position: absolute;
+    inset: -20px;
+    background-size: cover;
+    background-position: center;
+    filter: blur(40px) brightness(0.35) saturate(1.25);
+    opacity: 0.55;
+    pointer-events: none;
+    transform: scale(1.1);
+}
+
+.who-we-are-frame {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 540px;
+    aspect-ratio: 4 / 3;
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: #16171d;
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
+}
+
+.who-we-are-frame:hover {
+    transform: translateY(-4px) scale(1.015);
+    box-shadow: 0 35px 75px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(135, 90, 245, 0.35);
+}
+
+.who-we-are-img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.who-we-are-frame:hover .who-we-are-img {
+    transform: scale(1.02);
+}
+
+/* ===========================================================================
+   [COMMENTED OUT] BRIX'S FULL-BLEED VERSION (commit 02d9c65)
+   To restore Brix's version: comment out the framed block above and uncomment this block.
+   ---------------------------------------------------------------------------
 .who-we-are-right {
     flex: 0 0 45%;
     width: 45%;
@@ -811,6 +883,7 @@ body:not(.hero-active) .hero-services-stage {
     object-position: center 15%;
     display: block;
 }
+   =========================================================================== */
 
 /* Responsive Breakpoints */
 @media (max-width: 1023px) {
@@ -845,24 +918,29 @@ body:not(.hero-active) .hero-services-stage {
     .who-we-are-mobile-media {
         display: block;
         width: 100%;
-        max-width: 480px;
+        max-width: 540px;
         margin: 0 auto clamp(20px, 3.5vw, 28px);
         border-radius: 16px;
         overflow: hidden;
         background-color: #111111;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         border: 1px solid rgba(0, 0, 0, 0.06);
-        aspect-ratio: 3 / 4;
+        aspect-ratio: 4 / 3;
     }
 
     .who-we-are-mobile-img {
         width: 100%;
         height: 100%;
-        aspect-ratio: 3 / 4;
+        aspect-ratio: 4 / 3;
         object-fit: cover;
         object-position: center center;
         display: block;
     }
+
+    /* Commented out: Brix's mobile 3/4 portrait crop (commit 02d9c65)
+    .who-we-are-mobile-media { max-width: 480px; aspect-ratio: 3 / 4; }
+    .who-we-are-mobile-img { aspect-ratio: 3 / 4; }
+    */
 
     .who-we-are-statement {
         font-size: clamp(24px, 4.4vw, 38px);
