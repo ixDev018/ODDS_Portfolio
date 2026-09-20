@@ -3,7 +3,7 @@ services:
     name: odds-portfolio
     runtime: docker
     plan: free
-    region: oregon
+    region: singapore
     branch: MERGED
     autoDeploy: true
     healthCheckPath: /ping
