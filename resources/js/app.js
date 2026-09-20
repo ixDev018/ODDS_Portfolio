@@ -2282,52 +2282,14 @@ if (ctaVideo && ctaCanvas) {
         requestAnimationFrame(loop);
     }
 
-    // ─── Mobile Process Line Trail Animation ───
-    const mobilePath = document.getElementById('process-mobile-line-path');
-    let mobileLineST = null;
-
-    function initMobileProcessLine() {
-        if (mobileLineST) {
-            mobileLineST.kill();
-            mobileLineST = null;
-        }
-
-        if (!mobilePath || window.innerWidth >= 992) return;
-
-        let totalLen = 1250;
-        try {
-            totalLen = Math.round(mobilePath.getTotalLength()) || 1250;
-        } catch (e) {
-            totalLen = 1250;
-        }
-
-        mobilePath.style.strokeDasharray = `${totalLen} ${totalLen}`;
-        mobilePath.style.strokeDashoffset = `${totalLen}`;
-
-        mobileLineST = ScrollTrigger.create({
-            trigger: '#process',
-            start: 'top 92%',
-            end: 'bottom 85%',
-            scrub: 0.35,
-            onUpdate: (self) => {
-                const drawOffset = totalLen * (1 - self.progress);
-                mobilePath.style.strokeDashoffset = Math.max(0, drawOffset);
-            }
-        });
-    }
-
-    initMobileProcessLine();
-
     window.addEventListener('scroll', calcTargetProgress, { passive: true });
     window.addEventListener('resize', () => {
         calcTargetProgress();
-        initMobileProcessLine();
     });
 
     if (typeof ScrollTrigger !== 'undefined') {
         ScrollTrigger.addEventListener('refresh', () => {
             calcTargetProgress();
-            initMobileProcessLine();
         });
     }
 
