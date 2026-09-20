@@ -41,12 +41,8 @@
 
                         <div class="cta-actions" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                             <a href="#contact" class="cta-btn js-open-contact-modal" data-open-contact>Let's Talk & Build</a>
-                            <a href="mailto:{{ $settings->cta_email ?? 'oddsdevph@gmail.com' }}" class="cta-btn-email" title="Send direct email" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 18px; border-radius: 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); color: #cbd5e1; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: all 0.2s;">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                                    <polyline points="22,6 12,13 2,6"></polyline>
-                                </svg>
-                                <span>{{ $settings->cta_email ?? 'oddsdevph@gmail.com' }}</span>
+                            <a href="mailto:{{ $settings->cta_email ?? 'oddsdevph@gmail.com' }}" class="cta-btn" title="Send direct email">
+                                {{ $settings->cta_email ?? 'oddsdevph@gmail.com' }}
                             </a>
                         </div>
                     </div>
