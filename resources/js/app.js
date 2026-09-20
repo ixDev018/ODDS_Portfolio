@@ -1995,9 +1995,9 @@ if (ctaVideo && ctaCanvas) {
         const segments = Array.from(document.querySelectorAll('.why-bar-segment'));
         if (!deckEl || !prevBtn || !nextBtn) return;
 
-        // Clear any GSAP residual transforms so offsetLeft is accurate
+        // Clear any GSAP residual position transforms so slide dimensions and positions are clean
         cards.forEach(card => {
-            gsap.set(card, { clearProps: 'all' });
+            gsap.killTweensOf(card);
             card.style.transform = '';
             card.style.opacity = '';
         });
@@ -2005,7 +2005,9 @@ if (ctaVideo && ctaCanvas) {
         let currentIdx = 0;
 
         function getCardLeft(idx) {
-            return idx * (deckEl.clientWidth || deckEl.offsetWidth || 1);
+            const targetCard = cards[idx];
+            if (!targetCard) return 0;
+            return targetCard.offsetLeft - (deckEl.clientWidth - targetCard.offsetWidth) / 2;
         }
 
         function scrollToCard(idx, smooth = true) {
@@ -2033,18 +2035,26 @@ if (ctaVideo && ctaCanvas) {
         function onScroll() {
             clearTimeout(scrollTimer);
             scrollTimer = setTimeout(() => {
-                const scrollLeft = deckEl.scrollLeft;
-                const cardWidth = deckEl.clientWidth || deckEl.offsetWidth || 1;
-                const closest = Math.max(0, Math.min(cards.length - 1, Math.round(scrollLeft / cardWidth)));
+                const scrollCenter = deckEl.scrollLeft + deckEl.clientWidth / 2;
+                let closest = 0;
+                let minDiff = Infinity;
+                cards.forEach((card, idx) => {
+                    const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+                    const diff = Math.abs(scrollCenter - cardCenter);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        closest = idx;
+                    }
+                });
                 if (closest !== currentIdx) {
                     currentIdx = closest;
                     updateControls();
                 }
-            }, 50);
+            }, 60);
         }
 
-        const onPrev = () => scrollToCard(currentIdx - 1);
-        const onNext = () => scrollToCard(currentIdx + 1);
+        const onPrev = (e) => { e.preventDefault(); e.stopPropagation(); scrollToCard(currentIdx - 1); };
+        const onNext = (e) => { e.preventDefault(); e.stopPropagation(); scrollToCard(currentIdx + 1); };
 
         prevBtn.addEventListener('click', onPrev);
         nextBtn.addEventListener('click', onNext);
@@ -2053,16 +2063,22 @@ if (ctaVideo && ctaCanvas) {
         // Segment dot clicks
         segments.forEach((seg, i) => seg.addEventListener('click', () => scrollToCard(i)));
 
-        // Reset to first card immediately and after layout settles
+        // Reset to first card immediately and after paint frames so layout is fully settled
         currentIdx = 0;
         updateControls();
         deckEl.scrollLeft = 0;
+        try { deckEl.scrollTo({ left: 0, behavior: 'instant' }); } catch (e) {}
+
         requestAnimationFrame(() => {
-            deckEl.scrollLeft = 0;
             requestAnimationFrame(() => {
                 deckEl.scrollLeft = 0;
             });
         });
+        setTimeout(() => {
+            if (currentIdx === 0 && deckEl.scrollLeft !== 0) {
+                deckEl.scrollLeft = 0;
+            }
+        }, 120);
 
         carouselCleanup = () => {
             prevBtn.removeEventListener('click', onPrev);

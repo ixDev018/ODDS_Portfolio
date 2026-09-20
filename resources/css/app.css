@@ -618,15 +618,16 @@ body:not(.hero-active) .hero-services-stage {
     flex-direction: row;
     align-items: stretch;
     width: 100%;
-    min-height: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
     position: relative;
 }
 
-/* Left Content Column (58% Text Area aligned to global grid) */
+/* Left Content Column (55% Text Area aligned to global grid) */
 .who-we-are-left {
-    flex: 0 0 58%;
-    width: 58%;
-    max-width: 58%;
+    flex: 0 0 55%;
+    width: 55%;
+    max-width: 55%;
     min-height: 100%;
     display: flex;
     flex-direction: column;
@@ -749,64 +750,47 @@ body:not(.hero-active) .hero-services-stage {
     transform: translateX(4px);
 }
 
-/* Right Framed Image Column (42% Photo Stage) */
+/* Right Framed Image Column (45% Photo Stage - Complete Full Bleed) */
 .who-we-are-right {
-    flex: 0 0 42%;
-    width: 42%;
-    max-width: 42%;
-    height: 100%;
+    flex: 0 0 45%;
+    width: 45%;
+    max-width: 45%;
     min-height: 100%;
     position: relative;
     overflow: hidden;
-    background-color: #0b0c10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: clamp(24px, 3.5vw, 48px);
+    background-color: transparent;
+    display: block;
+    padding: 0;
+    margin: 0;
     box-sizing: border-box;
 }
 
 .who-we-are-ambient-bg {
-    position: absolute;
-    inset: -20px;
-    background-size: cover;
-    background-position: center;
-    filter: blur(40px) brightness(0.35) saturate(1.25);
-    opacity: 0.55;
-    pointer-events: none;
-    transform: scale(1.1);
+    display: none;
 }
 
 .who-we-are-frame {
-    position: relative;
-    z-index: 2;
+    position: absolute;
+    inset: 0;
     width: 100%;
-    max-width: 540px;
-    aspect-ratio: 4 / 3;
-    border-radius: 20px;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    border: none;
+    border-radius: 0;
     overflow: hidden;
-    background-color: #16171d;
-    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
-}
-
-.who-we-are-frame:hover {
-    transform: translateY(-4px) scale(1.015);
-    box-shadow: 0 35px 75px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(135, 90, 245, 0.35);
+    background-color: transparent;
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
 }
 
 .who-we-are-img {
     width: 100%;
     height: 100%;
-    aspect-ratio: 4 / 3;
     object-fit: cover;
-    object-position: center center;
+    object-position: center 15%;
     display: block;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.who-we-are-frame:hover .who-we-are-img {
-    transform: scale(1.02);
 }
 
 /* Responsive Breakpoints */
@@ -842,20 +826,20 @@ body:not(.hero-active) .hero-services-stage {
     .who-we-are-mobile-media {
         display: block;
         width: 100%;
-        max-width: 540px;
+        max-width: 480px;
         margin: 0 auto clamp(20px, 3.5vw, 28px);
         border-radius: 16px;
         overflow: hidden;
         background-color: #111111;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         border: 1px solid rgba(0, 0, 0, 0.06);
-        aspect-ratio: 4 / 3;
+        aspect-ratio: 3 / 4;
     }
 
     .who-we-are-mobile-img {
         width: 100%;
         height: 100%;
-        aspect-ratio: 4 / 3;
+        aspect-ratio: 3 / 4;
         object-fit: cover;
         object-position: center center;
         display: block;
@@ -2206,7 +2190,8 @@ body:not(.hero-active) .hero-services-stage {
 .why-card {
     width: 385px;
     min-width: 385px;
-    height: 490px;
+    aspect-ratio: 394 / 502;
+    height: auto;
     position: relative;
     perspective: 1200px;
     cursor: pointer;
@@ -2250,13 +2235,15 @@ body:not(.hero-active) .hero-services-stage {
 /* ─── Back Face: Inactive Playing Card (Default) ─── */
 .why-card-back {
     transform: rotateY(0deg);
-    background: transparent;
+    background: #3C3C3C;
     border: none;
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.08);
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
+    border-radius: 26px;
+    overflow: hidden;
     transition: box-shadow 0.3s ease;
 }
 
@@ -4161,45 +4148,39 @@ body:not(.hero-active) .hero-services-stage {
         min-height: auto !important;
         height: auto !important;
         justify-content: flex-start !important;
+        overflow: hidden !important;
         width: 100% !important;
         max-width: 100% !important;
-        min-width: 0 !important;
         box-sizing: border-box !important;
-        overflow: hidden !important;
     }
 
     .why .sec-inner {
+        padding: 0 !important;
         width: 100% !important;
         max-width: 100% !important;
-        min-width: 0 !important;
-        padding: 0 16px !important;
         margin: 0 auto !important;
         box-sizing: border-box !important;
-        overflow: hidden !important;
     }
 
     .why-main-stage {
         width: 100% !important;
         max-width: 100% !important;
-        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        transform: none !important;
         box-sizing: border-box !important;
     }
 
     .why-center {
         margin-bottom: 20px !important;
-        padding: 0 !important;
+        padding: 0 20px !important;
         text-align: center !important;
-        width: 100% !important;
-        max-width: 100% !important;
         box-sizing: border-box !important;
     }
 
     .why-title {
-        font-size: clamp(24px, 6.5vw, 34px) !important;
-        margin-bottom: 8px !important;
-        text-align: center !important;
-        word-wrap: break-word !important;
-        overflow-wrap: break-word !important;
+        font-size: clamp(24px, 6vw, 32px);
+        margin-bottom: 8px;
     }
 
     .why-desc {
@@ -4215,31 +4196,35 @@ body:not(.hero-active) .hero-services-stage {
     .why-deck-wrap {
         width: 100% !important;
         max-width: 100% !important;
-        min-width: 0 !important;
-        margin: 0 auto !important;
-        padding: 0 !important;
-        box-sizing: border-box !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        position: relative !important;
-        overflow: hidden !important;
+        margin: 0 auto;
+        padding: 0;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        position: relative;
+        overflow: hidden;
     }
 
-    /* ─── Horizontal Scroll Track ─── */
+    /* ─── Horizontal Scroll Track (Snap Carousel) ─── */
     .why-deck {
+        position: relative !important;
         display: flex !important;
         flex-direction: row !important;
+        flex-wrap: nowrap !important;
         justify-content: flex-start !important;
         align-items: stretch !important;
-        gap: 0 !important;
+        gap: 16px !important;
         width: 100% !important;
         max-width: 100% !important;
         min-width: 0 !important;
         height: auto !important;
         margin: 0 !important;
-        padding: 0 !important;
+        /* Padding on sides allows active card to center and adjacent cards to peek */
+        padding: 12px calc((100% - min(78vw, 340px)) / 2) 24px !important;
+        scroll-padding: 0 calc((100% - min(78vw, 340px)) / 2) !important;
         overflow-x: auto !important;
+        overflow-y: hidden !important;
         scroll-snap-type: x mandatory !important;
         -webkit-overflow-scrolling: touch !important;
         scrollbar-width: none !important;
@@ -4248,8 +4233,7 @@ body:not(.hero-active) .hero-services-stage {
         transform-style: flat !important;
         touch-action: pan-x !important;
         user-select: none;
-        perspective: none !important;
-        position: relative !important;
+        perspective: 1200px !important;
         box-sizing: border-box !important;
     }
 
@@ -4257,76 +4241,109 @@ body:not(.hero-active) .hero-services-stage {
         display: none !important;
     }
 
-    /* ─── Carousel Slide (each card is a full-width slide) ─── */
+    /* ─── Carousel Card (78vw scaling with card back 394/502 aspect ratio) ─── */
     .why-card {
-        flex: 0 0 100% !important;
-        width: 100% !important;
-        min-width: 100% !important;
-        max-width: 100% !important;
+        flex: 0 0 min(78vw, 340px) !important;
+        width: min(78vw, 340px) !important;
+        min-width: 260px !important;
+        max-width: 340px !important;
+        aspect-ratio: 394 / 502 !important;
         height: auto !important;
         min-height: 0 !important;
-        aspect-ratio: unset !important;
         padding: 0 !important;
         margin: 0 !important;
         border: none !important;
         background: transparent !important;
-        border-radius: 0 !important;
-        scroll-snap-align: start !important;
+        border-radius: 26px !important;
+        scroll-snap-align: center !important;
         scroll-snap-stop: always !important;
         box-sizing: border-box !important;
         position: relative !important;
         top: auto !important;
         left: auto !important;
-        transform: none !important;
+        perspective: 1200px !important;
         cursor: pointer !important;
         pointer-events: auto !important;
         z-index: 2 !important;
-        will-change: auto !important;
+        will-change: transform !important;
+        overflow: visible !important;
     }
 
-    /* ─── Card slide inner content frame ─── */
-    .why-card-inner,
-    .why-card-face {
-        border-radius: 20px !important;
+    /* ─── 3D Card Inner & Faces ─── */
+    .why-card-inner {
+        position: relative !important;
         width: 100% !important;
         height: 100% !important;
+        transform-style: preserve-3d !important;
+        -webkit-transform-style: preserve-3d !important;
+        border-radius: 26px !important;
         box-sizing: border-box !important;
-        transform: none !important;
-        transform-style: flat !important;
-        backface-visibility: visible !important;
-        -webkit-backface-visibility: visible !important;
+        will-change: transform !important;
+        transition: box-shadow 0.3s ease;
     }
 
-    /* ─── On mobile, hide the card back and show the front directly ─── */
-    .why-card-back {
-        display: none !important;
-    }
-
-    .why-card-front {
-        position: relative !important;
-        transform: none !important;
-        backface-visibility: visible !important;
-        -webkit-backface-visibility: visible !important;
-        margin: 0 auto !important;
-        width: calc(100% - 16px) !important;
-        max-width: 390px !important;
-        background: #ffffff !important;
-        padding: 28px 22px 24px !important;
-        border-radius: 20px !important;
-        border: 1px solid rgba(0, 0, 0, 0.07) !important;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.09), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+    .why-card-face {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        border-radius: 26px !important;
+        box-sizing: border-box !important;
+        -webkit-backface-visibility: hidden !important;
+        backface-visibility: hidden !important;
         overflow: hidden !important;
-        min-height: 240px;
-        box-sizing: border-box !important;
+    }
+
+    /* ─── Card Back Face (Default State) ─── */
+    .why-card-back {
+        display: flex !important;
+        transform: rotateY(0deg) !important;
+        background: #3C3C3C !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+        border-radius: 26px !important;
+        overflow: hidden !important;
+    }
+
+    .why-card-back-svg {
+        width: 100% !important;
+        height: 100% !important;
+        border-radius: 26px !important;
+    }
+
+    /* ─── Card Front Face (Revealed Content) ─── */
+    .why-card-front {
         display: flex !important;
         flex-direction: column !important;
         justify-content: flex-start !important;
+        transform: rotateY(180deg) !important;
+        background: #ffffff !important;
+        padding: 30px 24px 26px !important;
+        border-radius: 26px !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        box-shadow: 0 10px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+        overflow: hidden !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
     }
 
-    /* ─── Hide card hint & flip prompt on mobile (not needed) ─── */
-    .why-card-hint,
+    /* ─── Flip Hints ─── */
+    .why-card-hint {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 1 !important;
+        pointer-events: none;
+        z-index: 5;
+    }
+
     .why-card-front-hint {
-        display: none !important;
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        z-index: 4;
+        opacity: 0.7;
     }
 
     /* ─── Reset stacking classes — no effect needed in carousel ─── */
@@ -4337,8 +4354,6 @@ body:not(.hero-active) .hero-services-stage {
         position: relative !important;
         opacity: 1 !important;
         pointer-events: auto !important;
-        transform: none !important;
-        box-shadow: none !important;
         z-index: 2 !important;
     }
 
@@ -4355,15 +4370,15 @@ body:not(.hero-active) .hero-services-stage {
     }
 
     .why-card-text {
-        font-size: 14px;
-        line-height: 1.7;
+        font-size: 13.5px;
+        line-height: 1.65;
         max-width: 100%;
         color: #555;
     }
 
     .why-card-bg {
-        width: 180px;
-        height: 180px;
+        width: 170px;
+        height: 170px;
         bottom: -20px;
         right: -20px;
         opacity: 0.6;
@@ -4378,13 +4393,13 @@ body:not(.hero-active) .hero-services-stage {
     /* ─── Show Mobile Carousel Controls ─── */
     .why-mobile-controls {
         display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        width: 100% !important;
-        max-width: 390px !important;
+        align-items: center;
+        justify-content: space-between;
+        width: calc(100% - 32px) !important;
+        max-width: calc(100% - 32px) !important;
         margin: 16px auto 0 !important;
-        padding: 0 8px !important;
-        gap: 12px !important;
+        padding: 0;
+        gap: 12px;
         box-sizing: border-box !important;
     }
 
@@ -4828,17 +4843,22 @@ body:not(.hero-active) .hero-services-stage {
 }
 
 @media (max-width: 380px) {
+    .why-card {
+        padding: 0 10px !important;
+    }
+
     .why-card-front {
-        margin: 0 12px !important;
-        width: calc(100% - 24px) !important;
-        padding: 24px 20px !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 22px 18px 20px !important;
         min-height: 200px;
     }
 
     .why-mobile-controls {
-        width: calc(100% - 24px) !important;
-        margin-left: 12px !important;
-        margin-right: 12px !important;
+        width: calc(100% - 20px) !important;
+        max-width: calc(100% - 20px) !important;
+        margin: 14px auto 0 !important;
     }
 
     .why-card-title {
