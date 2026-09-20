@@ -14,6 +14,15 @@ use App\Http\Middleware\AdminAuthMiddleware;
 
 /*
 |--------------------------------------------------------------------------
+| Health Check / Uptime Ping
+|--------------------------------------------------------------------------
+*/
+
+// Lightweight ping for uptime monitors — no DB queries, zero overhead
+Route::get('/ping', fn() => response()->json(['status' => 'ok']))->name('ping');
+
+/*
+|--------------------------------------------------------------------------
 | Public Frontend Routes
 |--------------------------------------------------------------------------
 */

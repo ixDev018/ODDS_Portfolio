@@ -6,7 +6,7 @@ services:
     region: oregon
     branch: MERGED
     autoDeploy: true
-    healthCheckPath: /
+    healthCheckPath: /ping
     envVars:
       - key: APP_NAME
         value: "ODDS Studio"
