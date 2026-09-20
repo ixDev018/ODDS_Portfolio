@@ -1888,15 +1888,14 @@ if (ctaVideo && ctaCanvas) {
             path.style.strokeDashoffset = res.pathLength;
         }
 
-        // Pinned Horizontal Scrub: Why -> Process
+        // Pinned Horizontal Scrub: Why -> Process (Direct 1:1 linear scroll without double-smoothing bounce)
         const dealTL = gsap.timeline({
             scrollTrigger: {
                 trigger: wrapper,
                 start: 'top top',
                 end: '+=2000',
                 pin: true,
-                scrub: 0.8,
-                anticipatePin: 1,
+                scrub: true,
                 invalidateOnRefresh: true,
                 onRefresh: () => {
                     calibratePathStartX();
@@ -1914,7 +1913,7 @@ if (ctaVideo && ctaCanvas) {
         if (track) {
             dealTL.to(track, {
                 x: '-160vw',
-                ease: 'power1.inOut',
+                ease: 'none',
                 duration: 2.0
             });
         }
@@ -1927,7 +1926,7 @@ if (ctaVideo && ctaCanvas) {
             }, '<')
             .to(path, {
                 strokeDashoffset: () => pathLength - horizLen,
-                ease: 'power1.inOut',
+                ease: 'none',
                 duration: 2.0
             }, '<');
         }
