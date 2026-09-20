@@ -3374,6 +3374,14 @@ body:not(.hero-active) .hero-services-stage {
     margin-bottom: 34px;
 }
 
+/* ── Actions ── */
+.cta-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
 /* ── Button ── */
 .cta-btn {
     display: inline-block;
@@ -3469,9 +3477,14 @@ body:not(.hero-active) .hero-services-stage {
         border-radius: 14px;
     }
 
+    .cta-meta {
+        text-align: center;
+    }
+
     .cta-row {
         flex-direction: column;
-        align-items: stretch;
+        align-items: center;
+        text-align: center;
         gap: 24px;
         margin-bottom: 24px;
     }
@@ -3481,7 +3494,9 @@ body:not(.hero-active) .hero-services-stage {
         width: 100%;
         height: auto;
         max-width: 360px;
-        margin: 0;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
     }
 
     .cta-video {
@@ -3492,6 +3507,25 @@ body:not(.hero-active) .hero-services-stage {
     .cta-content {
         order: 1;
         max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .cta-title {
+        text-align: center;
+    }
+
+    .cta-desc {
+        text-align: center;
+    }
+
+    .cta-actions {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
     }
 
     .cta-terminal-body {
@@ -3509,6 +3543,7 @@ body:not(.hero-active) .hero-services-stage {
     .cta-meta-line,
     .cta-meta-prompt {
         font-size: 13px;
+        text-align: center;
     }
 
     .cta-desc {
@@ -3552,27 +3587,32 @@ body:not(.hero-active) .hero-services-stage {
 
     .cta-meta {
         margin-bottom: 8px;
+        text-align: center;
     }
 
     .cta-meta-line,
     .cta-meta-prompt {
         font-size: 11px;
         line-height: 1.45;
+        text-align: center;
     }
 
     .cta-row {
         flex-direction: column;
-        align-items: stretch;
+        align-items: center;
+        text-align: center;
         gap: 10px;
         margin-bottom: 12px;
     }
 
     .cta-visual {
         order: -1;
-        width: calc(100% + 16px);
+        width: 100%;
         max-width: clamp(280px, 82vw, 340px);
         height: clamp(260px, 76vw, 320px);
-        margin: 2px 0 6px -28px;
+        margin: 2px auto 6px;
+        display: flex;
+        justify-content: center;
     }
 
     .cta-video {
@@ -3584,24 +3624,40 @@ body:not(.hero-active) .hero-services-stage {
         order: 1;
         width: 100%;
         max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
     }
 
     .cta-title {
         font-size: clamp(22px, 6.2vw, 28px);
         line-height: 1.12;
         margin-bottom: 8px;
+        text-align: center;
     }
 
     .cta-desc {
         font-size: 11.5px;
         line-height: 1.5;
         margin: 12px 0;
+        text-align: center;
+    }
+
+    .cta-actions {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        flex-wrap: wrap;
     }
 
     .cta-btn {
         font-size: 12.5px;
-        margin: 12px 0;
+        margin: 4px 0;
         padding: 8px 18px;
+        text-align: center;
     }
 
     .cta-terminal-footer {
@@ -3635,23 +3691,26 @@ body:not(.hero-active) .hero-services-stage {
 
     .cta-meta {
         margin-bottom: 6px;
+        text-align: center;
     }
 
     .cta-visual {
         max-width: 220px;
         height: 220px;
-        margin-bottom: 4px;
+        margin: 0 auto 4px;
     }
 
     .cta-title {
         font-size: 20px;
         margin-bottom: 6px;
+        text-align: center;
     }
 
     .cta-desc {
         font-size: 10.5px;
         line-height: 1.45;
         margin-bottom: 10px;
+        text-align: center;
     }
 
     .cta-terminal-footer {

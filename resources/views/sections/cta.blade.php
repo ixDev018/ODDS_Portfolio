@@ -39,7 +39,7 @@
                             {!! $settings->cta_desc ?? "Tell us what you're facing.<br>Whether you need a quick technical module or an end-to-end package solution, our team is ready to execute. Expect a response with clear next steps within 24 hours." !!}
                         </p>
 
-                        <div class="cta-actions" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                        <div class="cta-actions">
                             <a href="#contact" class="cta-btn js-open-contact-modal" data-open-contact>Let's Talk & Build</a>
                             <a href="mailto:{{ $settings->cta_email ?? 'oddsdevph@gmail.com' }}" class="cta-btn" title="Send direct email">
                                 {{ $settings->cta_email ?? 'oddsdevph@gmail.com' }}
