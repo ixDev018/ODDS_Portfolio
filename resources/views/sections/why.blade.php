@@ -81,11 +81,11 @@ $accentThemes = ['purple', 'pink', 'cyan'];
                     <div class="why-card-inner">
                         {{-- Inactive Card Face (Playing Card Back - Default State) --}}
                         <div class="why-card-face why-card-back">
-                            <svg viewBox="0 0 394 502" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="why-card-back-svg" aria-hidden="true">
+                            <svg viewBox="0 0 394 502" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="why-card-back-svg" aria-hidden="true" preserveAspectRatio="none">
                                 <g filter="url(#filter0_i_card_{{ $index }})">
-                                    <rect width="394" height="501.36" rx="26" fill="#3C3C3C"/>
+                                    <rect width="394" height="502" rx="26" fill="#3C3C3C"/>
                                 </g>
-                                <rect class="why-card-svg-border" x="8.33862" y="8.33862" width="377.323" height="484.683" rx="17.7196" stroke="white" stroke-width="16.6772"/>
+                                <rect class="why-card-svg-border" x="8.33862" y="8.33862" width="377.323" height="485.323" rx="17.7196" stroke="white" stroke-width="16.6772"/>
                                 <rect opacity="0.02" x="5.21094" y="8.33862" width="383.577" height="487.81" rx="25" fill="url(#pattern0_card_{{ $index }})"/>
                                 <path d="M183.615 242.275C183.715 243.612 184.537 244.787 185.759 245.339L226.397 263.693C228.928 264.836 231.759 262.855 231.553 260.086L229.586 233.636C229.487 232.299 228.665 231.124 227.443 230.572L186.805 212.218C184.274 211.075 181.442 213.056 181.648 215.826L183.615 242.275Z" fill="white"/>
                                 <path d="M181.214 247.586C182.283 246.777 183.709 246.617 184.931 247.169L225.569 265.522C228.099 266.665 228.486 270.1 226.272 271.776L205.128 287.788C204.059 288.597 202.634 288.757 201.412 288.205L160.774 269.852C158.243 268.709 157.857 265.274 160.07 263.598L181.214 247.586Z" fill="white"/>
@@ -112,15 +112,6 @@ $accentThemes = ['purple', 'pink', 'cyan'];
                                         <use xlink:href="#pattern0_inner_card_{{ $index }}" transform="translate(13.28 26.56)"/>
                                     </pattern>
                                 </defs>
-                            </svg>
-                            <div class="why-card-hint">
-                                <span class="why-hint-pill">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
-                                    </svg>
-                                    <span>Click to flip</span>
-                                </span>
-                            </div>
                         </div>
 
                         {{-- Active Card Face (Playing Card Front - Content Revealed on Flip) --}}
@@ -214,40 +205,19 @@ $accentThemes = ['purple', 'pink', 'cyan'];
                 @endforeach
             </div>
 
-            {{-- Mobile Deck Navigation & Controls --}}
-            <div class="why-mobile-controls" id="why-mobile-controls">
-                <button type="button" class="why-nav-arrow why-nav-prev" id="why-nav-prev" aria-label="Previous pillar">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M15 18l-6-6 6-6"/>
+            {{-- Mobile Dynamic Swipe Pill Hint --}}
+            <div class="why-swipe-pill-wrap" id="why-swipe-pill-wrap" aria-live="polite">
+                <div class="why-swipe-pill" id="why-swipe-pill">
+                    <svg class="why-swipe-icon why-swipe-icon-left" id="why-swipe-icon-left" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
                     </svg>
-                </button>
-
-                <div class="why-progress-status">
-                    <div class="why-counter">
-                        <span class="why-current-idx" id="why-current-idx">01</span>
-                        <span class="why-counter-divider">/</span>
-                        <span class="why-total-idx">0{{ count($reasonsList) }}</span>
-                    </div>
-                    <div class="why-segmented-bar" id="why-segmented-bar">
-                        @foreach($reasonsList as $index => $r)
-                        <span class="why-bar-segment {{ $index === 0 ? 'active' : '' }}" data-segment="{{ $index }}"></span>
-                        @endforeach
-                    </div>
+                    <span class="why-swipe-text" id="why-swipe-text">Swipe left to see other cards</span>
+                    <svg class="why-swipe-icon why-swipe-icon-right" id="why-swipe-icon-right" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
                 </div>
-
-                <button type="button" class="why-nav-arrow why-nav-next" id="why-nav-next" aria-label="Next pillar">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 18l6-6-6-6"/>
-                    </svg>
-                </button>
-            </div>
-
-            {{-- Swipe Gesture Hint --}}
-            <div class="why-swipe-hint" aria-hidden="true">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M7 16l-4-4m0 0l4-4m-4 4h18M17 8l4 4m0 0l-4 4"/>
-                </svg>
-                <span>Swipe left or right to explore</span>
             </div>
         </div>
         </div>

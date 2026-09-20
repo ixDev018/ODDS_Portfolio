@@ -1536,8 +1536,28 @@ if (ctaVideo && ctaCanvas) {
             });
         });
 
-        // Click or tap to flip card
-        card.addEventListener('click', () => {
+        // Click or tap to flip card (prevent triggering flip on thumb swipe)
+        let ptrDownX = 0;
+        let ptrDownY = 0;
+        let wasDragging = false;
+
+        card.addEventListener('pointerdown', (e) => {
+            ptrDownX = e.clientX;
+            ptrDownY = e.clientY;
+            wasDragging = false;
+        });
+
+        card.addEventListener('pointermove', (e) => {
+            if (Math.abs(e.clientX - ptrDownX) > 10 || Math.abs(e.clientY - ptrDownY) > 10) {
+                wasDragging = true;
+            }
+        });
+
+        card.addEventListener('click', (e) => {
+            if (wasDragging) {
+                wasDragging = false;
+                return;
+            }
             flipCard(card);
             syncRevealButtonState();
         });
@@ -1868,15 +1888,14 @@ if (ctaVideo && ctaCanvas) {
             path.style.strokeDashoffset = res.pathLength;
         }
 
-        // Pinned Horizontal Scrub: Why -> Process
+        // Pinned Horizontal Scrub: Why -> Process (Direct 1:1 linear scroll without double-smoothing bounce)
         const dealTL = gsap.timeline({
             scrollTrigger: {
                 trigger: wrapper,
                 start: 'top top',
                 end: '+=2000',
                 pin: true,
-                scrub: 0.8,
-                anticipatePin: 1,
+                scrub: true,
                 invalidateOnRefresh: true,
                 onRefresh: () => {
                     calibratePathStartX();
@@ -1894,7 +1913,7 @@ if (ctaVideo && ctaCanvas) {
         if (track) {
             dealTL.to(track, {
                 x: '-160vw',
-                ease: 'power1.inOut',
+                ease: 'none',
                 duration: 2.0
             });
         }
@@ -1907,7 +1926,7 @@ if (ctaVideo && ctaCanvas) {
             }, '<')
             .to(path, {
                 strokeDashoffset: () => pathLength - horizLen,
-                ease: 'power1.inOut',
+                ease: 'none',
                 duration: 2.0
             }, '<');
         }
@@ -1988,86 +2007,113 @@ if (ctaVideo && ctaCanvas) {
         if (carouselCleanup) { carouselCleanup(); carouselCleanup = null; }
         if (window.innerWidth > 768) return;
 
-        const deckEl   = document.getElementById('why-deck');
-        const prevBtn  = document.getElementById('why-nav-prev');
-        const nextBtn  = document.getElementById('why-nav-next');
-        const counter  = document.getElementById('why-current-idx');
-        const segments = Array.from(document.querySelectorAll('.why-bar-segment'));
-        if (!deckEl || !prevBtn || !nextBtn) return;
+        const deckEl = document.getElementById('why-deck');
+        const pillText = document.getElementById('why-swipe-text');
+        const iconLeft = document.getElementById('why-swipe-icon-left');
+        const iconRight = document.getElementById('why-swipe-icon-right');
+        if (!deckEl) return;
 
-        // Clear any GSAP residual transforms so offsetLeft is accurate
+        // Clear any GSAP residual position transforms so slide dimensions and positions are clean
         cards.forEach(card => {
-            gsap.set(card, { clearProps: 'all' });
+            gsap.killTweensOf(card);
             card.style.transform = '';
             card.style.opacity = '';
         });
 
         let currentIdx = 0;
 
-        function getCardLeft(idx) {
-            return idx * (deckEl.clientWidth || deckEl.offsetWidth || 1);
-        }
-
-        function scrollToCard(idx, smooth = true) {
-            idx = Math.max(0, Math.min(cards.length - 1, idx));
-            currentIdx = idx;
-            const targetLeft = getCardLeft(idx);
-            if (smooth) {
-                deckEl.scrollTo({ left: targetLeft, behavior: 'smooth' });
+        function updateSwipePill(idx) {
+            if (!pillText) return;
+            if (idx === 0) {
+                pillText.textContent = 'Swipe left to see other cards';
+                if (iconLeft) iconLeft.style.display = 'none';
+                if (iconRight) iconRight.style.display = 'inline-block';
+            } else if (idx >= cards.length - 1) {
+                pillText.textContent = 'Swipe right to see other cards';
+                if (iconLeft) iconLeft.style.display = 'inline-block';
+                if (iconRight) iconRight.style.display = 'none';
             } else {
-                deckEl.scrollLeft = targetLeft;
+                pillText.textContent = 'Swipe left or right to see other cards';
+                if (iconLeft) iconLeft.style.display = 'inline-block';
+                if (iconRight) iconRight.style.display = 'inline-block';
             }
-            updateControls();
-        }
-
-        function updateControls() {
-            if (counter) counter.textContent = String(currentIdx + 1).padStart(2, '0');
-            segments.forEach((seg, i) => {
-                seg.classList.toggle('active', i === currentIdx);
-            });
-            prevBtn.disabled = currentIdx === 0;
-            nextBtn.disabled = currentIdx === cards.length - 1;
         }
 
         let scrollTimer = null;
         function onScroll() {
             clearTimeout(scrollTimer);
             scrollTimer = setTimeout(() => {
-                const scrollLeft = deckEl.scrollLeft;
-                const cardWidth = deckEl.clientWidth || deckEl.offsetWidth || 1;
-                const closest = Math.max(0, Math.min(cards.length - 1, Math.round(scrollLeft / cardWidth)));
+                const scrollCenter = deckEl.scrollLeft + deckEl.clientWidth / 2;
+                let closest = 0;
+                let minDiff = Infinity;
+                cards.forEach((card, idx) => {
+                    const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+                    const diff = Math.abs(scrollCenter - cardCenter);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        closest = idx;
+                    }
+                });
                 if (closest !== currentIdx) {
                     currentIdx = closest;
-                    updateControls();
+                    updateSwipePill(currentIdx);
                 }
             }, 50);
         }
 
-        const onPrev = () => scrollToCard(currentIdx - 1);
-        const onNext = () => scrollToCard(currentIdx + 1);
-
-        prevBtn.addEventListener('click', onPrev);
-        nextBtn.addEventListener('click', onNext);
         deckEl.addEventListener('scroll', onScroll, { passive: true });
 
-        // Segment dot clicks
-        segments.forEach((seg, i) => seg.addEventListener('click', () => scrollToCard(i)));
+        // Fluid thumb / mouse drag support
+        let isPointerDown = false;
+        let dragStartX = 0;
+        let dragScrollLeft = 0;
 
-        // Reset to first card immediately and after layout settles
+        const handlePointerDown = (e) => {
+            isPointerDown = true;
+            dragStartX = e.pageX || (e.touches && e.touches[0] ? e.touches[0].pageX : 0);
+            dragScrollLeft = deckEl.scrollLeft;
+            deckEl.style.scrollSnapType = 'none'; // Temporarily disable snap during active drag for fluid thumb movement
+        };
+
+        const handlePointerMove = (e) => {
+            if (!isPointerDown) return;
+            const x = e.pageX || (e.touches && e.touches[0] ? e.touches[0].pageX : 0);
+            const walk = (x - dragStartX) * 1.15;
+            deckEl.scrollLeft = dragScrollLeft - walk;
+        };
+
+        const handlePointerUp = () => {
+            if (!isPointerDown) return;
+            isPointerDown = false;
+            deckEl.style.scrollSnapType = 'x mandatory'; // Re-enable snap when thumb releases
+        };
+
+        deckEl.addEventListener('mousedown', handlePointerDown);
+        window.addEventListener('mousemove', handlePointerMove);
+        window.addEventListener('mouseup', handlePointerUp);
+
+        // Reset to first card and update initial pill state
         currentIdx = 0;
-        updateControls();
+        updateSwipePill(0);
         deckEl.scrollLeft = 0;
+        try { deckEl.scrollTo({ left: 0, behavior: 'instant' }); } catch (e) {}
+
         requestAnimationFrame(() => {
-            deckEl.scrollLeft = 0;
             requestAnimationFrame(() => {
                 deckEl.scrollLeft = 0;
             });
         });
+        setTimeout(() => {
+            if (currentIdx === 0 && deckEl.scrollLeft !== 0) {
+                deckEl.scrollLeft = 0;
+            }
+        }, 120);
 
         carouselCleanup = () => {
-            prevBtn.removeEventListener('click', onPrev);
-            nextBtn.removeEventListener('click', onNext);
             deckEl.removeEventListener('scroll', onScroll);
+            deckEl.removeEventListener('mousedown', handlePointerDown);
+            window.removeEventListener('mousemove', handlePointerMove);
+            window.removeEventListener('mouseup', handlePointerUp);
         };
     }
 
@@ -2235,52 +2281,14 @@ if (ctaVideo && ctaCanvas) {
         requestAnimationFrame(loop);
     }
 
-    // ─── Mobile Process Line Trail Animation ───
-    const mobilePath = document.getElementById('process-mobile-line-path');
-    let mobileLineST = null;
-
-    function initMobileProcessLine() {
-        if (mobileLineST) {
-            mobileLineST.kill();
-            mobileLineST = null;
-        }
-
-        if (!mobilePath || window.innerWidth >= 992) return;
-
-        let totalLen = 1250;
-        try {
-            totalLen = Math.round(mobilePath.getTotalLength()) || 1250;
-        } catch (e) {
-            totalLen = 1250;
-        }
-
-        mobilePath.style.strokeDasharray = `${totalLen} ${totalLen}`;
-        mobilePath.style.strokeDashoffset = `${totalLen}`;
-
-        mobileLineST = ScrollTrigger.create({
-            trigger: '#process',
-            start: 'top 92%',
-            end: 'bottom 85%',
-            scrub: 0.35,
-            onUpdate: (self) => {
-                const drawOffset = totalLen * (1 - self.progress);
-                mobilePath.style.strokeDashoffset = Math.max(0, drawOffset);
-            }
-        });
-    }
-
-    initMobileProcessLine();
-
     window.addEventListener('scroll', calcTargetProgress, { passive: true });
     window.addEventListener('resize', () => {
         calcTargetProgress();
-        initMobileProcessLine();
     });
 
     if (typeof ScrollTrigger !== 'undefined') {
         ScrollTrigger.addEventListener('refresh', () => {
             calcTargetProgress();
-            initMobileProcessLine();
         });
     }
 
