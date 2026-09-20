@@ -1968,7 +1968,8 @@ body:not(.hero-active) .hero-services-stage {
     }
 
     .why-mobile-controls,
-    .why-swipe-hint {
+    .why-swipe-hint,
+    .why-swipe-pill-wrap {
         display: none !important;
     }
 }
@@ -2277,42 +2278,6 @@ body:not(.hero-active) .hero-services-stage {
     height: 100%;
     object-fit: fill;
     display: block;
-    border-radius: 26px;
-    pointer-events: none;
-}
-
-.why-card-hint {
-    position: absolute;
-    bottom: 22px;
-    left: 50%;
-    transform: translateX(-50%) translateY(6px);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    z-index: 5;
-}
-
-.why-card:hover .why-card-hint {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-}
-
-.why-hint-pill {
-    background: rgba(18, 18, 20, 0.88);
-    color: #ffffff;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: 7px 16px;
-    border-radius: 100px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-    white-space: nowrap;
 }
 
 /* ─── Front Face: Active Card Content (Revealed) ─── */
@@ -2482,8 +2447,62 @@ body:not(.hero-active) .hero-services-stage {
 }
 
 .why-mobile-controls,
-.why-swipe-hint {
+.why-swipe-hint,
+.why-swipe-pill-wrap {
     display: none;
+}
+
+.why-swipe-pill-wrap {
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 16px auto 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.why-swipe-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(238, 240, 245, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 9999px;
+    padding: 6px 16px;
+    color: #4b5563;
+    font-family: var(--font-primary), -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.08);
+    user-select: none;
+    -webkit-user-select: none;
+    transition: color 0.25s ease, border-color 0.25s ease;
+    animation: whySwipePulse 2.8s ease-in-out infinite;
+}
+
+.why-swipe-icon {
+    flex-shrink: 0;
+    stroke: #6b7280;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.why-swipe-text {
+    color: #4b5563;
+    white-space: nowrap;
+}
+
+@keyframes whySwipePulse {
+    0%, 100% {
+        opacity: 0.55;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.95;
+        transform: scale(1.02);
+    }
 }
 
 /* ─── Why Section Main Stage ─── */
@@ -4355,16 +4374,6 @@ body:not(.hero-active) .hero-services-stage {
     }
 
     /* ─── Flip Hints ─── */
-    .why-card-hint {
-        position: absolute;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        opacity: 1 !important;
-        pointer-events: none;
-        z-index: 5;
-    }
-
     .why-card-front-hint {
         position: absolute;
         top: 18px;
@@ -4420,44 +4429,6 @@ body:not(.hero-active) .hero-services-stage {
     /* ─── Mobile Dynamic Swipe Pill Hint ─── */
     .why-swipe-pill-wrap {
         display: flex !important;
-        justify-content: center;
-        align-items: center;
-        width: 100% !important;
-        margin: 16px auto 0 !important;
-        padding: 0;
-        box-sizing: border-box !important;
-    }
-
-    .why-swipe-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: rgba(20, 20, 28, 0.78);
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 9999px;
-        padding: 7px 18px;
-        color: #e2e8f0;
-        font-family: var(--font-primary), -apple-system, BlinkMacSystemFont, sans-serif;
-        font-size: 12.5px;
-        font-weight: 600;
-        letter-spacing: 0.01em;
-        box-shadow: 0 6px 20px -3px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(255, 255, 255, 0.04);
-        user-select: none;
-        -webkit-user-select: none;
-        transition: all 0.25s ease;
-    }
-
-    .why-swipe-icon {
-        flex-shrink: 0;
-        stroke: #c084fc;
-        transition: transform 0.2s ease, opacity 0.2s ease;
-    }
-
-    .why-swipe-text {
-        color: #f1f5f9;
-        white-space: nowrap;
     }
 
     .why-orb-1 {
