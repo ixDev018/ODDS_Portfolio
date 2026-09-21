@@ -22,6 +22,8 @@ services:
         generateValue: true
       - key: LOG_CHANNEL
         value: stderr
+      - key: SENTRY_LARAVEL_DSN
+        sync: false
       - key: DB_CONNECTION
         value: sqlite
       - key: SESSION_DRIVER

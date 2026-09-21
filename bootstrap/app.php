@@ -15,6 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        \Sentry\Laravel\Integration::handles($exceptions);
+
         $exceptions->render(function (\Illuminate\Http\Exceptions\PostTooLargeException $e, \Illuminate\Http\Request $request) {
             $maxSize = ini_get('upload_max_filesize') ?: ini_get('post_max_size') ?: '128M';
             $message = "The uploaded file is too large for the server. Maximum allowed file size is {$maxSize}.";
