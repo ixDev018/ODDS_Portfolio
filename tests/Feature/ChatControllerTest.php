@@ -27,7 +27,7 @@ class ChatControllerTest extends TestCase
         $this->mock(GroqService::class, function ($mock) {
             $mock->shouldReceive('chat')
                  ->once()
-                 ->with(Mockery::any(), 'what projects has ODDS built?')
+                 ->with(Mockery::any(), Mockery::type('array'))
                  ->andReturn('ODDS has built AVONIC, MoneySense, THEODORE, and more.');
         });
 
@@ -53,7 +53,7 @@ class ChatControllerTest extends TestCase
                      return str_contains($prompt, 'You are Lorenzo') &&
                             str_contains($prompt, 'AVONIC') &&
                             str_contains($prompt, 'can only help with ODDS-related questions');
-                 }), 'what projects has ODDS built?')
+                 }), Mockery::type('array'))
                  ->andReturn('Here are our projects.');
         });
 

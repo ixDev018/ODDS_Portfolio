@@ -474,14 +474,20 @@ document.addEventListener('DOMContentLoaded', () => {
         e.stopPropagation();
     }, { passive: true });
 
+    // Small in-memory conversation history cache (persists per session / page life)
+    const conversationHistory = [];
+
     // Handle form submit
     chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const messageText = chatInput.value.trim();
         if (!messageText) return;
 
-        // Append user message
+        // Append user message to UI and history
         appendMessage(messageText, 'user');
+        conversationHistory.push({ role: 'user', content: messageText });
+        if (conversationHistory.length > 8) conversationHistory.shift(); // keep sliding window of last 8 turns
+
         chatInput.value = '';
         
         // Show typing indicator
@@ -498,7 +504,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     'X-Requested-With': 'XMLHttpRequest',
                     'X-CSRF-TOKEN': csrfToken
                 },
-                body: JSON.stringify({ message: messageText })
+                body: JSON.stringify({ 
+                    message: messageText,
+                    history: conversationHistory.slice(0, -1) // send preceding context
+                })
             });
 
             const data = await response.json();
@@ -506,6 +515,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok && data.reply) {
                 appendMessage(data.reply, 'assistant');
+                conversationHistory.push({ role: 'assistant', content: data.reply });
+                if (conversationHistory.length > 8) conversationHistory.shift();
             } else {
                 appendMessage(data.error || 'Oops, Lorenzo had an issue processing that. Please try again.', 'system');
             }

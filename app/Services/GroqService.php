@@ -9,14 +9,14 @@ use Exception;
 class GroqService
 {
     /**
-     * Send chat prompt to Groq API.
+     * Send chat prompt and history to Groq API.
      *
      * @param string $systemPrompt
-     * @param string $userMessage
+     * @param string|array $userMessageOrHistory
      * @return string
      * @throws Exception
      */
-    public function chat(string $systemPrompt, string $userMessage): string
+    public function chat(string $systemPrompt, string|array $userMessageOrHistory): string
     {
         $apiKey = config('services.groq.key');
 
@@ -34,6 +34,27 @@ class GroqService
             'groq/compound-mini',
         ]));
 
+        // Build messages payload
+        $messagesPayload = [
+            ['role' => 'system', 'content' => $systemPrompt],
+        ];
+
+        if (is_array($userMessageOrHistory)) {
+            foreach ($userMessageOrHistory as $msg) {
+                if (!empty($msg['role']) && isset($msg['content'])) {
+                    $messagesPayload[] = [
+                        'role' => $msg['role'],
+                        'content' => (string)$msg['content'],
+                    ];
+                }
+            }
+        } else {
+            $messagesPayload[] = [
+                'role' => 'user',
+                'content' => (string)$userMessageOrHistory,
+            ];
+        }
+
         $lastException = null;
 
         foreach ($modelsToTry as $model) {
@@ -41,10 +62,7 @@ class GroqService
                 'Authorization' => 'Bearer ' . $apiKey,
             ])->post('https://api.groq.com/openai/v1/chat/completions', [
                 'model' => $model,
-                'messages' => [
-                    ['role' => 'system', 'content' => $systemPrompt],
-                    ['role' => 'user', 'content' => $userMessage],
-                ],
+                'messages' => $messagesPayload,
                 'temperature' => 0.3,
                 'max_tokens' => 500,
             ]);
