@@ -53,7 +53,7 @@
                     </svg>
                 </div>
                 <div class="chat-bubble chat-bubble-assistant">
-                    Hey! I'm <strong>Lorenzo</strong>. Ask me anything about ODDS—our projects, Simula, or how we collaborate!
+                    Hey! I'm <strong>Lorenzo</strong> at the front desk. Ask me anything about ODDS—our projects, services, or how we collaborate!
                 </div>
             </div>
 

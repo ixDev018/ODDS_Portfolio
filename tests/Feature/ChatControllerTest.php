@@ -27,17 +27,17 @@ class ChatControllerTest extends TestCase
         $this->mock(GroqService::class, function ($mock) {
             $mock->shouldReceive('chat')
                  ->once()
-                 ->with(Mockery::any(), 'what is Simula?')
-                 ->andReturn('Simula is the simulation framework built by ODDS.');
+                 ->with(Mockery::any(), 'what projects has ODDS built?')
+                 ->andReturn('ODDS has built AVONIC, MoneySense, THEODORE, and more.');
         });
 
         $response = $this->postJson('/api/chat', [
-            'message' => 'what is Simula?',
+            'message' => 'what projects has ODDS built?',
         ]);
 
         $response->assertStatus(200)
                  ->assertJson([
-                     'reply' => 'Simula is the simulation framework built by ODDS.',
+                     'reply' => 'ODDS has built AVONIC, MoneySense, THEODORE, and more.',
                  ]);
     }
 
@@ -51,16 +51,19 @@ class ChatControllerTest extends TestCase
                  ->once()
                  ->with(Mockery::on(function ($prompt) {
                      return str_contains($prompt, 'You are Lorenzo') &&
-                            str_contains($prompt, 'Simula') &&
+                            str_contains($prompt, 'AVONIC') &&
                             str_contains($prompt, 'can only help with ODDS-related questions');
-                 }), 'what is Simula?')
-                 ->andReturn('Simula is a framework.');
+                 }), 'what projects has ODDS built?')
+                 ->andReturn('Here are our projects.');
         });
 
         $response = $this->postJson('/api/chat', [
-            'message' => 'what is Simula?',
+            'message' => 'what projects has ODDS built?',
         ]);
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+                 ->assertJson([
+                     'reply' => 'Here are our projects.',
+                 ]);
     }
 }
