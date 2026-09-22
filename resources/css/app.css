@@ -3339,18 +3339,24 @@ body:not(.hero-active) .hero-services-stage {
 
 /* ── macOS Title Bar ── */
 .cta-terminal-bar {
-    background: #F3F3F3;
-    padding: 16px 28px;
+    background: #18181B;
+    padding: 14px 24px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: space-between;
     flex-shrink: 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cta-terminal-dots {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .dot {
-    width: 13px;
-    height: 13px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     display: inline-block;
 }
@@ -3370,441 +3376,552 @@ body:not(.hero-active) .hero-services-stage {
     border: 0.6px solid #1AAB29;
 }
 
-/* ── Dark Terminal Body ── */
-.cta-terminal-body {
-    background: #000;
-    padding: 56px 72px 42px;
+.cta-terminal-title {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.55);
+    letter-spacing: 0.02em;
 }
 
-/* ── Meta info lines ── */
+.cta-terminal-status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: #4ADE80;
+}
+
+.cta-status-indicator {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #22C55E;
+    box-shadow: 0 0 8px #22C55E;
+    animation: cta-pulse 2s infinite ease-in-out;
+}
+
+@keyframes cta-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+/* ── Dark Terminal Body ── */
+.cta-terminal-body {
+    background: #09090B;
+    padding: 36px 56px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ── Top Row: Meta Copyright (2026) ── */
+.cta-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-bottom: 4px;
+}
+
+.cta-top-meta-line {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.45);
+    letter-spacing: 0.03em;
+    margin: 0;
+}
+
+/* ── CLI Banner (ASCII "ODDS" + Telemetry) ── */
+.cta-cli-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 36px;
+    flex-wrap: wrap;
+}
+
+.cta-ascii-wrapper {
+    flex: 1 1 auto;
+    overflow: visible;
+    padding-top: 20px;
+    padding-bottom: 6px;
+}
+
+.cta-ascii-art {
+    font-family: var(--font-mono);
+    font-size: clamp(8.5px, 1.3vw, 13.5px);
+    line-height: 1.18;
+    color: #F359B0;
+    text-shadow:
+        0 0 16px rgba(243, 89, 176, 0.75),
+        0 0 36px rgba(215, 1, 143, 0.5),
+        0 0 54px rgba(243, 89, 176, 0.3);
+    margin: 0;
+    padding-top: 12px;
+    user-select: none;
+    white-space: pre;
+    cursor: pointer;
+    overflow: visible;
+    animation: odds-glow-pulse 4s ease-in-out infinite;
+    transition: filter 0.3s ease;
+}
+
+.cta-ascii-art:hover {
+    filter: drop-shadow(0 0 20px #F359B0) drop-shadow(0 0 42px #D7018F);
+}
+
+/* ── Live System Telemetry Grid (Option 3: Seamless Terminal Embedded) ── */
+.cta-cli-telemetry-grid {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.45;
+    letter-spacing: 0.02em;
+    padding-left: 20px;
+    border-left: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.cta-telem-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.cta-telem-key {
+    color: #818CF8;
+    min-width: 90px;
+    font-weight: 500;
+}
+
+.cta-telem-sep {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.cta-telem-val {
+    color: rgba(255, 255, 255, 0.85);
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.cta-telem-val.text-cyan {
+    color: #38BDF8;
+}
+
+.cta-telem-val.text-pink {
+    color: #F359B0;
+    font-weight: 600;
+}
+
+.cta-telem-val.text-green {
+    color: #4ADE80;
+    font-weight: 600;
+}
+
+.cta-telem-pulse {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #22C55E;
+    box-shadow: 0 0 6px #22C55E;
+    animation: cta-pulse 1.8s infinite ease-in-out;
+}
+
+.cta-telem-tag {
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 1px 7px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    letter-spacing: 0.04em;
+}
+
+.cta-telem-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #F359B0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    letter-spacing: 0.03em;
+}
+
+.cta-telem-btn:hover {
+    background: rgba(243, 89, 176, 0.18);
+    border-color: #F359B0;
+    color: #FFFFFF;
+    box-shadow: 0 0 12px rgba(243, 89, 176, 0.35);
+    transform: translateY(-1px);
+}
+
+.cta-telem-btn-chat {
+    color: #38BDF8;
+    border-color: rgba(56, 189, 248, 0.3);
+}
+
+.cta-telem-btn-chat:hover {
+    background: rgba(56, 189, 248, 0.16);
+    border-color: #38BDF8;
+    color: #FFFFFF;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+}
+
+.cta-telem-btn.copied {
+    background: rgba(74, 222, 128, 0.2) !important;
+    border-color: #4ADE80 !important;
+    color: #4ADE80 !important;
+}
+
+.cta-email-text {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.cta-cli-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(243, 89, 176, 0.4) 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+    margin: 4px 0 8px;
+}
+
+.cta-main-block {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ── Meta info lines (High Contrast) ── */
 .cta-meta {
-    margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 6px;
 }
 
 .cta-meta-line {
     font-family: var(--font-mono);
-    font-size: 15px;
+    font-size: 13.5px;
     font-weight: 400;
-    color: #fff;
-    line-height: 1.6;
-    display: block;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.5;
+    letter-spacing: 0.02em;
 }
 
 .cta-meta-prompt {
     font-family: var(--font-mono);
-    font-size: 15px;
-    font-weight: 400;
-    color: #fff;
-    line-height: 1.6;
-    display: block;
-    margin-top: 3px;
-}
-
-/* ── Two-column row ── */
-.cta-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 48px;
-    margin-bottom: 48px;
-}
-
-.cta-content {
-    flex: 1;
-    max-width: 660px;
-}
-
-.cta-visual {
-    flex: 0 0 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 440px;
-    height: 440px;
-}
-
-.cta-video {
-    width: 440px;
-    height: 440px;
-    object-fit: contain;
-    pointer-events: none;
-    user-select: none;
-}
-
-/* ── Heading ── */
-.cta-title {
-    font-family: var(--font-mono);
-    font-size: clamp(36px, 4.2vw, 60px);
-    font-weight: 700;
-    color: #DB3E94;
-    line-height: 1.1;
-    letter-spacing: -0.01em;
-    margin-bottom: 26px;
-}
-
-/* ── Description ── */
-.cta-desc {
-    font-family: var(--font-mono);
     font-size: 14.5px;
-    font-weight: 400;
-    color: #fff;
+    font-weight: 600;
+    color: #4ADE80;
+    line-height: 1.5;
+    letter-spacing: 0.03em;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(74, 222, 128, 0.08);
+    border: 1px solid rgba(74, 222, 128, 0.25);
+    padding: 7px 16px;
+    border-radius: 6px;
+    width: fit-content;
+}
+
+.cta-prompt-symbol {
+    color: #F359B0;
+    font-weight: 700;
+}
+
+/* ── ASCII CLI Tagline (Solid High-Contrast Text under ODDS Banner) ── */
+.cta-ascii-tagline {
+    font-family: var(--font-mono);
+    font-size: clamp(12.5px, 1.35vw, 15.5px);
+    font-weight: 600;
+    color: #FFFFFF !important;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    margin-top: 10px;
+    margin-bottom: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+.cta-tagline-prompt {
+    color: #F359B0 !important;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(243, 89, 176, 0.7);
+}
+
+.cta-tagline-text {
+    color: #FFFFFF !important;
+    font-weight: 600;
+}
+
+/* ── Terminal Dialogue: Lorenzo's Terminal Response ── */
+.cta-terminal-dialogue {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 16px 0 20px;
+    font-family: var(--font-mono);
+}
+
+.cta-speaker-header {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cta-speaker-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4ADE80;
+    box-shadow: 0 0 8px #4ADE80;
+    animation: cta-pulse 2s infinite ease-in-out;
+}
+
+.cta-speaker-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #F359B0;
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 8px rgba(243, 89, 176, 0.4);
+}
+
+.cta-speaker-message {
+    font-size: 14.5px;
+    color: rgba(255, 255, 255, 0.92);
     line-height: 1.75;
-    margin-bottom: 34px;
+    padding-left: 15px;
+    border-left: 2px solid rgba(243, 89, 176, 0.35);
+    margin: 4px 0 0 4px;
+}
+
+.cta-actions-prompt {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 12px;
+    letter-spacing: 0.04em;
 }
 
 /* ── Actions ── */
 .cta-actions {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
     flex-wrap: wrap;
 }
 
 /* ── Button ── */
 .cta-btn {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     font-family: var(--font-mono);
-    font-size: 14.5px;
-    font-weight: 400;
+    font-size: 14px;
+    font-weight: 500;
     color: #fff;
-    border: 1.2px solid #fff;
-    padding: 10px 24px;
-    border-radius: 0;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.04);
+    padding: 12px 26px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     text-decoration: none;
-    letter-spacing: 0;
+    letter-spacing: 0.02em;
+}
+
+.cta-btn-chevron {
+    color: #F359B0;
+    font-weight: 700;
+    transition: transform 0.2s ease;
 }
 
 .cta-btn:hover {
-    background: rgba(255, 255, 255, 0.12);
-}
-
-/* ── Footer social bar ── */
-.cta-terminal-footer {
-    border-top: 1px solid rgba(255, 255, 255, 0.25);
-    padding-top: 22px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 16px 40px;
-}
-
-.cta-terminal-footer span {
-    font-family: var(--font-mono);
-    font-size: 13.5px;
-    font-weight: 400;
+    background: rgba(243, 89, 176, 0.12);
+    border-color: #F359B0;
     color: #fff;
-    white-space: nowrap;
+    box-shadow: 0 0 20px rgba(243, 89, 176, 0.25);
+    transform: translateY(-2px);
+}
+
+.cta-btn:hover .cta-btn-chevron {
+    transform: translateX(3px);
+}
+
+.cta-btn-primary {
+    background: rgba(243, 89, 176, 0.16);
+    border-color: rgba(243, 89, 176, 0.5);
+}
+
+/* ── Terminal CLI Footer Prompt ── */
+.cta-cli-footer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: 8px;
+}
+
+.cta-footer-path {
+    color: #4ADE80;
+    font-weight: 600;
+}
+
+.cta-footer-command {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.cta-cursor {
+    color: #F359B0;
+    animation: cta-blink 1s step-start infinite;
+    font-size: 14px;
+}
+
+@keyframes cta-blink {
+    0%, 50% { opacity: 1; }
+    50.01%, 100% { opacity: 0; }
+}
+
+@keyframes odds-glow-pulse {
+    0%, 100% {
+        filter: drop-shadow(0 0 6px rgba(243, 89, 176, 0.3));
+    }
+    50% {
+        filter: drop-shadow(0 0 16px rgba(243, 89, 176, 0.75)) drop-shadow(0 0 32px rgba(215, 1, 143, 0.4));
+    }
 }
 
 /* ── CTA Responsive ── */
-@media (max-width: 1200px) {
-    .cta-outer {
-        max-width: 100%;
-        padding: 0 32px;
-    }
-
-    .cta-visual,
-    .cta-video {
-        width: 360px;
-        height: 360px;
-    }
-
-    .cta-terminal-body {
-        padding: 44px 44px 32px;
-    }
-}
-
 @media (max-width: 1024px) {
     .cta-outer {
         padding: 0 24px;
     }
 
     .cta-terminal-body {
-        padding: 36px 32px 28px;
+        padding: 36px 36px 28px;
+        gap: 20px;
     }
 
-    .cta-visual,
-    .cta-video {
-        width: 300px;
-        height: 300px;
-    }
-
-    .cta-title {
-        font-size: 36px;
-    }
-
-    .cta-terminal-footer {
-        gap: 10px 20px;
-    }
-}
-
-/* Tablet: stack video on top of content */
-@media (max-width: 850px) {
-    .cta {
-        padding: calc(var(--nav-height) + 20px) 0 40px;
-    }
-
-    .cta-outer {
-        padding: 0 20px;
-    }
-
-    .cta-terminal {
-        border-radius: 14px;
-    }
-
-    .cta-meta {
-        text-align: center;
-    }
-
-    .cta-row {
+    .cta-cli-banner {
         flex-direction: column;
-        align-items: center;
-        text-align: center;
+        align-items: flex-start;
         gap: 24px;
-        margin-bottom: 24px;
     }
 
-    .cta-visual {
-        order: -1;
+    .cta-cli-telemetry-grid {
         width: 100%;
-        height: auto;
-        max-width: 360px;
-        margin: 0 auto;
-        display: flex;
-        justify-content: center;
-    }
-
-    .cta-video {
-        width: 100%;
-        height: 360px;
-    }
-
-    .cta-content {
-        order: 1;
-        max-width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .cta-title {
-        text-align: center;
-    }
-
-    .cta-desc {
-        text-align: center;
-    }
-
-    .cta-actions {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-    }
-
-    .cta-terminal-body {
-        padding: 30px 24px 24px;
-    }
-
-    .cta-terminal-footer {
-        gap: 8px 20px;
-    }
-
-    .cta-terminal-footer span {
-        font-size: 12px;
-    }
-
-    .cta-meta-line,
-    .cta-meta-prompt {
-        font-size: 13px;
-        text-align: center;
-    }
-
-    .cta-desc {
-        font-size: 13px;
+        padding-left: 0;
+        border-left: none;
+        border-top: 1px dashed rgba(255, 255, 255, 0.12);
+        padding-top: 14px;
     }
 }
 
-/* Phone: preserve floating terminal window card, ASCII animation scaled large on top */
-@media (max-width: 580px) {
-    .cta {
-        padding: calc(var(--nav-height) + 8px) 0 20px;
-        justify-content: flex-start;
-        min-height: 100dvh;
-    }
-
+@media (max-width: 768px) {
     .cta-outer {
-        padding: 0 14px;
-        max-width: 100%;
-    }
-
-    .cta-terminal {
-        border-radius: 14px;
-        box-shadow:
-            0 0 0 1px rgba(255, 255, 255, 0.08),
-            0 12px 36px rgba(0, 0, 0, 0.7);
-    }
-
-    .cta-terminal-bar {
-        padding: 10px 16px;
-        gap: 7px;
-    }
-
-    .dot {
-        width: 9px;
-        height: 9px;
+        padding: 0 18px;
     }
 
     .cta-terminal-body {
-        padding: 16px 16px 16px;
+        padding: 28px 22px 22px;
+        gap: 18px;
     }
 
-    .cta-meta {
-        margin-bottom: 8px;
-        text-align: center;
+    .cta-ascii-art {
+        font-size: clamp(7.5px, 2.3vw, 11px);
     }
 
-    .cta-meta-line,
-    .cta-meta-prompt {
-        font-size: 11px;
-        line-height: 1.45;
-        text-align: center;
-    }
-
-    .cta-row {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 10px;
-        margin-bottom: 12px;
-    }
-
-    .cta-visual {
-        order: -1;
-        width: 100%;
-        max-width: clamp(280px, 82vw, 340px);
-        height: clamp(260px, 76vw, 320px);
-        margin: 2px auto 6px;
-        display: flex;
-        justify-content: center;
-    }
-
-    .cta-video {
-        width: 100%;
-        height: 100%;
-    }
-
-    .cta-content {
-        order: 1;
-        width: 100%;
-        max-width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .cta-title {
-        font-size: clamp(22px, 6.2vw, 28px);
-        line-height: 1.12;
-        margin-bottom: 8px;
-        text-align: center;
+    .cta-ascii-tagline {
+        font-size: 12.5px;
     }
 
     .cta-desc {
-        font-size: 11.5px;
-        line-height: 1.5;
-        margin: 12px 0;
-        text-align: center;
+        font-size: 13.5px;
     }
 
     .cta-actions {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        width: 100%;
-        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: stretch;
     }
 
     .cta-btn {
-        font-size: 12.5px;
-        margin: 4px 0;
-        padding: 8px 18px;
-        text-align: center;
-    }
-
-    .cta-terminal-footer {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        column-gap: 28px;
-        row-gap: 6px;
-        padding-top: 10px;
-        margin-top: 4px;
-    }
-
-    .cta-terminal-footer span {
-        font-size: 10.5px;
-        white-space: nowrap;
-    }
-
-    .cta-terminal-footer span:nth-child(odd) {
-        padding-right: 14px;
+        justify-content: center;
+        width: 100%;
     }
 }
 
-/* Compact screens (iPhone SE / short viewport heights) */
-@media (max-height: 680px) and (max-width: 580px) {
-    .cta {
-        padding: calc(var(--nav-height) + 4px) 0 14px;
+@media (max-width: 480px) {
+    .cta-outer {
+        padding: 0 12px;
+    }
+
+    .cta-terminal-bar {
+        padding: 10px 14px;
+    }
+
+    .cta-terminal-title {
+        font-size: 11px;
+    }
+
+    .cta-terminal-status {
+        font-size: 10px;
     }
 
     .cta-terminal-body {
-        padding: 12px 12px 12px;
+        padding: 20px 14px 18px;
+        gap: 16px;
     }
 
-    .cta-meta {
-        margin-bottom: 6px;
-        text-align: center;
+    .cta-ascii-art {
+        font-size: clamp(6px, 2.2vw, 8px);
     }
 
-    .cta-visual {
-        max-width: 220px;
-        height: 220px;
-        margin: 0 auto 4px;
+    .cta-telemetry-pill {
+        font-size: 10px;
     }
 
-    .cta-title {
-        font-size: 20px;
-        margin-bottom: 6px;
-        text-align: center;
+    .cta-telemetry-row {
+        font-size: 10.5px;
+    }
+
+    .cta-meta-line,
+    .cta-meta-prompt {
+        font-size: 12px;
+    }
+
+    .cta-ascii-tagline {
+        font-size: 11px;
+        letter-spacing: 0.04em;
     }
 
     .cta-desc {
-        font-size: 10.5px;
-        line-height: 1.45;
-        margin-bottom: 10px;
-        text-align: center;
-    }
-
-    .cta-terminal-footer {
-        padding-top: 8px;
-        column-gap: 20px;
-        row-gap: 4px;
-    }
-
-    .cta-terminal-footer span {
-        font-size: 9.5px;
-    }
-
-    .cta-terminal-footer span:nth-child(odd) {
-        padding-right: 10px;
+        font-size: 12.5px;
+        line-height: 1.55;
     }
 }
+
 
 
 

@@ -11,57 +11,131 @@
 
             <!-- macOS Title Bar -->
             <div class="cta-terminal-bar">
-                <span class="dot dot-red"></span>
-                <span class="dot dot-yellow"></span>
-                <span class="dot dot-green"></span>
+                <div class="cta-terminal-dots">
+                    <span class="dot dot-red"></span>
+                    <span class="dot dot-yellow"></span>
+                    <span class="dot dot-green"></span>
+                </div>
+                <div class="cta-terminal-title">bash — odds@client: ~/project-init</div>
+                <div class="cta-terminal-status">
+                    <span class="cta-status-indicator"></span>
+                    <span>ONLINE</span>
+                </div>
             </div>
 
             <!-- Dark Terminal Body -->
             <div class="cta-terminal-body">
-                <!-- Meta info -->
-                <div class="cta-meta">
-                    <p class="cta-meta-line">{{ $settings->cta_meta_line ?? 'ODDS Development Team 2025. All rights reserved' }}</p>
-                    <p class="cta-meta-prompt">{{ $settings->cta_terminal_prompt ?? 'client\ODDS_Project> project init' }}</p>
+                <!-- Top Row: Meta Copyright (2026) -->
+                <div class="cta-top-row">
+                    <p class="cta-top-meta-line">{{ str_replace('2025', '2026', $settings->cta_meta_line ?? 'ODDS Development Team 2026. All rights reserved') }}</p>
                 </div>
 
-                <!-- Two-column row: content left, graphic right -->
-                <div class="cta-row">
-                    <div class="cta-content">
-                        <h2 class="cta-title">
+                <!-- CLI Banner: Pink ASCII Art for ODDS + Telemetry -->
+                <div class="cta-cli-banner">
+                    <div class="cta-ascii-wrapper">
+                        <pre class="cta-ascii-art" aria-label="ODDS">
+ ██████╗  ██████╗  ██████╗  ███████╗
+██╔═══██╗ ██╔══██╗ ██╔══██╗ ██╔════╝
+██║   ██║ ██║  ██║ ██║  ██║ ███████╗
+██║   ██║ ██║  ██║ ██║  ██║ ╚════██║
+╚██████╔╝ ██████╔╝ ██████╔╝ ███████║
+ ╚═════╝  ╚═════╝  ╚═════╝  ╚══════╝</pre>
+                        <div class="cta-ascii-tagline">
+                            <span class="cta-tagline-prompt">//</span>
                             @if(!empty($settings->cta_title))
-                                {!! nl2br(e($settings->cta_title)) !!}
+                                <span class="cta-tagline-text">{!! e(str_replace(["\r\n", "\n", "<br>", "<br/>", "<br />"], " ", $settings->cta_title)) !!}</span>
                             @else
-                                Let's Build<br>Something Real.
+                                <span class="cta-tagline-text">Let's Build Something Real.</span>
                             @endif
-                        </h2>
-
-                        <p class="cta-desc">
-                            {!! $settings->cta_desc ?? "Tell us what you're facing.<br>Whether you need a quick technical module or an end-to-end package solution, our team is ready to execute. Expect a response with clear next steps within 24 hours." !!}
-                        </p>
-
-                        <div class="cta-actions">
-                            <a href="#contact" class="cta-btn js-open-contact-modal" data-open-contact>Let's Talk & Build</a>
-                            <a href="mailto:{{ $settings->cta_email ?? 'oddsdevph@gmail.com' }}" class="cta-btn" title="Send direct email">
-                                {{ $settings->cta_email ?? 'oddsdevph@gmail.com' }}
-                            </a>
                         </div>
                     </div>
 
-                    <div class="cta-visual">
-                        <video id="cta-video-source" style="display: none;" autoplay loop muted playsinline disablePictureInPicture>
-                            <source src="{{ asset('assets/img/ascii-animation.mp4') }}" type="video/mp4">
-                        </video>
-                        <canvas id="cta-video-canvas" class="cta-video"></canvas>
+                    <!-- Live System Telemetry Grid (Option 4: Interactive Functional Readout) -->
+                    <div class="cta-cli-telemetry-grid">
+                        <div class="cta-telem-item">
+                            <span class="cta-telem-key">sys.studio</span>
+                            <span class="cta-telem-sep">:</span>
+                            <span class="cta-telem-val">
+                                Manila, PH <span class="cta-telem-tag text-green"><span class="cta-telem-pulse"></span> ACTIVE NOW</span>
+                            </span>
+                        </div>
+                        <div class="cta-telem-item">
+                            <span class="cta-telem-key">sys.ping</span>
+                            <span class="cta-telem-sep">:</span>
+                            <span class="cta-telem-val">
+                                <span id="cta-live-ping">18ms</span> <span class="cta-telem-tag text-cyan">OPTIMAL</span>
+                            </span>
+                        </div>
+                        <div class="cta-telem-item">
+                            <span class="cta-telem-key">sys.dispatch</span>
+                            <span class="cta-telem-sep">:</span>
+                            <span class="cta-telem-val text-pink">&lt; 24h SLA GUARANTEE</span>
+                        </div>
+                        <div class="cta-telem-item">
+                            <span class="cta-telem-key">sys.agent</span>
+                            <span class="cta-telem-sep">:</span>
+                            <span class="cta-telem-val">
+                                Lorenzo
+                                <button type="button" id="cta-open-chat-btn" class="cta-telem-btn cta-telem-btn-chat" title="Open live chat with Lorenzo">
+                                    [ Chat with AI ↗ ]
+                                </button>
+                            </span>
+                        </div>
+                        <div class="cta-telem-item">
+                            <span class="cta-telem-key">sys.email</span>
+                            <span class="cta-telem-sep">:</span>
+                            <span class="cta-telem-val">
+                                <span class="cta-email-text">{{ $settings->cta_email ?? 'oddsdevph@gmail.com' }}</span>
+                                <button type="button" id="cta-copy-email-btn" class="cta-telem-btn cta-telem-btn-copy" data-email="{{ $settings->cta_email ?? 'oddsdevph@gmail.com' }}" title="Copy email address to clipboard">
+                                    <span class="cta-copy-label">[ Copy ]</span>
+                                </button>
+                            </span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Footer social bar inside terminal -->
-                <!-- <div class="cta-terminal-footer">
-                    <span>facebook: {{ $settings->cta_facebook ?? 'ODDS Comp.' }}</span>
-                    <span>instagram: {{ $settings->cta_instagram ?? 'ODDS Comp.' }}</span>
-                    <span>mail: {{ $settings->cta_email ?? 'oddsdevph@gmail.com' }}</span>
-                    <span>youtube: {{ $settings->cta_youtube ?? 'ODDS Comp.' }}</span>
-                </div> -->
+                <div class="cta-cli-divider"></div>
+
+                <!-- Meta Prompt & Content -->
+                <div class="cta-main-block">
+                    <div class="cta-meta">
+                        <p class="cta-meta-prompt">
+                            <span class="cta-prompt-symbol">&gt;</span> {{ $settings->cta_terminal_prompt ?? 'client\ODDS_Project> project init --exec' }}
+                        </p>
+                    </div>
+
+                    <div class="cta-content">
+                        <div class="cta-terminal-dialogue">
+                            <div class="cta-speaker-header">
+                                <span class="cta-speaker-dot"></span>
+                                <span class="cta-speaker-name">Lorenzo:</span>
+                            </div>
+                            <div class="cta-speaker-message">
+                                &ldquo;{!! $settings->cta_desc ?? "Tell us what you're facing. Whether you need a quick technical module or an end-to-end package solution, our team is ready to execute. Expect a response with clear next steps within 24 hours." !!}&rdquo;
+                            </div>
+                        </div>
+
+                        <div class="cta-actions-prompt">
+                            <span class="cta-actions-label">&gt; select dispatch action:</span>
+                        </div>
+
+                        <div class="cta-actions">
+                            <a href="#contact" class="cta-btn cta-btn-primary js-open-contact-modal" data-open-contact>
+                                <span class="cta-btn-chevron">&gt;</span> Let's Talk &amp; Build
+                            </a>
+                            <a href="mailto:{{ $settings->cta_email ?? 'oddsdevph@gmail.com' }}" class="cta-btn" title="Send direct email">
+                                <span class="cta-btn-chevron">&gt;</span> {{ $settings->cta_email ?? 'oddsdevph@gmail.com' }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Terminal Footer Prompt -->
+                <div class="cta-cli-footer">
+                    <span class="cta-footer-path">guest@odds:~$</span>
+                    <span class="cta-footer-command">odds deploy --interactive</span>
+                    <span class="cta-cursor" aria-hidden="true">█</span>
+                </div>
             </div>
 
         </div>

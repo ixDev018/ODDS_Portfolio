@@ -1235,7 +1235,7 @@
         flex-direction: column;
         align-items: center;
         text-align: center;
-        justify-content: space-between;
+        justify-content: flex-start;
     }
 
     .gallery-member-name {
@@ -1251,7 +1251,7 @@
         justify-content: center;
         flex-wrap: wrap;
         gap: 0.2rem;
-        min-height: 2.85rem;
+        height: 3rem;
         width: 100%;
         min-width: 0;
         text-align: center;
@@ -1283,19 +1283,19 @@
     /* Two-Sided Split Metadata: Positions (Left) vs Awards (Right) */
     .gallery-member-meta {
         display: flex;
-        align-items: stretch;
+        align-items: flex-start;
         justify-content: space-between;
-        gap: 0.65rem;
+        gap: 0.75rem;
         width: 100%;
         min-width: 0;
-        padding-top: 0.5rem;
+        padding-top: 0.6rem;
         border-top: 1px solid #f1f5f9;
-        min-height: 68px;
         box-sizing: border-box;
+        margin-top: auto;
     }
 
     .gallery-meta-col {
-        flex: 1;
+        flex: 1 1 50%;
         min-width: 0;
         display: flex;
         flex-direction: column;
@@ -1319,37 +1319,35 @@
         text-transform: uppercase;
         color: #991b1b;
         line-height: 1;
-        margin-bottom: 0.35rem;
+        margin-bottom: 0.4rem;
     }
 
     .gallery-meta-entries {
         display: flex;
         flex-direction: column;
-        gap: 0.15rem;
+        gap: 0.35rem;
         width: 100%;
         min-width: 0;
-        min-height: 38px;
         justify-content: flex-start;
-        overflow: hidden;
     }
 
     .gallery-meta-text {
         font-size: 0.72rem;
         font-weight: 600;
         color: #334155;
-        line-height: 1.3;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        line-height: 1.35;
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: break-word;
         display: block;
         width: 100%;
-        max-width: 100%;
     }
 
     .gallery-meta-sep {
         width: 1px;
+        align-self: stretch;
         background: #e2e8f0;
-        margin: 0.15rem 0;
+        margin: 0.1rem 0;
         flex-shrink: 0;
     }
 
@@ -1392,7 +1390,7 @@
 
         .gallery-member-name {
             font-size: 0.875rem;
-            min-height: 2.35rem;
+            height: 2.5rem;
             line-height: 1.22;
             margin-bottom: 0.35rem;
         }
@@ -1402,9 +1400,8 @@
         }
 
         .gallery-member-meta {
-            gap: 0.35rem;
-            padding-top: 0.4rem;
-            min-height: 54px;
+            gap: 0.5rem;
+            padding-top: 0.45rem;
         }
 
         .gallery-meta-kicker {
@@ -1413,11 +1410,12 @@
         }
 
         .gallery-meta-entries {
-            min-height: 30px;
+            gap: 0.25rem;
         }
 
         .gallery-meta-text {
-            font-size: 0.64rem;
+            font-size: 0.65rem;
+            line-height: 1.3;
         }
 
         .gallery-quip-wrap {
@@ -1612,7 +1610,7 @@ $teamMembers = [
         'is_mystery' => true,
         'quip' => "the most technical person really has no photos",
         'positions' => ['Co-Founder', 'Software / Database Dev'],
-        'awards' => ['Magna Cum Laude'],
+        'awards' => ['Magna Cum Laude', 'Outstanding System Developer'],
     ],
     [
         'name' => 'Robert Santiago',
@@ -1642,7 +1640,7 @@ $teamMembers = [
         'real_photo' => asset('storage/odds/team/Jazam_Laranio.jpeg'),
         'quip' => "hates commuting",
         'positions' => ['Developer', 'Lead Gen Specialist'],
-        'awards' => ['Cum Laude'],
+        'awards' => ['Cum Laude', 'Outstanding System Developer'],
     ],
     [
         'name' => 'Mark Paulo Franco',

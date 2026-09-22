@@ -9,6 +9,7 @@ use App\Models\OddsWork;
 use App\Models\OddsTestimonial;
 use App\Models\OddsWhyReason;
 use App\Models\OddsFaq;
+use App\Models\Achievement;
 use Illuminate\Support\Str;
 
 class OddsContentSeeder extends Seeder
@@ -566,6 +567,34 @@ class OddsContentSeeder extends Seeder
                     copy($src, $dest);
                 }
             }
+        }
+
+        // 8. Achievements / Awards
+        $achievements = [
+            [
+                'title'       => 'Outstanding System Developer',
+                'issuer'      => 'Jherald Vibar',
+                'year'        => '2026',
+                'type'        => 'award',
+                'description' => 'Awarded to Jherald Vibar for exceptional architecture, software, and database engineering at ODDS.',
+            ],
+            [
+                'title'       => 'Outstanding System Developer',
+                'issuer'      => 'Jazam Laranio',
+                'year'        => '2026',
+                'type'        => 'award',
+                'description' => 'Awarded to Jazam Laranio for outstanding systems development, execution, and technical contributions at ODDS.',
+            ],
+        ];
+
+        foreach ($achievements as $data) {
+            Achievement::updateOrCreate(
+                [
+                    'title'  => $data['title'],
+                    'issuer' => $data['issuer'],
+                ],
+                $data
+            );
         }
     }
 }

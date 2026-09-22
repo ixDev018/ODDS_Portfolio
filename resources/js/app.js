@@ -773,17 +773,150 @@ function clearCarouselSelection() {
     document.querySelectorAll('.services-track').forEach(t => t.classList.remove('has-selected'));
 }
 
-// ─── CTA ASCII Video Canvas ─────────────────────────────
-const ctaVideo = document.getElementById('cta-video-source');
-const ctaCanvas = document.getElementById('cta-video-canvas');
-if (ctaVideo && ctaCanvas) {
-    const ctx = ctaCanvas.getContext('2d');
-    const upd = () => { if (ctaVideo.videoWidth) { ctaCanvas.width = ctaVideo.videoWidth; ctaCanvas.height = ctaVideo.videoHeight; } };
-    ctaVideo.addEventListener('loadedmetadata', upd);
-    const render = () => { if (!ctaVideo.paused && !ctaVideo.ended) { ctx.clearRect(0, 0, ctaCanvas.width, ctaCanvas.height); ctx.drawImage(ctaVideo, 0, 0, ctaCanvas.width, ctaCanvas.height); } requestAnimationFrame(render); };
-    ctaVideo.addEventListener('play', () => { upd(); render(); });
-    if (!ctaVideo.paused) { upd(); render(); } else { ctaVideo.play().then(() => { upd(); render(); }).catch(() => { }); }
-}
+// ─── CTA Terminal ASCII "ODDS" Cyber Animation Controller ───
+(function initCtaAsciiAnimation() {
+    const asciiEl = document.querySelector('.cta-ascii-art');
+    if (!asciiEl) return;
+
+    const originalText = asciiEl.textContent;
+    const glitchChars = '01XY#%&*+=/~^░▒▓█@!$?';
+    let isAnimating = false;
+    let hasPlayedInitial = false;
+
+    function scrambleDecode(duration = 1000) {
+        if (isAnimating) return;
+        isAnimating = true;
+
+        const startTime = performance.now();
+        const originalChars = originalText.split('');
+        const nonWhitespaceIndices = [];
+
+        originalChars.forEach((ch, idx) => {
+            if (ch !== ' ' && ch !== '\n') {
+                nonWhitespaceIndices.push(idx);
+            }
+        });
+
+        function step(now) {
+            const progress = Math.min((now - startTime) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const revealedCount = Math.floor(eased * nonWhitespaceIndices.length);
+            const resolvedSet = new Set(nonWhitespaceIndices.slice(0, revealedCount));
+
+            const rendered = originalChars.map((char, i) => {
+                if (char === ' ' || char === '\n') return char;
+                if (resolvedSet.has(i)) return char;
+                return glitchChars[Math.floor(Math.random() * glitchChars.length)];
+            }).join('');
+
+            asciiEl.textContent = rendered;
+
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            } else {
+                asciiEl.textContent = originalText;
+                isAnimating = false;
+            }
+        }
+
+        requestAnimationFrame(step);
+    }
+
+    // Trigger when scrolled into view
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !hasPlayedInitial) {
+                    hasPlayedInitial = true;
+                    setTimeout(() => scrambleDecode(1100), 250);
+                }
+            });
+        }, { threshold: 0.2 });
+        observer.observe(asciiEl);
+    } else {
+        setTimeout(() => scrambleDecode(1100), 500);
+    }
+
+    // Trigger micro-glitch on hover
+    asciiEl.addEventListener('mouseenter', () => {
+        if (!isAnimating) {
+            scrambleDecode(650);
+        }
+    });
+
+    // Periodic subtle cyber glitch every 9 seconds if in view
+    setInterval(() => {
+        if (!isAnimating && document.visibilityState === 'visible') {
+            const rect = asciiEl.getBoundingClientRect();
+            const inView = rect.top < window.innerHeight && rect.bottom > 0;
+            if (inView) {
+                scrambleDecode(750);
+            }
+        }
+    }, 9000);
+})();
+
+// ─── CTA Telemetry Interactive Actions (Option 4) ───────────
+(function initCtaTelemetryActions() {
+    // 1. Open Lorenzo Chat Widget
+    const chatBtn = document.getElementById('cta-open-chat-btn');
+    if (chatBtn) {
+        chatBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const chatToggle = document.getElementById('chat-toggle-btn');
+            const chatWindow = document.getElementById('chat-window');
+            if (chatToggle) {
+                if (!chatWindow || chatWindow.classList.contains('hidden')) {
+                    chatToggle.click();
+                }
+                const input = document.getElementById('chat-input');
+                if (input) {
+                    setTimeout(() => input.focus(), 300);
+                }
+            }
+        });
+    }
+
+    // 2. 1-Click Email Copy with Terminal Feedback
+    const copyBtn = document.getElementById('cta-copy-email-btn');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const email = copyBtn.getAttribute('data-email') || 'oddsdevph@gmail.com';
+            navigator.clipboard.writeText(email).then(() => {
+                const label = copyBtn.querySelector('.cta-copy-label');
+                if (label) label.textContent = '[ ✔ Copied! ]';
+                copyBtn.classList.add('copied');
+                setTimeout(() => {
+                    if (label) label.textContent = '[ Copy ]';
+                    copyBtn.classList.remove('copied');
+                }, 2200);
+            }).catch(() => {
+                window.location.href = `mailto:${email}`;
+            });
+        });
+    }
+
+    // 3. Live Real-Time Network Ping
+    const pingEl = document.getElementById('cta-live-ping');
+    if (pingEl) {
+        function updatePing() {
+            const start = performance.now();
+            fetch('/favicon.png?_t=' + Date.now(), { method: 'HEAD', cache: 'no-store' })
+                .then(() => {
+                    const elapsed = Math.round(performance.now() - start);
+                    const clamped = Math.max(8, Math.min(elapsed, 95));
+                    pingEl.textContent = `${clamped}ms`;
+                })
+                .catch(() => {
+                    const sim = Math.floor(Math.random() * 8) + 12;
+                    pingEl.textContent = `${sim}ms`;
+                });
+        }
+        updatePing();
+        setInterval(updatePing, 15000);
+    }
+})();
 
 // ─── Project Detail Modal Controller ────────────────────
 (function projectModalController() {
@@ -2334,7 +2467,6 @@ function initHeadingReveals() {
         '.testi-title',
         '.process-title',
         '.faq-title',
-        '.cta-title',
         '.about-massive-headline',
         '.our-work-closing-title'
     ];
