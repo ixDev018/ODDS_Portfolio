@@ -346,11 +346,6 @@
     
     /* Mobile full-responsive sheet & keyboard accommodation */
     @media (max-width: 640px) {
-        #odds-chat-container {
-            bottom: 0 !important;
-            right: 0 !important;
-            left: 0 !important;
-        }
         #chat-window {
             position: fixed !important;
             left: 0 !important;
@@ -373,10 +368,6 @@
             touch-action: pan-y;
             overscroll-behavior: contain;
             -webkit-overflow-scrolling: touch;
-        }
-        #chat-toggle-btn {
-            bottom: 16px !important;
-            right: 16px !important;
         }
     }
     
