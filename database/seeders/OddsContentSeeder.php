@@ -197,155 +197,195 @@ class OddsContentSeeder extends Seeder
             [
                 'title' => 'Liberty',
                 'slug' => 'liberty-1',
-                'year' => '2023',
-                'category' => 'Web & CMS',
+                'year' => '2026',
+                'category' => 'Web Development',
                 'client' => 'Liberty Investigation & Security Agency Inc.',
-                'role' => 'Full-Stack Web & Client Portal',
-                'desc' => 'High-trust corporate portal and guard dispatch management platform for a licensed corporate security and private investigation firm.',
+                'role' => 'Front-End Rebuild & React UI',
+                'desc' => 'Their old site was still stuck in an earlier era of the internet. We rebuilt it in React — bilingual EN/ZH, faster navigation, service breakdowns that make sense, and a contact flow that isn\'t a 20-field form.',
                 'image' => 'Liberty_thumbnail.png',
                 'sort' => 1,
                 'body_content' => [
-                    ['type' => 'heading2', 'content' => 'Project Documentation'],
-                    ['type' => 'paragraph', 'content' => $lazyQuote],
-                    ['type' => 'callout', 'content' => 'Status: Production system live & active. Full case study coming soon.']
+                    ['type' => 'heading2', 'content' => 'Retiring the Legacy Dinosaur'],
+                    ['type' => 'paragraph', 'content' => 'Their old site was still stuck in an earlier era of the internet. Liberty handles high-trust security and private investigation, but the web presence didn\'t match the caliber of the team.'],
+                    ['type' => 'callout', 'content' => '<strong>What We Changed:</strong> Rebuilt in React from the ground up — snappy, modern, bilingual (EN/ZH), and designed so prospective clients can reach real people without filling out an endless questionnaire.'],
+                    ['type' => 'heading3', 'content' => 'Key Highlights'],
+                    ['type' => 'bullet', 'content' => '<strong>React Front-End:</strong> Fast, lightweight navigation with zero clunkiness.'],
+                    ['type' => 'bullet', 'content' => '<strong>Bilingual Support:</strong> Seamless English and Traditional Chinese (EN/ZH) localization.'],
+                    ['type' => 'bullet', 'content' => '<strong>Service Breakdowns:</strong> Clear, sensible presentation of guard dispatch, security systems, and private investigation services.'],
+                    ['type' => 'bullet', 'content' => '<strong>Frictionless Contact Flow:</strong> Streamlined inquiry funnel that gets straight to the point instead of a 20-field form.']
                 ],
-                'story_content' => "<h2>Project Documentation</h2><p>{$lazyQuote}</p>"
+                'story_content' => "<h2>Retiring the Legacy Dinosaur</h2><p>Their old site was still stuck in an earlier era of the internet. We rebuilt it in React — bilingual EN/ZH, faster navigation, service breakdowns that make sense, and a contact flow that isn't a 20-field form.</p>"
             ],
             [
                 'title' => 'SPCC Website',
                 'slug' => 'spcc-website-2',
-                'year' => '2023',
+                'year' => '2026',
                 'category' => 'Web Development',
                 'client' => 'Systems Plus Computer College',
-                'role' => 'Institutional Web & Admissions Architecture',
-                'desc' => 'High-throughput institutional web portal and academic admissions gateway for multi-campus enrollment and student services.',
+                'role' => 'Institutional Web Architecture',
+                'desc' => '',
                 'image' => 'SPCC WEBSITE.png',
                 'sort' => 2,
                 'body_content' => [
-                    ['type' => 'heading2', 'content' => 'Project Documentation'],
-                    ['type' => 'paragraph', 'content' => $lazyQuote],
-                    ['type' => 'callout', 'content' => 'Status: Production system live & active. Full case study coming soon.']
+                    ['type' => 'heading2', 'content' => 'Under Wraps'],
+                    ['type' => 'paragraph', 'content' => 'Still under NDA. More soon.'],
+                    ['type' => 'callout', 'content' => '<strong>Status:</strong> Confidential. We\'ll share the details when we\'re cleared to.']
                 ],
-                'story_content' => "<h2>Project Documentation</h2><p>{$lazyQuote}</p>"
+                'story_content' => "<h2>Under Wraps</h2><p>Still under NDA. More soon.</p>"
             ],
             [
                 'title' => 'AVONIC',
                 'slug' => 'avonic-3',
-                'year' => '2023',
+                'year' => '2025–2026',
                 'category' => 'Hardware & IoT',
-                'client' => 'Agricultural R&D',
-                'role' => 'Embedded Firmware & IoT Telemetry',
-                'desc' => 'Embedded IoT telemetry station monitoring vermicompost ecology through real-time soil moisture, gas emissions, and microclimate telemetry.',
+                'client' => 'Agricultural R&D (Won Best in Hardware)',
+                'role' => 'Smart Climate Machine & Custom Firmware',
+                'desc' => 'Won Best in Hardware. An automated vermicomposting machine that actually adjusts to the worms instead of just logging conditions. ESP32-S3 master/slave setup with online, offline, or physical controls, and hand-drawn cartoon worms that show their mood.',
                 'image' => 'Avonic_thumbnail.png',
                 'sort' => 3,
                 'body_content' => [
-                    ['type' => 'heading2', 'content' => 'Project Documentation'],
-                    ['type' => 'paragraph', 'content' => $lazyQuote],
-                    ['type' => 'callout', 'content' => 'Status: Production system live & active. Full case study coming soon.']
+                    ['type' => 'heading2', 'content' => 'Automated Climate That Actually Caters to the Worms'],
+                    ['type' => 'paragraph', 'content' => 'This was the capstone — an automated vermicomposting machine that actually adjusts to the worms instead of just logging conditions and leaving them to it. Too hot, it cools down. Too dry, it adds moisture. So on and so forth.'],
+                    ['type' => 'callout', 'content' => '<strong>Won Best in Hardware:</strong> Built on an ESP32-S3 master/slave architecture with tri-mode control and custom hand-drawn cartoon worms that express their mood based on the sensor readings.'],
+                    ['type' => 'heading3', 'content' => 'Inside the Machine'],
+                    ['type' => 'bullet', 'content' => '<strong>ESP32-S3 Master/Slave Setup:</strong> Distributed microcontroller architecture dividing heavy sensor reading from actuator control for rock-solid reliability.'],
+                    ['type' => 'bullet', 'content' => '<strong>Tri-Mode Accessibility:</strong> Works online through web telemetry, offline over a local Wi-Fi AP, or directly through physical hardware buttons if both networks fail.'],
+                    ['type' => 'bullet', 'content' => '<strong>Active Climate Adjustment:</strong> Closed-loop heating, cooling, misting, and air circulation that self-corrects the substrate environment on the fly.'],
+                    ['type' => 'bullet', 'content' => '<strong>Hand-Drawn Cartoon Worm UI:</strong> We didn\'t want it to look like every other generic IoT dashboard, so the UI features hand-drawn cartoon worms whose expressions reflect the environment.']
                 ],
-                'story_content' => "<h2>Project Documentation</h2><p>{$lazyQuote}</p>"
+                'story_content' => "<h2>Automated Climate That Actually Caters to the Worms</h2><p>This was the capstone — an automated vermicomposting machine that actually adjusts to the worms instead of just logging conditions and leaving them to it. Too hot, it cools down. Too dry, it adds moisture. Runs on an ESP32-S3 master/slave setup, works online, offline, or through physical controls if both fail. Won Best in Hardware.</p>"
             ],
             [
                 'title' => 'MoneySense',
                 'slug' => 'moneysense-4',
-                'year' => '2022',
-                'category' => 'Mobile App',
-                'client' => 'Accessibility & Assistive Tech',
-                'role' => 'Mobile App & Edge Neural Vision',
-                'desc' => 'Offline-first assistive mobile app leveraging edge computer vision to scan, identify, and audibly announce Philippine banknotes and coins.',
+                'year' => '2025–2026',
+                'category' => 'Mobile App & ML',
+                'client' => 'Assistive Tech (Won Best in Software)',
+                'role' => 'Edge ML & Non-Visual UI/UX',
+                'desc' => 'Won Best in Software. A camera-based money verifier built for blind users — point it at a bill, it tells you what it is, no cloud round-trip, no lag. UI designed around how someone who can\'t see the screen actually navigates.',
                 'image' => 'MoneySense.png',
                 'sort' => 4,
                 'body_content' => [
-                    ['type' => 'heading2', 'content' => 'Project Documentation'],
-                    ['type' => 'paragraph', 'content' => $lazyQuote],
-                    ['type' => 'callout', 'content' => 'Status: Production system live & active. Full case study coming soon.']
+                    ['type' => 'heading2', 'content' => 'Camera ML Money Verifier Built for the Blind'],
+                    ['type' => 'paragraph', 'content' => 'Also from capstone. A camera-based money verifier built for blind users — point it at a bill, it tells you what it is, no cloud round-trip, no lag. The whole UI was designed around how someone who can\'t see the screen actually navigates a phone, not bolted on as an afterthought.'],
+                    ['type' => 'callout', 'content' => '<strong>Won Best in Software:</strong> Designed from the ground up for real-world independence when handling cash.'],
+                    ['type' => 'heading3', 'content' => 'How It Works'],
+                    ['type' => 'bullet', 'content' => '<strong>Instant On-Device ML:</strong> Point the camera at any bill or coin and hear what it is immediately — zero cloud round-trip, zero latency.'],
+                    ['type' => 'bullet', 'content' => '<strong>Non-Visual Navigation Design:</strong> The interface was built entirely around screen-reader accessibility, haptic pulses, and tactile zones rather than visual buttons.'],
+                    ['type' => 'bullet', 'content' => '<strong>Offline Reliability:</strong> Runs completely self-contained on the device without requiring cell reception or data credits in wet markets or basements.'],
+                    ['type' => 'bullet', 'content' => '<strong>Speech Feedback:</strong> Clear, instant audible verification so users never have to second-guess transactions.']
                 ],
-                'story_content' => "<h2>Project Documentation</h2><p>{$lazyQuote}</p>"
+                'story_content' => "<h2>Camera ML Money Verifier Built for the Blind</h2><p>Also from capstone. A camera-based money verifier built for blind users — point it at a bill, it tells you what it is, no cloud round-trip, no lag. The whole UI was designed around how someone who can't see the screen actually navigates a phone, not bolted on as an afterthought. Won Best in Software.</p>"
             ],
             [
                 'title' => 'SIBOL',
                 'slug' => 'sibol-5',
-                'year' => '2023',
+                'year' => '2026',
                 'category' => 'IoT & AgriTech',
-                'client' => 'Smart Agriculture Initiative',
-                'role' => 'IoT Platform & Automated Irrigation',
-                'desc' => 'Solar-powered smart farming platform delivering soil hydrology analytics, ambient weather tracking, and automated irrigation control.',
+                'client' => 'Barangay Smart Agriculture',
+                'role' => 'LoRa Telemetry, ESP32 & Plant ML',
+                'desc' => 'Farm tracking for barangay-level plots that don\'t have real internet access. Runs on LoRa instead of Wi-Fi so it still works miles out, and uses ESP32 + ML to check plant and leaf health from sensor data, not just soil readings.',
                 'image' => 'sibol.png',
                 'sort' => 5,
                 'body_content' => [
-                    ['type' => 'heading2', 'content' => 'Project Documentation'],
-                    ['type' => 'paragraph', 'content' => $lazyQuote],
-                    ['type' => 'callout', 'content' => 'Status: Production system live & active. Full case study coming soon.']
+                    ['type' => 'heading2', 'content' => 'Grassroots Farm Tracking Miles Off the Grid'],
+                    ['type' => 'paragraph', 'content' => 'Farm tracking for barangay-level plots that don\'t have real internet access. Runs on LoRa instead of Wi-Fi so it still works miles out, and uses ESP32 + ML to check plant and leaf health from sensor data, not just soil readings.'],
+                    ['type' => 'callout', 'content' => '<strong>Built for the Real Field:</strong> Solving agricultural connectivity where cell towers don\'t reach by pairing long-range radio with on-device intelligence.'],
+                    ['type' => 'heading3', 'content' => 'Technical Highlights'],
+                    ['type' => 'bullet', 'content' => '<strong>LoRa Wireless Telemetry:</strong> Transmits critical field data miles across rural terrain without expensive cellular SIMs or Wi-Fi dependencies.'],
+                    ['type' => 'bullet', 'content' => '<strong>ESP32 + ML Leaf & Plant Health:</strong> Runs edge machine learning to inspect plant leaves and catch disease early right from sensor and vision data.'],
+                    ['type' => 'bullet', 'content' => '<strong>Comprehensive Ground Metrics:</strong> Real-time environmental tracking beyond soil readings to give farmers a complete picture of microclimate health.'],
+                    ['type' => 'bullet', 'content' => '<strong>Barangay-Level Hub:</strong> Practical, localized monitoring station built for actual daily use by local farming communities.']
                 ],
-                'story_content' => "<h2>Project Documentation</h2><p>{$lazyQuote}</p>"
+                'story_content' => "<h2>Grassroots Farm Tracking Miles Off the Grid</h2><p>Farm tracking for barangay-level plots that don't have real internet access. Runs on LoRa instead of Wi-Fi so it still works miles out, and uses ESP32 + ML to check plant and leaf health from sensor data, not just soil readings.</p>"
             ],
             [
                 'title' => 'THEODORE',
                 'slug' => 'theodore-6',
-                'year' => '2024',
+                'year' => '2025',
                 'category' => 'Security & Vision',
-                'client' => 'Industrial Safety & Facilities',
-                'role' => 'Computer Vision & Edge AI Surveillance',
-                'desc' => 'Intelligent CCTV surveillance layer with edge-accelerated smoke and flame detection, automated PTZ tracking, and emergency broadcast dispatch.',
+                'client' => 'Industrial Safety & Fire Detection',
+                'role' => 'ESP32 Camera ML & Thermal Triage',
+                'desc' => 'The project that actually got ODDS started. ESP32 camera + ML that watches for heat spikes and flame patterns, tells the difference between a machine running hot and an actual fire, and tiers the response — eventually meant to call BFP directly.',
                 'image' => 'THEODORE PREVIEW.png',
                 'sort' => 6,
                 'body_content' => [
-                    ['type' => 'heading2', 'content' => 'Project Documentation'],
-                    ['type' => 'paragraph', 'content' => $lazyQuote],
-                    ['type' => 'callout', 'content' => 'Status: Production system live & active. Full case study coming soon.']
+                    ['type' => 'heading2', 'content' => 'The Origin Story of ODDS'],
+                    ['type' => 'paragraph', 'content' => 'The project that actually got ODDS started. An ESP32 camera paired with machine learning that watches for heat spikes and flame patterns, tells the difference between a machine running hot and an actual fire, and tiers the response.'],
+                    ['type' => 'callout', 'content' => '<strong>Autonomous Emergency Calling:</strong> Designed with tiered threat levels and architected with the potential to call BFP (Bureau of Fire Protection) directly once we get there.'],
+                    ['type' => 'heading3', 'content' => 'Inside the Rig'],
+                    ['type' => 'bullet', 'content' => '<strong>ESP32 Camera + ML:</strong> Microcontroller-based machine learning pipeline trained to spot genuine flame behavior and thermal activity.'],
+                    ['type' => 'bullet', 'content' => '<strong>Smart False-Alarm Filtering:</strong> Knows the difference between normal industrial heat or engines running hot versus an active, dangerous fire.'],
+                    ['type' => 'bullet', 'content' => '<strong>Tiered Response System:</strong> Escalates warnings progressively depending on thermal severity rather than causing immediate false alarm panic.'],
+                    ['type' => 'bullet', 'content' => '<strong>Direct Dispatch Architecture:</strong> Engineered to connect directly with emergency response systems and dispatch alerts autonomously.']
                 ],
-                'story_content' => "<h2>Project Documentation</h2><p>{$lazyQuote}</p>"
+                'story_content' => "<h2>The Origin Story of ODDS</h2><p>The project that actually got ODDS started. ESP32 camera + ML that watches for heat spikes and flame patterns, tells the difference between a machine running hot and an actual fire, and tiers the response — eventually meant to call BFP directly once we get there.</p>"
             ],
             [
                 'title' => 'HALLET',
                 'slug' => 'hallet-7',
-                'year' => '2023',
+                'year' => '2026',
                 'category' => 'Mobile App',
-                'client' => 'Personal FinTech',
-                'role' => 'Mobile App Architecture & Data Security',
-                'desc' => 'Sovereign personal finance companion featuring encrypted multi-wallet balances, categorised cash-flow analytics, and offline-first budget forecasting.',
+                'client' => 'Personal FinTech & Companion App',
+                'role' => 'Dart Mobile App & Playful Pink UI',
+                'desc' => 'Not every project needs to be a system. This one\'s just a Dart app, built pink, built for someone specific — a reminder to ourselves that we can build things that are just warm and useful instead of impressive.',
                 'image' => 'HALLET.png',
                 'sort' => 7,
                 'body_content' => [
-                    ['type' => 'heading2', 'content' => 'Project Documentation'],
-                    ['type' => 'paragraph', 'content' => $lazyQuote],
-                    ['type' => 'callout', 'content' => 'Status: Production system live & active. Full case study coming soon.']
+                    ['type' => 'heading2', 'content' => 'Warm, Useful, and Built with Love'],
+                    ['type' => 'paragraph', 'content' => 'Not every project needs to be a system. This one\'s just a Dart app, built pink, built for someone specific — a reminder to ourselves that we can build things that are just warm and useful instead of impressive.'],
+                    ['type' => 'callout', 'content' => '<strong>The Heart of ODDS:</strong> Not everything we ship has to be hardcore hardware or enterprise backends. Sometimes software just needs to show love and make daily life a little better.'],
+                    ['type' => 'heading3', 'content' => 'App Highlights'],
+                    ['type' => 'bullet', 'content' => '<strong>Crafted in Dart:</strong> Snappy, clean mobile architecture with fluid animations and zero overhead.'],
+                    ['type' => 'bullet', 'content' => '<strong>Proudly Pink UI:</strong> Unapologetically colorful and playful aesthetic crafted to bring personality to utility.'],
+                    ['type' => 'bullet', 'content' => '<strong>Everyday Practicality:</strong> Frictionless daily finance and tracking designed for real-world convenience.'],
+                    ['type' => 'bullet', 'content' => '<strong>Personal Craft:</strong> Proof of ODDS\'s flexibility to adapt code to human emotion and care.']
                 ],
-                'story_content' => "<h2>Project Documentation</h2><p>{$lazyQuote}</p>"
+                'story_content' => "<h2>Warm, Useful, and Built with Love</h2><p>Not every project needs to be a system. This one's just a Dart app, built pink, built for someone specific — a reminder to ourselves that we can build things that are just warm and useful instead of impressive.</p>"
             ],
             [
                 'title' => 'LITIKS',
                 'slug' => 'litiks-8',
-                'year' => '2024',
+                'year' => '2026',
                 'category' => 'Analytics Platform',
-                'client' => 'Retail Enterprise SaaS',
-                'role' => 'Cloud Analytics & Ingestion Pipeline',
-                'desc' => 'Enterprise SaaS platform unifying POS transaction streams across multi-branch retail chains into predictive sales forecasts and cohort heatmaps.',
+                'client' => 'Multi-Branch Commercial Business',
+                'role' => 'PHP Laravel & Holt-Winters Predictive Math',
+                'desc' => 'Built for a business running multiple branches with zero visibility into how each one was actually performing. Laravel backend, uses Holt-Winters exponential smoothing so it accounts for seasonality and trend instead of just averaging numbers together.',
                 'image' => 'LITIKS_THUMBNA.png',
                 'sort' => 8,
                 'body_content' => [
-                    ['type' => 'heading2', 'content' => 'Project Documentation'],
-                    ['type' => 'paragraph', 'content' => $lazyQuote],
-                    ['type' => 'callout', 'content' => 'Status: Production system live & active. Full case study coming soon.']
+                    ['type' => 'heading2', 'content' => 'Visibility Across Branches with Real Predictive Math'],
+                    ['type' => 'paragraph', 'content' => 'Built for a business running multiple branches with zero visibility into how each one was actually performing. LITIKS aggregates data from across branches to give leadership real insight into store-level performance.'],
+                    ['type' => 'callout', 'content' => '<strong>Holt-Winters Exponential Smoothing:</strong> Employs triple exponential smoothing to account for seasonality and underlying trends instead of just naively averaging numbers together.'],
+                    ['type' => 'heading3', 'content' => 'Platform Capabilities'],
+                    ['type' => 'bullet', 'content' => '<strong>PHP Laravel Engine:</strong> High-performance backend wrangling multi-location transaction streams with optimized query caching.'],
+                    ['type' => 'bullet', 'content' => '<strong>Holt-Winters Forecasting:</strong> Statistically robust forecasting that models seasonal surges and baseline growth for reliable inventory demand planning.'],
+                    ['type' => 'bullet', 'content' => '<strong>Cross-Branch Comparisons:</strong> Clear performance benchmarking revealing which locations are thriving and which need intervention.'],
+                    ['type' => 'bullet', 'content' => '<strong>Automated Trend Alerts:</strong> Highlights anomalous shifts in sales volume or traffic before small hiccups become serious operational problems.']
                 ],
-                'story_content' => "<h2>Project Documentation</h2><p>{$lazyQuote}</p>"
+                'story_content' => "<h2>Visibility Across Branches with Real Predictive Math</h2><p>Built for a business running multiple branches with zero visibility into how each one was actually performing. Laravel backend, uses Holt-Winters exponential smoothing so it accounts for seasonality and trend instead of just averaging numbers together.</p>"
             ],
             [
                 'title' => 'TRYSEN',
                 'slug' => 'trysen-9',
-                'year' => '2024',
+                'year' => '2026',
                 'category' => 'Security & Systems',
-                'client' => 'Campus & Corporate Security',
-                'role' => 'Biometric Firmware & Access Systems',
-                'desc' => 'Contactless facial recognition turnstile and attendance gate terminal featuring anti-spoofing liveness detection and tamper-evident audit logs.',
+                'client' => 'Campus & Institutional Attendance',
+                'role' => 'Dart Mobile App & Facial Recognition ML',
+                'desc' => 'One of a few attendance systems we\'ve built, this one a Dart app that logs attendance by scanning a face directly instead of cards or manual sign-in.',
                 'image' => 'TRYSEN_Thumbnail.png',
                 'sort' => 9,
                 'body_content' => [
-                    ['type' => 'heading2', 'content' => 'Project Documentation'],
-                    ['type' => 'paragraph', 'content' => $lazyQuote],
-                    ['type' => 'callout', 'content' => 'Status: Production system live & active. Full case study coming soon.']
+                    ['type' => 'heading2', 'content' => 'Instant Face Scan Attendance in Dart'],
+                    ['type' => 'paragraph', 'content' => 'One of a few attendance systems we\'ve built, this one a Dart app that logs attendance by scanning a face directly instead of cards or manual sign-in.'],
+                    ['type' => 'callout', 'content' => '<strong>Ditch the Cards:</strong> Frictionless, touchless attendance verification powered by on-device computer vision.'],
+                    ['type' => 'heading3', 'content' => 'Architecture & Features'],
+                    ['type' => 'bullet', 'content' => '<strong>Dart Mobile Framework:</strong> Lightweight, ultra-responsive camera initialization and 60fps face detection.'],
+                    ['type' => 'bullet', 'content' => '<strong>Edge ML Biometric Matching:</strong> Rapid facial vector comparison against enrolled roster profiles in milliseconds.'],
+                    ['type' => 'bullet', 'content' => '<strong>Anti-Spoofing Protection:</strong> Liveness validation to ensure verified attendance logs represent real physical humans present.'],
+                    ['type' => 'bullet', 'content' => '<strong>Instant Audit Streaming:</strong> Automatically synchronizes time-stamped attendance logs for clean administrative reporting without manual clipboards.']
                 ],
-                'story_content' => "<h2>Project Documentation</h2><p>{$lazyQuote}</p>"
+                'story_content' => "<h2>Instant Face Scan Attendance in Dart</h2><p>One of a few attendance systems we've built, this one a Dart app that logs attendance by scanning a face directly instead of cards or manual sign-in.</p>"
             ],
         ];
 
