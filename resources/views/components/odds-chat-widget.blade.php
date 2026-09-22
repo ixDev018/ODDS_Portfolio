@@ -309,10 +309,16 @@
         color: #ffffff;
         border-radius: 10px;
         padding: 10px 14px;
-        font-size: 13px;
+        /* 16px font-size prevents mobile Safari/Chrome from automatically zooming in on focus */
+        font-size: 16px;
         outline: none;
         transition: all 0.25s ease;
         box-sizing: border-box;
+    }
+    @media (min-width: 640px) {
+        .chat-input-field {
+            font-size: 13px;
+        }
     }
     .chat-input-field::placeholder {
         color: #71717a;
@@ -336,6 +342,42 @@
         box-shadow: 0 4px 15px rgba(207, 90, 168, 0.3);
         transition: all 0.25s ease;
         flex-shrink: 0;
+    }
+    
+    /* Mobile full-responsive sheet & keyboard accommodation */
+    @media (max-width: 640px) {
+        #odds-chat-container {
+            bottom: 0 !important;
+            right: 0 !important;
+            left: 0 !important;
+        }
+        #chat-window {
+            position: fixed !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            top: auto !important;
+            width: 100vw !important;
+            max-width: 100vw !important;
+            height: calc(100dvh - 50px);
+            max-height: 90dvh;
+            border-radius: 20px 20px 0 0 !important;
+            border-bottom: none !important;
+            border-left: none !important;
+            border-right: none !important;
+            transform-origin: bottom center !important;
+            touch-action: manipulation;
+            overscroll-behavior: contain;
+        }
+        #chat-messages {
+            touch-action: pan-y;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+        }
+        #chat-toggle-btn {
+            bottom: 16px !important;
+            right: 16px !important;
+        }
     }
     
     /* Toggle FAB styling */
@@ -470,9 +512,30 @@ document.addEventListener('DOMContentLoaded', () => {
     chatInput.addEventListener('keydown', (e) => {
         e.stopPropagation();
     });
-    chatWindow.addEventListener('wheel', (e) => {
-        e.stopPropagation();
-    }, { passive: true });
+    // Visual Viewport Keyboard Adjustment (Mobile Safari & Chrome)
+    function handleVisualViewportChange() {
+        if (!window.visualViewport) return;
+        const isMobile = window.innerWidth <= 640;
+        if (!isMobile || chatWindow.classList.contains('hidden')) return;
+
+        // When virtual keyboard opens, visualViewport.height shrinks
+        const viewportHeight = window.visualViewport.height;
+        const windowHeight = window.innerHeight;
+        const keyboardHeight = Math.max(0, windowHeight - viewportHeight);
+
+        chatWindow.style.bottom = `${keyboardHeight}px`;
+        chatWindow.style.height = `${Math.min(viewportHeight - 10, viewportHeight * 0.92)}px`;
+
+        // Keep chat messages pinned to bottom so active conversation stays visible
+        setTimeout(() => {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 50);
+    }
+
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', handleVisualViewportChange);
+        window.visualViewport.addEventListener('scroll', handleVisualViewportChange);
+    }
 
     // Small in-memory conversation history cache (persists per session / page life)
     const conversationHistory = [];
