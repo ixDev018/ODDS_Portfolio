@@ -1291,7 +1291,8 @@
         padding-top: 0.6rem;
         border-top: 1px solid #f1f5f9;
         box-sizing: border-box;
-        margin-top: auto;
+        margin-top: 0;
+        flex: 1;
     }
 
     .gallery-meta-col {
