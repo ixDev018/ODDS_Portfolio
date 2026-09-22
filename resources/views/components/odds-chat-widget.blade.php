@@ -350,12 +350,12 @@
             position: fixed !important;
             left: 0 !important;
             right: 0 !important;
-            bottom: 0 !important;
+            bottom: 0;
             top: auto !important;
             width: 100vw !important;
             max-width: 100vw !important;
             height: calc(100dvh - 50px);
-            max-height: 90dvh;
+            max-height: 88dvh;
             border-radius: 20px 20px 0 0 !important;
             border-bottom: none !important;
             border-left: none !important;
@@ -459,10 +459,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function updateMobilePosition() {
+        if (!window.visualViewport) return;
+        const isMobile = window.innerWidth <= 640;
+        if (!isMobile) {
+            chatWindow.style.bottom = '';
+            chatWindow.style.height = '';
+            return;
+        }
+
+        const vv = window.visualViewport;
+        // The distance from the bottom of the layout viewport to the bottom of the visual viewport
+        const keyboardHeight = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+        
+        chatWindow.style.bottom = `${keyboardHeight}px`;
+        chatWindow.style.height = `${Math.min(vv.height - 10, window.innerHeight * 0.88)}px`;
+
+        setTimeout(() => {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 50);
+    }
+
     function openChat() {
         chatWindow.classList.remove('hidden');
         chatWindow.classList.add('flex');
         
+        const isMobile = window.innerWidth <= 640;
+        if (isMobile) {
+            updateMobilePosition();
+        }
+
         // Let display register then trigger transition
         setTimeout(() => {
             chatWindow.style.opacity = '1';
@@ -475,17 +501,27 @@ document.addEventListener('DOMContentLoaded', () => {
         // Pulse animation toggle on button
         toggleBtn.style.borderColor = 'rgba(207, 90, 168, 0.4)';
         
-        chatInput.focus();
+        // On mobile, DO NOT instantly focus input on open — popping the keyboard instantly
+        // causes the viewport to jump before the sheet is rendered. Let user tap input when ready.
+        if (!isMobile) {
+            chatInput.focus();
+        }
     }
 
     function closeChat() {
         chatWindow.style.opacity = '0';
         chatWindow.style.transform = 'scale(0.92) translateY(15px)';
         
+        if (document.activeElement === chatInput) {
+            chatInput.blur();
+        }
+
         // Wait for transition to finish
         setTimeout(() => {
             chatWindow.classList.add('hidden');
             chatWindow.classList.remove('flex');
+            chatWindow.style.bottom = '';
+            chatWindow.style.height = '';
         }, 250);
 
         chatIconOpen.classList.remove('hidden');
@@ -503,24 +539,22 @@ document.addEventListener('DOMContentLoaded', () => {
     chatInput.addEventListener('keydown', (e) => {
         e.stopPropagation();
     });
+
+    // When user taps/focuses the input on mobile, ensure sheet adapts to keyboard
+    chatInput.addEventListener('focus', () => {
+        if (window.innerWidth <= 640) {
+            setTimeout(updateMobilePosition, 100);
+            setTimeout(updateMobilePosition, 300);
+        }
+    });
+
     // Visual Viewport Keyboard Adjustment (Mobile Safari & Chrome)
     function handleVisualViewportChange() {
         if (!window.visualViewport) return;
         const isMobile = window.innerWidth <= 640;
         if (!isMobile || chatWindow.classList.contains('hidden')) return;
 
-        // When virtual keyboard opens, visualViewport.height shrinks
-        const viewportHeight = window.visualViewport.height;
-        const windowHeight = window.innerHeight;
-        const keyboardHeight = Math.max(0, windowHeight - viewportHeight);
-
-        chatWindow.style.bottom = `${keyboardHeight}px`;
-        chatWindow.style.height = `${Math.min(viewportHeight - 10, viewportHeight * 0.92)}px`;
-
-        // Keep chat messages pinned to bottom so active conversation stays visible
-        setTimeout(() => {
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }, 50);
+        updateMobilePosition();
     }
 
     if (window.visualViewport) {
