@@ -25,6 +25,32 @@
             </button>
         </div>
     </div>
+
+    <!-- Announcement Ticker Bar Underneath Navbar -->
+    <div class="nav-announcement-bar" role="region" aria-label="Announcement">
+        <div class="nav-announcement-track">
+            <div class="nav-announcement-content">
+                <span class="nav-announcement-item"><span class="nav-announcement-sparkle">🌸</span> Congratulations to the new Registered Psychometricians!</span>
+                <span class="nav-announcement-sep">•</span>
+                <span class="nav-announcement-item"><span class="nav-announcement-sparkle">🌸</span> Congratulations to the new Registered Psychometricians!</span>
+                <span class="nav-announcement-sep">•</span>
+                <span class="nav-announcement-item"><span class="nav-announcement-sparkle">🌸</span> Congratulations to the new Registered Psychometricians!</span>
+                <span class="nav-announcement-sep">•</span>
+                <span class="nav-announcement-item"><span class="nav-announcement-sparkle">🌸</span> Congratulations to the new Registered Psychometricians!</span>
+                <span class="nav-announcement-sep">•</span>
+            </div>
+            <div class="nav-announcement-content" aria-hidden="true">
+                <span class="nav-announcement-item"><span class="nav-announcement-sparkle">🌸</span> Congratulations to the new Registered Psychometricians!</span>
+                <span class="nav-announcement-sep">•</span>
+                <span class="nav-announcement-item"><span class="nav-announcement-sparkle">🌸</span> Congratulations to the new Registered Psychometricians!</span>
+                <span class="nav-announcement-sep">•</span>
+                <span class="nav-announcement-item"><span class="nav-announcement-sparkle">🌸</span> Congratulations to the new Registered Psychometricians!</span>
+                <span class="nav-announcement-sep">•</span>
+                <span class="nav-announcement-item"><span class="nav-announcement-sparkle">🌸</span> Congratulations to the new Registered Psychometricians!</span>
+                <span class="nav-announcement-sep">•</span>
+            </div>
+        </div>
+    </div>
 </nav>
 
 <!-- Mobile Navigation Drawer -->
